@@ -4,6 +4,7 @@
   margin: 0 auto;
   /* padding: 2rem; */
   text-align: center;
+  border: 1.5px solid #000;
   
   background-image: url('./assets/images/general/background-face-race.png' );
   background-repeat: no-repeat;

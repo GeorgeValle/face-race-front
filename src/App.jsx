@@ -1,7 +1,9 @@
 //import { useState } from 'react'
 import {Navigate, BrowserRouter, Route, Routes} from 'react-router-dom'
-import MainNavBar from './components/common/MainNavBar.jsx'
-import BodyPlane from './components/common/BodyPlane.jsx'
+import MainNavBar from './components/mainNavBar/MainNavBar.jsx'
+import Login from './views/auth/Login.jsx'
+
+//import BodyPlane from './components/common/BodyPlane.jsx'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
@@ -15,6 +17,7 @@ const App = () => {
 <BrowserRouter>
     <MainNavBar></MainNavBar>
   <Routes>
+            <Route path="/" element={<Login />} />
             {/* <Route path="/" element={<HomeView/>}/>
             <Route path="/wiki_ideas_front/" element={<Navigate to="/"/>}/>
             <Route path="/articles" element={<ArticlesView/>}/> */}
@@ -26,8 +29,8 @@ const App = () => {
           
   </BrowserRouter>
       
-      <h1>Vite + React</h1>
-      <BodyPlane></BodyPlane>
+      {/* <h1>Vite + React</h1> */}
+      
     </>
   )
 }

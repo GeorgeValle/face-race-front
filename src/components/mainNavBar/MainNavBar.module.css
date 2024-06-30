@@ -16,12 +16,17 @@
     background-color: rgba(230, 139, 81, 0.69);
     /* filter: blur(5px); */
     z-index: 1;
-
+    backdrop-filter: blur( 1.8px );
+    -webkit-backdrop-filter: blur( 1.8px );
 
     stroke-width: 0.5px;
     stroke: #000000;
+
+    margin-bottom: 15px;
     
 }
+
+
 
 /* .nav-bar-transparent{
     width: 1444px;
@@ -36,8 +41,10 @@
 
 .main_title{
     font-size: 64px;
-    line-height: 95.04px;
+    /* line-height: 95.04px; */
+    line-height: normal;
     font-weight: 800;
+    font-style: normal;
     font-family: 'M PLUS Rounded 1c', sans-serif;
     color: #ffffff;
     border-color: #51ACE6 2px solid;
