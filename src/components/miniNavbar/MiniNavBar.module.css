@@ -1,0 +1,47 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+
+.bar{
+min-width: 885px;
+/* max-width: fit-content; */
+height: 104px;
+display:flex;
+justify-content: space-around;
+flex-shrink: 0;
+border-radius: 15px;
+border: .5px solid #000;
+
+background: rgba(230, 139, 81, 0.69);
+box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.25);
+
+}
+
+.title{
+    
+    
+    color: #FFF;
+    text-align: center;
+    text-shadow:  4px 4px 6px rgba(0, 0, 0, 0.25);
+    /* -webkit-text-stroke: 1px #51ACE6; */
+    -webkit-text-stroke-width: .5px;
+    -webkit-text-stroke-color: #51ACE6;
+    font-family: "Roboto", sans-serif;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+
+.miniLogo{
+    
+    width: 186px;
+    height: 94px;
+    flex-shrink: 0;
+
+    /* background: url("../../assets/images/general/logo-collaneri.png") transparent 50% / cover no-repeat; */
+    -webkit-filter: drop-shadow( 4px 4px 8px rgba(0, 0, 0, 0.7));
+    filter: drop-shadow( 4px 6px 6px 10px rgba(0, 0, 0, 0.7));
+    /* filter: contrast(110%) */
+}

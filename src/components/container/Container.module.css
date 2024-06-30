@@ -1,0 +1,22 @@
+.box{
+    min-width: 885px;
+    min-height: 715px;
+    flex-shrink: 0;
+
+    border-radius: 15px;
+    background: rgba(230, 139, 81, 0.69);
+
+    /* filter: blur(5px); */
+    stroke-width: 0.5px;
+    stroke: #000;
+    border: .5px solid #000;
+    backdrop-filter: blur( 3.75px );
+    -webkit-backdrop-filter: blur( 3.75px );
+    -moz-backdrop-filter: blur( 3.75px );
+    box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.25);
+    position: relative;
+    
+    
+
+
+}
