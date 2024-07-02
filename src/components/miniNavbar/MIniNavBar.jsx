@@ -3,17 +3,19 @@ import navStyles from './MiniNavBar.module.css'
 import { NavLink } from 'react-router-dom'
 
 
-const MiniNavBar = () => {
+const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título"}) => {
 
     return (
-        
+        <>
             <nav className={navStyles.bar}>
 
+            {
+                btnBack &&
                 <NavLink to='/panel' >
                 </NavLink>
-
+            }
                 <div >
-                    <h2 className={navStyles.title} >BIENVENIDOS</h2>                
+                    <h2 className={navStyles.title} >{miniTitle}</h2>                
                 </div>
                 
                 
@@ -22,15 +24,11 @@ const MiniNavBar = () => {
                     src={logo}
                     className={navStyles.miniLogo}
                 />
-
-                {/* <div className={navStyles.miniLogo}>
-
-                </div> */}
                 
 
                
             </nav>
-            
+        </>    
         
     );
 };
