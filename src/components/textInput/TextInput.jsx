@@ -6,11 +6,11 @@ const TextInput = ({typeInput="text", isLabel=false, titleLabel="", nameLabel=""
 
     return (
         <>
-            <div className={styleInput.input_group}>
+            <div className={styleInput.inputText_group}>
                 {
                     isLabel&&<label className={styleInput.label}>{titleLabel}</label>
                 }
-                <input autoComplete="off" name={nameLabel} id={nameLabel} className={styleInput.input} type={typeInput} placeholder={placeholderText} />
+                <input autoComplete="off" name={nameLabel} id={nameLabel} className={styleInput.inputText} type={typeInput} placeholder={placeholderText} />
             </div>
         </>    
         
