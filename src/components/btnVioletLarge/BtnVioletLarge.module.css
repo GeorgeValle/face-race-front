@@ -1,13 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
 
 .buttonLarge{
-    display:flex;
+    
     flex-shrink: 0;
     border-radius: 10px;
     border: 1px solid #000000;
-   
-   /* background: radial-gradient(circle, rgba(81,97,230,1) 0%, rgba(213,81,230,1) 100%); */
-    /* box-shadow: 6px 6px 4px 0px rgba(0, 0, 0, 0.25); */
+    color: linear-gradient(90deg, rgba(81,97,230,1) 0%, rgba(213,81,230,1) 100%);
+    box-shadow: 6px 6px 4px 0px rgba(0, 0, 0, 0.25); 
 }
 
 .texts{
