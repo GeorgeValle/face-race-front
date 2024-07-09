@@ -1,0 +1,14 @@
+
+.linkStyle{
+color: #FFF;
+text-align: center;
+-webkit-text-stroke-width: 0.5;
+-webkit-text-stroke-color: #000;
+font-family: "Roboto";
+font-size: 20px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+text-decoration-line: underline;
+
+}
