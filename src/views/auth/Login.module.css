@@ -8,13 +8,16 @@
 .content{
     margin-top: 50px;
     display: grid;
+    justify-content: center;
+    
+
   grid:
-    "item1 item2 item3" 2fr
-    "item4 item5 item6" 1fr
-    "item7 item8 item9" auto
-    "item10 item11 item12" auto
-    / 1fr 2fr 1fr;
-  gap: 10px;
+    "item1 " auto
+    "item2 " auto
+    "item3 " auto
+    "item4 " auto
+    /  .5fr;
+  gap: 40px;
     
 }
 
@@ -22,24 +25,9 @@
 .item2 { grid-area: item2; }
 .item3 { grid-area: item3; }
 .item4 { grid-area: item4; }
-.item5 { grid-area: item5; }
-.item6 { grid-area: item6; }
-.item7 { grid-area: item7; }
-.item8 { grid-area: item8; }
-.item9 { grid-area: item9; }
-.item10 { grid-area: item10; }
-.item11 { grid-area: item11; }
-.item12 { grid-area: item12; }
-
-.items{
-    display:block;
-    width:200px;
-}
 
 
 
-.buttons{
-    margin-top: 60px; 
-    display: block;
-    margin: 0 auto;
-}
+
+
+
