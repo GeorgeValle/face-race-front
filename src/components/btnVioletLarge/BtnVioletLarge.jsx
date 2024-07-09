@@ -7,9 +7,11 @@ const BtnVioletLarge = ({children, onClick, btnType="button"}) => {
 
     return(
         <>
-        <button  onClick={onclick} type={btnType} claseName={StyleBtn.buttonLarge}>
-            <span className={StyleBtn.texts}>{children}</span>                   
-        </button> 
+        <div className={StyleBtn.divButton}>
+            <button  onClick={onclick} type={btnType} className={StyleBtn.buttonLarge}>
+                <span className={StyleBtn.texts}>{children}</span>                   
+            </button>
+        </div> 
         </>  
     );
 }

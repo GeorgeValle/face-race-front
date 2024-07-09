@@ -20,7 +20,7 @@ const Login = () =>{
                         <TextInput typeInput={"password"} isLabel={true} titleLabel={"Contraseña"} nameLabel={"Contraseña"} placeholderText={"***********"} /></div>
                         <div claseName={StyleLogin.item6}></div>
                         <div className={StyleLogin.item7}></div>
-                    <div claseName={StyleLogin.item8}><BtnVioletLarge  >Ingresar</BtnVioletLarge></div>
+                    <div claseName={StyleLogin.item8}><BtnVioletLarge>Ingresar</BtnVioletLarge></div>
                     <div className={StyleLogin.item9}></div>
                 </article>
                 
