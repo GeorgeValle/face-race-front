@@ -8,6 +8,7 @@ min-width: 885px;
 height: 104px;
 display:flex;
 justify-content: space-around;
+align-items: center;
 flex-shrink: 0;
 border-radius: 15px;
 border: .5px solid #000;
