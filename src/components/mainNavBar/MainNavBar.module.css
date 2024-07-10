@@ -53,6 +53,7 @@
     -webkit-text-stroke-width: 2;
     -webkit-text-stroke-color: #51ACE6;
     
+    
     z-index: 6;
 
 }
@@ -62,8 +63,15 @@
     
     padding: 10px;
     height: 60px;
-    fill: #FFF;
-    
+    border-radius: 47%;
+    padding: 17px 20px;
+    background:white;
+    box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.35);
+    border: .5px solid transparent;
+}
+
+.logo:hover{
+    border: .5px solid #E65152;
 }
 
 nav .routes {
