@@ -1,0 +1,32 @@
+.text_description{
+    color: #FFF;
+    text-align: center;
+    -webkit-text-stroke-width: 0.5;
+    -webkit-text-stroke-color: #000;
+    font-family: "Roboto";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+.article{
+    display: flex;
+    max-width:400px;
+    
+}
+
+.content{
+    margin-top: 200px;
+    display: grid;
+    justify-content: center;
+    
+    
+
+  grid:
+    "item1 " auto
+    /  .5fr;
+  gap: 50px;
+    
+}
+
+.item1 { grid-area: item1; }
