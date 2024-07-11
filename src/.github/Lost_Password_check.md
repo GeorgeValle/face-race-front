@@ -8,7 +8,7 @@
 
 -  [x] add minibar component.
 -  [x] Add title "Recupere su contraseña" in minibar
--  [ ] Add button back navigation in minibar
+-  [x] Add button back navigation in minibar
 -  [x] Add inputtext "Email / Usuario"
 -  [x] Add BtvioletLarge button "Enviar Link a su Email"
 -  [x] Add text description / Usuario
