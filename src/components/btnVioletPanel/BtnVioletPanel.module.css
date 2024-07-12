@@ -1,0 +1,53 @@
+
+.divButton{
+    display:flex;
+    flex-direction: column;
+
+    border-radius: 15px;
+    width: 149px;
+    height: 155px;
+    flex-shrink: 0;
+    /*  */
+    margin-left: 40px;
+    border: 1px solid #E65152;
+    box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.35);
+}
+
+.divButton:hover{
+    border: .5px solid #5161E6;
+}
+
+.btnLink {
+    padding: 2px 5px;
+    
+    text-decoration: none;
+}
+
+.btnLinkLeft{
+    background: linear-gradient(90deg, #5161E6 0%, #D551E6 100%);
+}
+
+.btnLinkRight{
+    background: linear-gradient(270deg, #5161E6 0%, #D551E6 100%);
+}
+
+.btnLinkTop{
+    background: linear-gradient(180deg, #5161E6 0%, #D551E6 100%);
+}
+
+.btnLinkBottom{
+    background: linear-gradient(0deg, #5161E6 0%, #D551E6 100%);
+}
+
+
+
+.texts{
+    
+    font-size: 18px;
+    color: white;
+}
+
+.icono{
+    font-size: 50px;
+    color: #4EBBF9;
+}

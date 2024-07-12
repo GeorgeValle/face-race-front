@@ -20,6 +20,9 @@ const MainNavBar = () => {
                 <div >
                     <h1 className={navStyles.main_title} >COLANERI MOTOSHOP</h1>                
                 </div>
+
+               
+
             </nav>
             
         
