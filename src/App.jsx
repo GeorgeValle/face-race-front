@@ -4,6 +4,7 @@ import MainNavBar from './components/mainNavBar/MainNavBar.jsx'
 import Logout from './views/auth/Logout.jsx'
 import Login from './views/auth/Login.jsx'
 import Lost_Password from './views/auth/Lost_Password.jsx'
+import Panel from './views/panel/Panel.jsx'
 
 //import BodyPlane from './components/common/BodyPlane.jsx'
 // import reactLogo from './assets/react.svg'
@@ -23,6 +24,8 @@ const App = () => {
             <Route path="/" element={<Login />} />
             <Route path="/lost_password" element={<Lost_Password/>}/>
             <Route path="/logout" element={<Logout/>}/>
+            <Route path="/panel" element={<Panel/>}/>
+
             {/* <Route path="/" element={<HomeView/>}/>
             <Route path="/wiki_ideas_front/" element={<Navigate to="/"/>}/>
             <Route path="/articles" element={<ArticlesView/>}/> */}

@@ -3,9 +3,11 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import TextInput from '../../components/textInput/TextInput'
 import BtnVioletLarge from '../../components/btnVioletLarge/BtnVioletLarge'
 import LinkCommon from '../../components/linkCommon/LinkCommon'
+import { useNavigate } from 'react-router-dom';
 import Style from './Login.module.css'
 
 const Login = () =>{
+    const navigate = useNavigate();
     return(
 
         <div style={{width:"876px", heigth:"700px",margin:"auto"}}>
@@ -19,7 +21,7 @@ const Login = () =>{
                         <TextInput typeInput={"password"} isLabel={true} titleLabel={"Contraseña"} nameLabel={"Contraseña"} placeholderText={"***********"} />   
                     </div>
                     <div claseName={Style.item3}>
-                        <BtnVioletLarge>Iniciar Sesión</BtnVioletLarge>
+                        <BtnVioletLarge onClick={() => navigate('/panel')}>Iniciar Sesión</BtnVioletLarge>
                     </div>
                     <div claseName={Style.item4}>
                         <LinkCommon>¿Has olvidado la contraseña?</LinkCommon>
