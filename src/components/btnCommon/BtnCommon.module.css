@@ -1,0 +1,33 @@
+.btn {
+    width: 156px;
+    height: 50px;
+    background: linear-gradient(90deg, #E65152 0%, #E651AC 100%);
+    border-radius: 15px;
+    padding: 15px 25px;
+    border: .5px solid #E65152;
+    box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.35);  
+}
+
+.btRed{
+    background: linear-gradient(90deg, #E65152 0%, #E651AC 100%);
+}
+
+.btnViolet{
+    background: linear-gradient(90deg, #5161E6 0%, #D551E6 100%);
+}
+
+.btn:hover{
+    border: .5px solid #5161E6;
+}
+
+
+
+.texts, .icon{
+    color: #ffffff;
+    text-align: center;
+    font-family: "Roboto";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}

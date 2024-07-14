@@ -1,9 +1,6 @@
 import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
-
-import BtnVioletLarge from '../../components/btnVioletLarge/BtnVioletLarge'
 import BtnVioletPanel from '../../components/btnVioletPanel/BtnVioletPanel'
-import LinkCommon from '../../components/linkCommon/LinkCommon'
 import Style from './Panel.module.css'
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -19,7 +16,7 @@ const Panel = () =>{
                 <MiniNavBar miniTitle={"PANEL DE CONTROL"} btnQuit={true}/>
                 <article className={Style.content}>
                     <div claseName={Style.item1}>
-                        <BtnVioletPanel title={"Presupuesto"}  leftColor={true}>
+                        <BtnVioletPanel title={"Presupuesto"} path={"/budget"} leftColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>
                     </div>
