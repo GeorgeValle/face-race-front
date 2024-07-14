@@ -6,11 +6,11 @@ import {faXmark} from "@fortawesome/free-solid-svg-icons";
 
 
 
-const BtnVioletPanel = ({ title="", children, leftColor=false, topColor=false, rightColor=false, bottomColor=false}) => {
+const BtnVioletPanel = ({ title="", path="/logout", children, leftColor=false, topColor=false, rightColor=false, bottomColor=false}) => {
     return(
         <>
         <Link 
-            to={'/logout'}               
+            to={path}               
             className={`${StyleBtn.btnLink}`}>
             <div className={`${StyleBtn.divButton} ${leftColor&&StyleBtn.btnLinkLeft} ${rightColor&&StyleBtn.btnLinkRight} ${topColor&&StyleBtn.btnLinkTop} ${bottomColor&&StyleBtn.btnLinkBottom}`}>
             
