@@ -20,9 +20,13 @@
     
 
   grid:
-    "item1 item2 item3 item4 item5" 1fr
-    "item6 item7 item8 item9 item10" 1fr
-    / .5fr .5fr .5fr .5fr .5fr;
+    "item1" auto
+    "item2" auto
+    "item3" 
+    "item4" auto
+    "item5" auto
+    "item6" 3fr  
+    / 1fr;
   gap: 5px;
     
 }
@@ -37,3 +41,31 @@
 .item8 { grid-area: item8; }
 .item7 { grid-area: item9; }
 .item8 { grid-area: item10; }
+
+
+.table_client{
+  /* display: flex;
+	flex-direction: column;
+	align-items:center;
+	justify-content: center; */
+	height: 100%;
+	/* Background-color: #faf9f6; */
+}
+.table{
+  width: 90%;
+  /* min-width: 100px;
+  max-width: 200px; */
+  height: 150px;
+  margin: 30px auto;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(154px,.4fr));
+  
+  justify-items: center;
+  
+  grid-auto-flow: column;
+  place-items: center;
+  gap: 0.7px;
+  
+
+}
