@@ -1,0 +1,20 @@
+.row{
+    
+    background-color:#A8D5F2;
+    width: inherit;
+    height: 35px;
+    text-align: center;
+    
+    
+    color: #000;
+    
+    
+    box-shadow: 2px 3px 4px 0px rgba(0, 0, 0, 0.25) inset;
+    
+    font-family: "Roboto";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+

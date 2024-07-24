@@ -17,13 +17,13 @@ const Login = () =>{
                     <div claseName={Style.item1}>
                         <TextInput  typeInput={"email"} isLabel={true} titleLabel={"Email"} nameLabel={"Email"} placeholderText={"micorreo@gmail.com"} />
                     </div>
-                    <div claseName={Style.item2}>
+                    <div className={Style.item2}>
                         <TextInput typeInput={"password"} isLabel={true} titleLabel={"Contraseña"} nameLabel={"Contraseña"} placeholderText={"***********"} />   
                     </div>
-                    <div claseName={Style.item3}>
+                    <div className={Style.item3}>
                         <BtnVioletLarge onClick={() => navigate('/panel')}>Iniciar Sesión</BtnVioletLarge>
                     </div>
-                    <div claseName={Style.item4}>
+                    <div className={Style.item4}>
                         <LinkCommon>¿Has olvidado la contraseña?</LinkCommon>
                     </div>
                     

@@ -15,22 +15,22 @@ const Panel = () =>{
             <Container>
                 <MiniNavBar miniTitle={"PANEL DE CONTROL"} btnQuit={true}/>
                 <article className={Style.content}>
-                    <div claseName={Style.item1}>
+                    <div className={Style.item1}>
                         <BtnVioletPanel title={"Presupuesto"} path={"/budget"} leftColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>
                     </div>
-                    <div claseName={Style.item2}>
+                    <div className={Style.item2}>
                         <BtnVioletPanel title={"Clientes"}  topColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel> 
                     </div>
-                    <div claseName={Style.item3}>
+                    <div className={Style.item3}>
                         <BtnVioletPanel title={"Ventas"}  rightColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>
                     </div>
-                    <div claseName={Style.item4}>
+                    <div className={Style.item4}>
                         <BtnVioletPanel title={"Caja"}  bottomColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>
@@ -40,27 +40,27 @@ const Panel = () =>{
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>
                     </div>
-                    <div claseName={Style.item6}>
+                    <div className={Style.item6}>
                         <BtnVioletPanel title={"Compras"}  topColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>
                     </div>
-                    <div claseName={Style.item7}>
+                    <div className={Style.item7}>
                         <BtnVioletPanel title={"Proveedores"}  rightColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>
                     </div>
-                    <div claseName={Style.item8}>
+                    <div className={Style.item8}>
                         <BtnVioletPanel title={"Inventario"}  bottomColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>
                     </div>
-                    <div claseName={Style.item9}>
+                    <div className={Style.item9}>
                         <BtnVioletPanel title={"Turnos"}  leftColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>
                     </div>
-                    <div claseName={Style.item10}>
+                    <div className={Style.item10}>
                         <BtnVioletPanel title={"Rectificaciones"}  topColor={true}>
                             <FontAwesomeIcon icon={faXmark} size="lg" />
                         </BtnVioletPanel>

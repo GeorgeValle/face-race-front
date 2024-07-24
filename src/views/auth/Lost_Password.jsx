@@ -12,16 +12,16 @@ const Lost_Password = () =>{
             <Container>
                 <MiniNavBar btnBack={true} miniTitle={"RECUPERE SU PASSWORD"}/>
                 <article className={Style.content}>
-                    <div claseName={Style.item1}>
+                    <div className={Style.item1}>
                         <TextInput  typeInput={"text"} isLabel={true} titleLabel={"Email / Usuario"} nameLabel={"Usuario"} placeholderText={"micorreo@gmail.com  / miusuario"} />
                     </div>
-                    <div claseName={Style.item2}>
+                    <div className={Style.item2}>
                     <BtnVioletLarge>Enviar Link a su Email</BtnVioletLarge>   
                     </div>
-                    <div claseName={Style.item3}>
+                    <div className={Style.item3}>
                     <p className={Style.text_description}>* Se le enviará el link de recuperación a su Email en caso que concuerde</p>
                     </div>
-                    <div claseName={Style.item4}>
+                    <div className={Style.item4}>
                         
                     </div>
                     

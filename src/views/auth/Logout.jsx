@@ -11,7 +11,7 @@ const Logout = () =>{
             <Container>
                 <MiniNavBar  miniTitle={"HASTA LUEGO"}/>
                 <article className={Style.content}>
-                    <div claseName={Style.item1}>
+                    <div className={Style.item1}>
                     <Link to='/'><BtnVioletLarge>Iniciar Sesión Nuevamente</BtnVioletLarge></Link>
                     </div>  
                 </article>   
