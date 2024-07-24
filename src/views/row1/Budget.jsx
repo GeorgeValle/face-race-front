@@ -4,10 +4,7 @@ import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import MiniBtn from '../../components/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btnCommon/BtnCommon'
-import TableHead from '../../components/tableHead/TableHead'
-import TableRows from '../../components/tableRows/TableRows'
 import {TableClient} from '../../components/tables/tableClient/TableClient'
-
 import Style from './Budget.module.css'
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -20,7 +17,7 @@ const Budget = () =>{
 
     // const headTitles = [{index:1,title:"ID Cliente"},{index:2,title:"Nombre"},{index:3,title:"Apellido"},{index:4,title:"Fecha / Hora"},{index:5,title:"Email"},{index:6,title:"DNI"},{index:7,title:"Tel."},{index:8,title:"Cel."}]
 
-    const row1=[{id:1,name:"Victor",surname:"Perez",date:"",email:"losespinos@gmail.com",dni:23456789,cel:234564554}]
+    const row1={id:1,name:"Victor",surname:"Perez",date:"",email:"losespinos@gmail.com",dni:23456789,tel:3514585956,cel:234564554}
     return(
 
         <div className={Style.mainContainer}>
@@ -44,13 +41,9 @@ const Budget = () =>{
                         
                     </div>
                     <div className={Style.item6}>
-                        {/* <article className={Style.table}>
-                            <TableHead headItems={headTitles}></TableHead>
-                            <TableRows rowsItems={rows2}></TableRows>
-                        </article> */}
-                        <section className={Style.table_client}>
+                        <article>
                             <TableClient row={row1}/>
-                        </section>
+                        </article>
                     </div>
                     <div className={Style.item7}>
                         

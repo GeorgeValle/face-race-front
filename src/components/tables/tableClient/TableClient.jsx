@@ -2,9 +2,9 @@
 import Style from "./TableClient.module.css"
 
 
-export const TableClient = (row) => {
+export const TableClient = ({row}) => {
     return (
-        <article className={Style.table_wrapper}>
+        
             <table className={Style.table}>
                 <thead>
                     <tr>
@@ -26,10 +26,11 @@ export const TableClient = (row) => {
                         <td>{row.date}</td>
                         <td>{row.email}</td>
                         <td>{row.dni}</td>
+                        <td>{row.tel}</td>
                         <td>{row.cel}</td>
                     </tr>
                 </tbody>
             </table>
-        </article>
+       
     )
 }
