@@ -1,6 +1,6 @@
 import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
-import BtnVioletLarge from '../../components/btnVioletLarge/BtnVioletLarge'
+import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge'
 import Style from './Logout.module.css'
 import { Link } from 'react-router-dom'
 

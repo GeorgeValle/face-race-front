@@ -2,8 +2,8 @@
 
 import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
-import MiniBtn from '../../components/miniBtn/MiniBtn'
-import BtnCommon from '../../components/btnCommon/BtnCommon'
+import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
+import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import {TableClient} from '../../components/tables/tableClient/TableClient'
 import Style from './Budget.module.css'
 
