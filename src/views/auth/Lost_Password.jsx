@@ -1,7 +1,7 @@
 import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
-import TextInput from '../../components/textInput/TextInput'
-import BtnVioletLarge from '../../components/btnVioletLarge/BtnVioletLarge'
+import TextInput from '../../components/inputs/textInput/TextInput'
+import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge'
 
 import Style from './Lost_Password.module.css'
 

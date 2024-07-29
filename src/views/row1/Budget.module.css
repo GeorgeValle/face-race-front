@@ -9,7 +9,12 @@
 
  .article{
     display: flex;
-    max-width:400px;
+    
+    justify-content: flex-start;
+    align-content: flex-start;
+    
+    
+    
 }
 
 .content{
@@ -25,9 +30,13 @@
     "item3" auto
     "item4" auto
     "item5" auto
-    "item6" auto  
+    "item6" auto
+    "item7" auto
+    "item8" auto
+    "item9" auto
+    "item10" auto
     / 1fr;
-  gap: 5px;
+  gap: 4px;
     
 }
 
@@ -39,6 +48,7 @@
 .item6 { grid-area: item6; }
 .item7 { grid-area: item7; }
 .item8 { grid-area: item8; }
-.item7 { grid-area: item9; }
-.item8 { grid-area: item10; }
+.item9 { grid-area: item9; }
+.item10 { grid-area: item10; }
+
 

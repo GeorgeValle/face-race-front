@@ -1,6 +1,6 @@
 import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
-import BtnVioletPanel from '../../components/btnVioletPanel/BtnVioletPanel'
+import BtnVioletPanel from '../../components/btns/btnVioletPanel/BtnVioletPanel'
 import Style from './Panel.module.css'
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

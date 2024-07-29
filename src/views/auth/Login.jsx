@@ -1,7 +1,7 @@
 import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
-import TextInput from '../../components/textInput/TextInput'
-import BtnVioletLarge from '../../components/btnVioletLarge/BtnVioletLarge'
+import TextInput from '../../components/inputs/textInput/TextInput'
+import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge'
 import LinkCommon from '../../components/linkCommon/LinkCommon'
 import { useNavigate } from 'react-router-dom';
 import Style from './Login.module.css'

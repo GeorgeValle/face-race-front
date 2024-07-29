@@ -1,8 +1,8 @@
 import logo from '../../assets/images/general/logo-collaneri.png'
 import navStyles from './MiniNavBar.module.css'
 // import { NavLink } from 'react-router-dom'
-import BtnBack from '../btnBack/BtnBack';
-import BtnQuit from '../btnQuit/BtnQuit';
+import BtnBack from '../btns/btnBack/BtnBack';
+import BtnQuit from '../btns/btnQuit/BtnQuit';
 
 
 const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=false}) => {
