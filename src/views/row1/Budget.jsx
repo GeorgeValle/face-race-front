@@ -4,6 +4,7 @@ import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
+import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
 import {TableClient} from '../../components/tables/tableClient/TableClient'
 import Style from './Budget.module.css'
 
@@ -25,8 +26,14 @@ const Budget = () =>{
                 <MiniNavBar miniTitle={"PRESUPUESTO"} btnBack={true}/>
                 <article className={Style.content}>
                     <div className={Style.item1}>
-                        <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
-                        <MiniBtn ><FontAwesomeIcon icon={faPlus} /></MiniBtn>
+                        <article className={Style.article}>
+                            <div className={Style.article}>
+                                <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" />
+                                <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                            </div>
+                            
+                            <MiniBtn ><FontAwesomeIcon icon={faPlus} /></MiniBtn>
+                        </article>
                     </div>
                     <div className={Style.item2}>
                         <BtnCommon title={"Imprimir "} ColorRed={true} ><FontAwesomeIcon icon={faPrint} /></BtnCommon>
@@ -49,7 +56,20 @@ const Budget = () =>{
                         
                     </div>
                     <div className={Style.item8}>
-                        
+                        <article className={Style.article}>
+                            <div className={Style.article}>
+                                <TextInputStyled placeholderText={"Ej: 11711455"} typeInput={"number"} titleLabel="Código de Barras" size={false} />
+                                <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                            </div>
+                            <div className={Style.article}>
+                                <TextInputStyled placeholderText={"Ej: Guantes "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} />
+                                <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                            </div>
+                            <div className={Style.article}>
+                                <TextInputStyled placeholderText={"Ej: 1"} typeInput={"number"} titleLabel="Cantidad" />
+                                <MiniBtn ><FontAwesomeIcon icon={faPlus} /></MiniBtn>
+                            </div>
+                        </article>
                     </div>
                     <div className={Style.item9}>
                         

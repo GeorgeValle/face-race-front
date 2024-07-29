@@ -1,0 +1,63 @@
+.inputText_group{
+  box-sizing: content-box;
+  max-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  height: 63px;
+  text-align: center;
+  border-radius: 15px;
+  background: rgba(230, 139, 81, 0.69);
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 1px;
+  padding-bottom: 7px;
+  margin: 7px 9px;
+  border: #000 1px solid;
+  box-shadow: 6px 7px 1px 0px rgba(0, 0, 0, 0.25);
+}
+
+.inputText {
+    display:flex;
+    height: 44px;
+    background-color: #FFFCFC;
+    border-radius: .5rem;
+    padding: 0 1rem;
+    border: 1px solid #05060f;
+    font-size: 1rem;
+    transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s, background .2s cubic-bezier(.25,.01,.25,1) 0s, border .3s cubic-bezier(.25,.01,.25,1) 0s;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: .1px;
+     color: #05060f99;
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+    color: #FFF;
+    text-shadow: 2px 2px 2px  rgba(0, 0, 0, 0.65);
+    -webkit-text-stroke-width: .6px;
+    -webkit-text-stroke-color: #000000;
+    font-family: "Roboto";
+    font-size: 20px;
+    font-style:normal;
+    font-weight: 700;
+    line-height:normal;
+
+  }
+  
+  .inputText:hover{
+    border: 1px solid #51ACE6;
+    /* border-color: #05060f; */
+  }
+  
+
+  .inputText_group:hover .label, .input:focus {
+    color: #05060fc2;
+  }
+
+.sizeS{
+  width: 140px;
+}
+
+.sizeM{
+  width: 326px;
+}
