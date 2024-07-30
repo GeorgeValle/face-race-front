@@ -7,7 +7,7 @@ import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
 import {TableClient} from '../../components/tables/tableClient/TableClient'
 import Style from './Budget.module.css'
-
+import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass, faPlus, faPrint, faPen} from "@fortawesome/free-solid-svg-icons";
 
@@ -72,7 +72,7 @@ const Budget = () =>{
                         </article>
                     </div>
                     <div className={Style.item9}>
-                        
+                        <MiniTotal>0,00</MiniTotal>
                     </div>
                     <div className={Style.item10}>
                        
