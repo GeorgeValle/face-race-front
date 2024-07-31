@@ -11,3 +11,5 @@
 -  [x] Add button Quit in the navigation of minibar
 -  [x] Add inputtext "Email / Usuario"
 -  [x] navigate to all areas
+-  [] changes all buttons icons
+-  [] add link in all btns
