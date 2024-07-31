@@ -1,4 +1,4 @@
-//budget = presupuesto in spanish
+// ******* budget = presupuesto in spanish ************
 
 import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
@@ -6,17 +6,24 @@ import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
 import {TableClient} from '../../components/tables/tableClient/TableClient'
+import {TableQuotation} from '../../components/tables/tableQuotation/TableQuotation'
 import Style from './Budget.module.css'
 import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faMagnifyingGlass, faPlus, faPrint, faPen} from "@fortawesome/free-solid-svg-icons";
+import {faMagnifyingGlass, faPlus, faPrint} from "@fortawesome/free-solid-svg-icons";
 
-
-// import {faXmark} from "@fortawesome/free-solid-svg-icons";
 
 const Budget = () =>{
 
-    // const headTitles = [{index:1,title:"ID Cliente"},{index:2,title:"Nombre"},{index:3,title:"Apellido"},{index:4,title:"Fecha / Hora"},{index:5,title:"Email"},{index:6,title:"DNI"},{index:7,title:"Tel."},{index:8,title:"Cel."}]
+    function prisa() {
+
+    }
+
+    function lento(){
+
+    }
+    
+    const item1 =[{code:323434,item:"Zapatillas Casual para motocicletas",quantity:2,price:"12,00",amount:54.45},{code:323434,item:"Camperas para motocicletas",quantity:2,price:12000.00,amount:12000.00}]
 
     const row1={id:1,name:"Victor",surname:"Perez",date:"",email:"losespinos@gmail.com",dni:23456789,tel:3514585956,cel:234564554}
     return(
@@ -26,37 +33,7 @@ const Budget = () =>{
                 <MiniNavBar miniTitle={"PRESUPUESTO"} btnBack={true}/>
                 <article className={Style.content}>
                     <div className={Style.item1}>
-                        <article className={Style.article}>
-                            <div className={Style.article}>
-                                <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" />
-                                <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
-                            </div>
-                            
-                            <MiniBtn ><FontAwesomeIcon icon={faPlus} /></MiniBtn>
-                        </article>
-                    </div>
-                    <div className={Style.item2}>
-                        <BtnCommon title={"Imprimir "} ColorRed={true} ><FontAwesomeIcon icon={faPrint} /></BtnCommon>
-                    </div>
-                    <div className={Style.item3}>
-                        <BtnCommon title={"Editar "} colorViolet={true}><FontAwesomeIcon icon={faPen} /></BtnCommon>
-                    </div>
-                    <div className={Style.item4}>
-                        
-                    </div>
-                    <div className={Style.item5}>
-                        
-                    </div>
-                    <div className={Style.item6}>
-                        <article>
-                            <TableClient row={row1}/>
-                        </article>
-                    </div>
-                    <div className={Style.item7}>
-                        
-                    </div>
-                    <div className={Style.item8}>
-                        <article className={Style.article}>
+                        <article className={Style.center}>     
                             <div className={Style.article}>
                                 <TextInputStyled placeholderText={"Ej: 11711455"} typeInput={"number"} titleLabel="Código de Barras" size={false} />
                                 <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
@@ -71,14 +48,24 @@ const Budget = () =>{
                             </div>
                         </article>
                     </div>
-                    <div className={Style.item9}>
-                        <MiniTotal>0,00</MiniTotal>
+                    <div className={Style.item2}>
+                        <TableQuotation rows={item1} ></TableQuotation>
                     </div>
-                    <div className={Style.item10}>
-                       
+                    <div className={Style.item3}>
+                        <article>
+                            <TableClient row={row1}/>
+                        </article> 
                     </div>
-
-                    
+                    <div className={Style.item4}>
+                        <article className={Style.separate}>
+                                <div className={Style.article}>
+                                    <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" />
+                                    <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                </div>
+                                <BtnCommon title={"Imprimir "} ColorRed={true} ><FontAwesomeIcon icon={faPrint} /></BtnCommon>
+                                <MiniTotal>0,00</MiniTotal>
+                        </article> 
+                    </div>
                 </article>
                     
             </Container>
