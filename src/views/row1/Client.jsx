@@ -7,14 +7,16 @@ import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
 import Style from './Client.module.css'
-
+import { useState } from 'react'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass, faPlus, faPencil} from "@fortawesome/free-solid-svg-icons";
-import TextViewClient from '../../components/textViews/textViewClient/TextViewClient'
+import TextViewClient from '../../components/textViews/textViewClient/TextViewClient';
+
 
 const Client = () => {
+    const [modalOpenNewClient, setModalOpenNewModal] = useState(false);
+    const [modalOpenModifyClient, setModalOpenModifyClient] = useState(false);
 return (
-    
     <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"CLIENTE"} btnBack={true}/>
