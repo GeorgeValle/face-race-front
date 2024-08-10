@@ -3,9 +3,10 @@ import navStyles from './MiniNavBar.module.css'
 // import { NavLink } from 'react-router-dom'
 import BtnBack from '../btns/btnBack/BtnBack';
 import BtnQuit from '../btns/btnQuit/BtnQuit';
+import BtnClose from '../btns/btnClose/BtnClose';
 
 
-const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=false}) => {
+const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=false, btnClose=false, onClose=null}) => {
 
     return (
         <>
@@ -30,8 +31,10 @@ const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=fal
                     className={navStyles.miniLogo}
                 />
                 
+                {
+                    btnClose && <BtnClose onClose={onClose}/>
+                }
 
-               
             </nav>
         </>    
         

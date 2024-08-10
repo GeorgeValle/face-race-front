@@ -11,15 +11,23 @@ import { useState } from 'react'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass, faPlus, faPencil} from "@fortawesome/free-solid-svg-icons";
 import TextViewClient from '../../components/textViews/textViewClient/TextViewClient';
+import NewClientModal from '../../components/modals/newClientModal/NewClientModal';
+import { createPortal } from 'react-dom'
+
 
 
 const Client = () => {
     const [modalOpenNewClient, setModalOpenNewModal] = useState(false);
     const [modalOpenModifyClient, setModalOpenModifyClient] = useState(false);
+
+    const handleClose=()=>{
+        setModalOpenNewModal(false);
+    }
 return (
     <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"CLIENTE"} btnBack={true}/>
+                {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={null} onCancel={null} onClose={()=>handleClose()} />,document.body)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>     
@@ -27,7 +35,7 @@ return (
                                 
                                 <article className={Style.separate}>
                                     
-                                    <BtnCommon title={"Registrar"} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
+                                    <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article}>
                                         <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" />
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
@@ -63,7 +71,7 @@ return (
             </Container>
         </div>
 
-  )
+    )
 }
 
 export default Client
