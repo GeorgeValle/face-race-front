@@ -7,7 +7,7 @@ const BtnCommon = ({title="",children, onClick, colorRed=false, colorViolet=fals
 
     return(
         <>
-            <button  type="button" onClick={onClick} className={`${StyleBtn.btn} ${colorRed&&StyleBtn.btnRed} ${colorViolet&&StyleBtn.btnViolet} `}>
+            <button  type="button" onClick={()=>onClick()} className={`${StyleBtn.btn} ${colorRed&&StyleBtn.btnRed} ${colorViolet&&StyleBtn.btnViolet} `}>
                 <span className={StyleBtn.texts}>{title}</span>
                 <span className={StyleBtn.icon}>{children}</span>                   
             </button>

@@ -11,17 +11,27 @@ import Style from './Budget.module.css'
 import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass, faPlus, faPrint} from "@fortawesome/free-solid-svg-icons";
-
+import MessageModal from '../../components/modals/messageModal/MessageModal';
+import {useState} from 'react';
+import {modal} from 'react-dom';
+import { createPortal } from 'react-dom'
 
 const Budget = () =>{
+    const [modalOpen, setModalOpen] = useState(false);
+    
+    function print() {
 
-    function prisa() {
-
+        // window.print();
+        setModalOpen(true)
+        const timer = setTimeout(() => {
+            setModalOpen(false);
+                    }, 2500);
     }
 
     function lento(){
 
     }
+    
     
     const item1 =[{code:323434,item:"Zapatillas Casual para motocicletas",quantity:2,price:"12,00",amount:54.45},{code:323434,item:"Camperas para motocicletas",quantity:2,price:12000.00,amount:12000.00}]
 
@@ -31,6 +41,7 @@ const Budget = () =>{
         <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"PRESUPUESTO"} btnBack={true}/>
+                {modalOpen && createPortal(<MessageModal >Impreso</MessageModal>,document.body)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>     
@@ -62,12 +73,12 @@ const Budget = () =>{
                                     <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" />
                                     <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                 </div>
-                                <BtnCommon title={"Imprimir "} ColorRed={true} ><FontAwesomeIcon icon={faPrint} /></BtnCommon>
+                                <BtnCommon title={"Imprimir "} ColorRed={true} onClick={()=>print()} ><FontAwesomeIcon icon={faPrint} /></BtnCommon>
                                 <MiniTotal>0,00</MiniTotal>
                         </article> 
                     </div>
                 </article>
-                    
+                        
             </Container>
         </div>
     )
