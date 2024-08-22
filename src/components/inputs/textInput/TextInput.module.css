@@ -48,6 +48,10 @@
     color: #05060fc2;
   }
 
+  .side{
+    flex-direction: row;
+    justify-content:space-between;
+  }
 
 
 

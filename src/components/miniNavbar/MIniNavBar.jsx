@@ -6,7 +6,7 @@ import BtnQuit from '../btns/btnQuit/BtnQuit';
 import BtnClose from '../btns/btnClose/BtnClose';
 
 
-const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=false, btnClose=false, onClose=null}) => {
+const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=false, btnClose=false, close}) => {
 
     return (
         <>
@@ -32,7 +32,7 @@ const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=fal
                 />
                 
                 {
-                    btnClose && <BtnClose onClose={onClose}/>
+                    btnClose && <BtnClose close={close}/>
                 }
 
             </nav>

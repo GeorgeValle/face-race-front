@@ -25,7 +25,7 @@ const TextViewClient = (TheClient) => {
             </tr>
             <tr>
               <th>Dirección:</th>
-              <td>{TheClient.addres}</td>
+              <td>{TheClient.address}</td>
               <th>Ciudad:</th>
               <td>{TheClient.city}</td>
             </tr>
