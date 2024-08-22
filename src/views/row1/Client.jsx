@@ -27,7 +27,7 @@ return (
     <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"CLIENTE"} btnBack={true}/>
-                {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={null} onCancel={null} onClose={()=>handleClose()} />,document.body)}
+                {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={handleClose} onCancel={handleClose} onClose={handleClose} />,document.body)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>     
