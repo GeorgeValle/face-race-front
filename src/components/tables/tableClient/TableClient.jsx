@@ -26,11 +26,10 @@ export const TableClient = ({row}) => {
                         <td>{row.date}</td>
                         <td>{row.email}</td>
                         <td>{row.dni}</td>
-                        <td>{row.tel}</td>
+                        <td>{row.phone}</td>
                         <td>{row.cel}</td>
                     </tr>
                 </tbody>
             </table>
-       
     )
 }
