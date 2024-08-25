@@ -13,20 +13,28 @@ import {faMagnifyingGlass, faPlus, faPencil} from "@fortawesome/free-solid-svg-i
 import TextViewClient from '../../components/textViews/textViewClient/TextViewClient';
 import NewClientModal from '../../components/modals/newClientModal/NewClientModal';
 import { createPortal } from 'react-dom'
+import EditClientModal from '../../components/modals/editClientModal/EditClientModal'
 
 
 
 const Client = () => {
     const [modalOpenNewClient, setModalOpenNewModal] = useState(false);
-    const [modalOpenModifyClient, setModalOpenModifyClient] = useState(false);
+    const [modalOpenEditClient, setModalOpenEditClient] = useState(false);
 
+    const client1={id:1,name:"Victor",surname:"Perez",date:"",email:"losespinos@gmail.com",dni:23456789,phone:3514585956,cel:234564554,address:"Pino 134",city:"Santa Fe",province:"Santa Fe" ,cp:"2542",obs:"Es un nuevo cliente"}
+    
     const handleClose=()=>{
         setModalOpenNewModal(false);
+        setModalOpenEditClient(false);
     }
+
+
+
 return (
     <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"CLIENTE"} btnBack={true}/>
+                {modalOpenEditClient&&createPortal(<EditClientModal onSubmit={handleClose} onCancel={handleClose} onClose={handleClose} client={client1} />,document.body)}
                 {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={handleClose} onCancel={handleClose} onClose={handleClose} />,document.body)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
@@ -44,7 +52,7 @@ return (
                                         <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} />
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
-                                    <BtnCommon title={"Editar"} colorViolet={true}> <FontAwesomeIcon icon={faPencil}/></BtnCommon>
+                                    <BtnCommon title={"Editar"} onClick={()=>setModalOpenEditClient(true)} colorViolet={true}> <FontAwesomeIcon icon={faPencil}/></BtnCommon>
                                 </article> 
                                 
                             </div>

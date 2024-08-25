@@ -35,7 +35,7 @@ const Budget = () =>{
     
     const item1 =[{code:323434,item:"Zapatillas Casual para motocicletas",quantity:2,price:"12,00",amount:54.45},{code:323434,item:"Camperas para motocicletas",quantity:2,price:12000.00,amount:12000.00}]
 
-    const row1={id:1,name:"Victor",surname:"Perez",date:"",email:"losespinos@gmail.com",dni:23456789,tel:3514585956,cel:234564554}
+    const row1={id:1,name:"Victor",surname:"Perez",date:"",email:"losespinos@gmail.com",dni:23456789,phone:3514585956,cel:234564554}
     return(
 
         <div className={Style.mainContainer}>
