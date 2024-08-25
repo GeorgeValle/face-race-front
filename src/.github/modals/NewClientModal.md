@@ -3,7 +3,6 @@
 - config layout of components 
 - Add all btns, inputs and minibar
 
- 
 
 ## Checklist
 
@@ -25,7 +24,7 @@
 -  [x] Add icons in buttons (optional)
 -  [x] close this modal to onClick out the modal
 -  [X] add close function in close btn
--  [X] add functions in cancelar btn
--  [] add textarea in observation 
--  [] add functions in guardar btn
--  [] add modal message whit status when click in buttons "Guardar" and "Cancelar"
+-  [X] add functions in "Cancelar" btn
+-  [ ] add textarea in observation 
+-  [ ] add functions in "Guardar" btn
+-  [ ] add modal message whit status when click in buttons "Guardar" and "Cancelar"

@@ -14,7 +14,7 @@ import {faMagnifyingGlass, faPlus, faPrint} from "@fortawesome/free-solid-svg-ic
 import MessageModal from '../../components/modals/messageModal/MessageModal';
 import {useState} from 'react';
 import {modal} from 'react-dom';
-import { createPortal } from 'react-dom'
+
 
 const Budget = () =>{
     const [modalOpen, setModalOpen] = useState(false);
@@ -25,11 +25,11 @@ const Budget = () =>{
         setModalOpen(true)
         const timer = setTimeout(() => {
             setModalOpen(false);
-                    }, 2500);
+                    }, 3500);
     }
 
-    function lento(){
-
+    function CloseMessageModal(){
+        setModalOpen(false);
     }
     
     
@@ -41,7 +41,7 @@ const Budget = () =>{
         <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"PRESUPUESTO"} btnBack={true}/>
-                {modalOpen && createPortal(<MessageModal >Impreso</MessageModal>,document.body)}
+                {modalOpen && (<MessageModal onClose={CloseMessageModal} >Impreso</MessageModal>)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>     
