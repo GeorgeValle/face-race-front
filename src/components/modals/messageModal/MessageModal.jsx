@@ -2,7 +2,7 @@
 import BtnClose from '../../btns/btnClose/BtnClose'
 import Style from './MessageModal.module.css'
 
-const MessageModal = ({children, onClose }) => {
+const MessageModal = ({messageModal, onClose }) => {
 return (
     <div className={Style.modal_container} onClick=
     {(e)=>{if(e.target.className === Style.modal_container){onClose()}}}>
@@ -12,7 +12,7 @@ return (
                     <BtnClose close={onClose}/>
                 </div>
                 <div className={Style.modal_content}>
-                    {children}
+                    <p>{messageModal}</p>
                 </div>
                 <div className={Style.modal_footer}>
                 </div>
