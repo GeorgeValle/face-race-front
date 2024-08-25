@@ -30,7 +30,7 @@
   .label {
     display: block;
     margin-bottom: .1px;
-     color: #05060f99;
+    color: #05060f99;
     transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
     color: #FFF;
     text-shadow: 2px 2px 2px  rgba(0, 0, 0, 0.65);
@@ -41,7 +41,6 @@
     font-style:normal;
     font-weight: 700;
     line-height:normal;
-
   }
   
   .inputText:hover{
@@ -51,7 +50,7 @@
   
 
   .inputText_group:hover .label, .input:focus {
-    color: #05060fc2;
+    color: #ccc;
   }
 
 .sizeS{

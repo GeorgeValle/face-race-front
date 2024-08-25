@@ -1,7 +1,7 @@
 ## Tasks description
 
-- config layout of components 
-- Add all btns, inputs and minibar
+- change config layout of components 
+- Add TextArea component "observacion:"
 
 
 ## Checklist
@@ -25,6 +25,7 @@
 -  [x] close this modal to onClick out the modal
 -  [X] add close function in close btn
 -  [X] add functions in "Cancelar" btn
--  [ ] add textarea in observation 
+-  [x] add textarea in "observation:" 
 -  [ ] add functions in "Guardar" btn
 -  [ ] add modal message whit status when click in buttons "Guardar" and "Cancelar"
+-  [ ] add form in modal_conten section
