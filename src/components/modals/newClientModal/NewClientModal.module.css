@@ -1,4 +1,5 @@
 .modal_container {
+    z-index: 2;
     display: flex;
     position: fixed;
     left: 0;
@@ -68,7 +69,49 @@
 
 .modal_content {
     padding-bottom: 2px;
+    margin-top:13px;
+    max-width: 994px;
+    display: grid;
+    grid:
+
+    "item1 item2 " .5fr
+
+    "item3 item4 " .5fr
+
+    "item5 item6 " .5fr
+
+    "item7 item8 " .5fr
+
+    "item9 item10" .5fr
+    "item11 item11" .5fr
+
+    / .5fr .5fr ;
+
+    gap: 10px;
 }
+
+
+.item1 { grid-area: item1; }
+
+.item2 { grid-area: item2; }
+
+.item3 { grid-area: item3; }
+
+.item4 { grid-area: item4; }
+
+.item5 { grid-area: item5; }
+
+.item6 { grid-area: item6; }
+
+.item7 { grid-area: item7; }
+
+.item8 { grid-area: item8; }
+
+.item9 { grid-area: item9; }
+
+.item10 { grid-area: item10; }
+
+.item11 { grid-area: item11; }
 
 
 .btn {
@@ -85,9 +128,14 @@
     display:flex;
     flex-wrap: nowrap;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: end;
     margin-top:15px;
     
+}
+
+.inputs{
+    display:flex;
+    justify-content: space-between;
 }
 
 .btn_submit {

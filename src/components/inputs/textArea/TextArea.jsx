@@ -1,13 +1,14 @@
-import React from 'react'
+import styleInput from './TextArea.module.css'
 
-const TextArea = () => {
+
+const TextArea = ({titleLabel="",nameLabel="", placeholderText="", sideLabel=false}) => {
     return (
         <>
-        <div className={`${styleInput.inputText_group} `}>
+        <div className={`${styleInput.inputText_group} ${sideLabel&&styleInput.side}`}>
             
                 <label className={`${styleInput.label}`}>{titleLabel}</label>
             
-            <textarea autoComplete="off" cols="30" rows="5" name={nameLabel} className={`${styleInput.inputText} ${size?styleInput.sizeS:styleInput.sizeM} `} type={typeInput} placeholder={placeholderText} />
+            <textarea autoComplete="off" cols="30" rows="5" name={nameLabel} className={`${styleInput.area}  `}  placeholder={placeholderText} />
         </div>
     </>    
     )

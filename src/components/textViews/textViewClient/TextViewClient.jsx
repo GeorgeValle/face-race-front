@@ -7,7 +7,7 @@ const TextViewClient = (TheClient) => {
         <table className={`${Style.table} ${Style.content}`}>
           <thead >
             <tr>
-              <th colspan="4">DATOS DEL CLIENTE</th>
+              <th colSpan="4">DATOS DEL CLIENTE</th>
             </tr>
           </thead>
           <tbody>
@@ -43,7 +43,7 @@ const TextViewClient = (TheClient) => {
             </tr>
             <tr>
               <th>Observación:</th>
-              <td colspan="3">{TheClient.obs}</td>
+              <td colSpan="3">{TheClient.obs}</td>
             </tr>
           </tbody>
         </table>
