@@ -1,13 +1,11 @@
 import Style from './EditClientModal.module.css'
 import MIniNavBar from '../../miniNavbar/MIniNavBar'
-import  TextInput from '../../inputs/textInput/TextInput'
+import TextInput from '../../inputs/textInput/TextInput'
 import TextArea from '../../inputs/textArea/TextArea'
 
 
 const EditClientModal = ({onSubmit, onCancel, onClose, client}) => {
 
-
-    
 
     return (
     <div className={Style.modal_container}  onClick={(e)=>{
@@ -55,7 +53,7 @@ const EditClientModal = ({onSubmit, onCancel, onClose, client}) => {
                 
             </div>
             <div className={Style.modal_buttons}>
-                <button className={`${Style.btn} ${Style.btn_submit}`} onClick={() => onSubmit()}>Editar </button>
+                <button className={`${Style.btn} ${Style.btn_submit}`} onClick={() => onSubmit("Cliente Actualizado")}>Editar </button>
                 <button className={`${Style.btn} ${Style.btn_cancel}`} onClick={() => onCancel()}>Cancelar </button>
             </div>
         </div>

@@ -41,7 +41,7 @@ const Budget = () =>{
         <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"PRESUPUESTO"} btnBack={true}/>
-                {modalOpen && (<MessageModal onClose={CloseMessageModal} >Impreso</MessageModal>)}
+                {modalOpen && (<MessageModal onClose={CloseMessageModal} messageModal={"Impreso"} />)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>     
