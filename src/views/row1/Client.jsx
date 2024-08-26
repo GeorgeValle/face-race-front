@@ -39,7 +39,15 @@ const Client = () => {
         const timer = setTimeout(() => {
             setModalOpenMessage(false);
                     }, 3500);
+    }
 
+    const handleSubmitNewClient=(messageModal)=>{
+        setMessage(messageModal);
+        setModalOpenNewModal(false);
+        setModalOpenMessage(true);
+        const timer = setTimeout(() => {
+            setModalOpenMessage(false);
+                    }, 3500);
     }
 
 
@@ -49,7 +57,7 @@ return (
             <Container>
                 <MiniNavBar miniTitle={"CLIENTE"} btnBack={true}/>
                 {modalOpenEditClient&&createPortal(<EditClientModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose} client={client1} />,document.body)}
-                {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={handleClose} onCancel={handleClose} onClose={handleClose} />,document.body)}
+                {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={handleSubmitNewClient} onCancel={handleClose} onClose={handleClose} />,document.body)}
                 {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
                 <article className={Style.content}>
                     <div className={Style.item1}>

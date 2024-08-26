@@ -1,7 +1,7 @@
-## Tasks description
+## Tasks description in NewClientModal
 
-- change config layout of components 
-- Add TextArea component "observacion:"
+- add modal message whit status when click in buttons "Guardar"
+
 
 
 ## Checklist
@@ -27,5 +27,5 @@
 -  [X] add functions in "Cancelar" btn
 -  [x] add textarea in "observation:" 
 -  [ ] add functions in "Guardar" btn
--  [ ] add modal message whit status when click in buttons "Guardar" and "Cancelar"
+-  [X] add modal message whit status when click in buttons "Guardar" and "Cancelar"
 -  [ ] add form in modal_conten section

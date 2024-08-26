@@ -53,7 +53,7 @@ const EditClientModal = ({onSubmit, onCancel, onClose, client}) => {
                 
             </div>
             <div className={Style.modal_buttons}>
-                <button className={`${Style.btn} ${Style.btn_submit}`} onClick={() => onSubmit("Cliente Actualizado")}>Editar </button>
+                <button className={`${Style.btn} ${Style.btn_submit}`} onClick={() => onSubmit("Datos de Cliente Actualizados")}>Editar </button>
                 <button className={`${Style.btn} ${Style.btn_cancel}`} onClick={() => onCancel()}>Cancelar </button>
             </div>
         </div>
