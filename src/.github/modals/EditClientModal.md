@@ -1,7 +1,6 @@
 ## Tasks description
 
-- change config layout of components 
-- Add TextArea component "observacion:"
+- Add MessageModal component for submit function
 
 
 ## Checklist
@@ -28,4 +27,4 @@
 -  [x] add textarea in "observation:" 
 -  [ ] add functions in "Editar" btn
 -  [ ] add modal message whit status when click in buttons "Editar" and "Cancelar"
--  [ ] add form in modal_conten section
+-  [X] add form in modal_conten section

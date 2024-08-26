@@ -51,7 +51,7 @@ const NewClientModal = ({onSubmit, onCancel, onClose }) =>{
                 
             </div>
             <div className={Style.modal_buttons}>
-                <button className={`${Style.btn} ${Style.btn_submit}`} onClick={() => onSubmit()}>Guardar </button>
+                <button className={`${Style.btn} ${Style.btn_submit}`} onClick={() => onSubmit("Datos de Cliente Guardados")}>Guardar </button>
                 <button className={`${Style.btn} ${Style.btn_cancel}`} onClick={() => onCancel()}>Cancelar </button>
             </div>
         </div>
