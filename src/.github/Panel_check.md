@@ -1,8 +1,7 @@
 ## Tasks description
 
-- Creat view Panel
-- Add button Quit "Salir" 
-- add buttons about areas. 
+- changes all buttons icons
+
 
 ## Checklist
 
@@ -11,5 +10,5 @@
 -  [x] Add button Quit in the navigation of minibar
 -  [x] Add inputtext "Email / Usuario"
 -  [x] navigate to all areas
--  [] changes all buttons icons
+-  [x] changes all buttons icons
 -  [] add link in all btns
