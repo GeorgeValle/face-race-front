@@ -26,7 +26,7 @@ const Panel = () =>{
                         </BtnVioletPanel> 
                     </div>
                     <div className={Style.item3}>
-                        <BtnVioletPanel title={"Cobrar"}  rightColor={true}>
+                        <BtnVioletPanel title={"Cobrar"} path={"/register_cash"}  rightColor={true}>
                             <FontAwesomeIcon icon={faCashRegister} size="lg" />
                         </BtnVioletPanel>
                     </div>
