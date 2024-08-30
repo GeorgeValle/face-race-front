@@ -7,6 +7,7 @@ import Lost_Password from './views/auth/Lost_Password.jsx'
 import Panel from './views/panel/Panel.jsx'
 import Budget from './views/row1/Budget.jsx'
 import Client from './views/row1/Client.jsx'
+import RegisterCash from './views/row1/RegisterCash.jsx'
 //import BodyPlane from './components/common/BodyPlane.jsx'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="/panel" element={<Panel/>}/>
             <Route path="/budget" element={<Budget/>} />
             <Route path="/client" element={<Client/>} />
+            <Route path="/register_cash" element={<RegisterCash/>} />
 
             {/* <Route path="/" element={<HomeView/>}/>
             <Route path="/wiki_ideas_front/" element={<Navigate to="/"/>}/>

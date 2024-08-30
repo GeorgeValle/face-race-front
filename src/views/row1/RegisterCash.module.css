@@ -1,0 +1,45 @@
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.article {
+    display: flex;
+    justify-content: flex-start;
+    align-content: flex-start;
+    margin-right: 9px;
+}
+
+.content {
+    margin-top: 20px;
+    display: grid;
+
+    grid:
+        "item1" "item5" auto 
+        "item2" "item5" auto 
+        "item3" "item5" auto 
+        "item4" "item5" auto
+        / 1fr 0.7fr;
+    gap: 8px;
+}
+
+.item1 {
+    grid-area: item1;
+}
+
+.item2 {
+    grid-area: item2;
+}
+
+.item3 {
+    grid-area: item3;
+}
+
+.item4 {
+    grid-area: item4;
+}
+
+.item5 {
+    grid-area: item5;
+    
+}
