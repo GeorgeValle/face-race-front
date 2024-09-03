@@ -13,25 +13,27 @@
 .content {
     margin-top: 20px;
     display: grid;
-
-    grid:
-        "item1" "item5" auto 
-        "item2" "item5" auto 
-        "item3" "item5" auto 
-        "item4" "item5" auto
-        / 1fr 0.7fr;
+    grid-template-columns: 2fr 1fr;
+    /* background-color: aquamarine; */
+    /* gap: 2px 3px;  */
+    /* grid:
+        "item1" "item5" 1fr 
+        "item2" "item5" 1fr 
+        "item3" "item5" 2fr 
+        "item4" "item5" 2fr
+        / 0.5fr 0.7fr; */
     gap: 8px;
 }
 
-.item1 {
-    grid-area: item1;
+.column1 {
+    background-color: transparent;
 }
 
-.item2 {
-    grid-area: item2;
+.column2 {
+    background-color: transparent;
 }
 
-.item3 {
+/* .item3 {
     grid-area: item3;
 }
 
@@ -42,4 +44,4 @@
 .item5 {
     grid-area: item5;
     
-}
+} */

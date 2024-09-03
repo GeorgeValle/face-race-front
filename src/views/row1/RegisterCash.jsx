@@ -7,23 +7,18 @@ import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputSt
 import MidTotal from '../../components/totals/midTotal/MidTotal'
 import Style from './RegisterCash.module.css'
 
+
 const RegisterCash = () => {
     return (
         <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"Caja"} btnBack={true}/>
                 <article className={Style.content}>
-                <div className={Style.item1}>
-                    <TextInputStyled/>
+                <div className={Style.column1}>
+                    <TextInputStyled/> <TextInputStyled/>
                 </div>
-                <div className={Style.item2}>
-                </div>
-                <div className={Style.item3}>
-                </div>
-                <div className={Style.item4}>
-                </div>
-                <div className={Style.item5}>
-                
+                <div className={Style.column2}>
+                <MidTotal/>
                 </div>
                     
                 </article>
