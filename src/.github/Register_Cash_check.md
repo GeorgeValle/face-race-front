@@ -1,8 +1,9 @@
 ## Tasks description in view register Cash
 
-- Add MidTotal Component
-- Add StyledInput
-- Add layout
+- Add StyledInput "Código de barras" Component
+- Add StyledInput "Cantidad"
+- Add button "Agregar +"
+- Add button "Precio $"
 
 ## Checklist
 
@@ -13,10 +14,10 @@
 -  [ ] Add button "Cobrar"
 -  [ ] Add button "Nuevo Cliente"
 -  [ ] Add button "Nueva Venta"
--  [ ] Add StyledInput "Código de barras"
--  [ ] Add StyledInput "Cantidad"
--  [ ] Add button "Agregar +"
--  [ ] Add button "Precio $"
+-  [x] Add StyledInput "Código de barras"
+-  [x] Add StyledInput "Cantidad"
+-  [x] Add button "Agregar +"
+-  [x] Add button "Precio $"
 -  [ ] Add table of items
 -  [ ] Add Dropbox "Fecha"
 -  [ ] Add Dropbox "Tipo"

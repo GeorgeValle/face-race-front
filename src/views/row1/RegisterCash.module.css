@@ -33,6 +33,20 @@
     background-color: transparent;
 }
 
+.row1, .row2 .row3{
+    display:flex;
+}
+
+
+.btnLayout{
+    margin-top:30px;
+    padding-right: 10px;
+    padding-left: 10px;;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
 /* .item3 {
     grid-area: item3;
 }
