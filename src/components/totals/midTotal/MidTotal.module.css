@@ -1,8 +1,8 @@
 
 .midTotal{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-rows:  20%  20%  60%;
+    justify-items:center;
     width: 374px;
     height: 216px;
     flex-shrink: 0;
@@ -12,24 +12,37 @@
     box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.25);
     padding: 0px 6px 0px 6px;
     margin: 2px 7px 2px 7px;
-
 }
 
 .subtotal{
+    width: 100%;
+    height: 100%;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
     color: #61E651;
     text-align: center;
     font-family: "Roboto";
-    font-size: 35px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-}
+} 
 
 .descuento{
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    align-content: flex-start;
     color: #fff;
 }
 
 .totals{
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    align-items: end;
     color: #61E651;
+    font-size: 20px;
 }
 

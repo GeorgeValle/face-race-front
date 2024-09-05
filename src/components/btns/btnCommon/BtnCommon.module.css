@@ -1,11 +1,12 @@
 .btn {
-    width: 159px;
+    width: 162px;
     height: 50px;
     background: linear-gradient(90deg, #E65152 0%, #E651AC 100%);
     border-radius: 15px;
     padding: 15px 25px;
     border: .5px solid #E65152;
-    box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.35);  
+    box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.35); 
+    margin-left: 10px; 
 }
 
 .btRed{
@@ -31,3 +32,4 @@
     font-weight: 700;
     line-height: normal;
 }
+
