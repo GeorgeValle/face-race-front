@@ -7,10 +7,26 @@ import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputSt
 import MidTotal from '../../components/totals/midTotal/MidTotal'
 import Style from './RegisterCash.module.css'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faPlus} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faUserPlus, faWallet,faXmark} from "@fortawesome/free-solid-svg-icons";
+import { TableQuotation } from '../../components/tables/tableQuotation/TableQuotation'
+import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge'
 
+
+const item1 =[
+    {code:323434,item:"Zapatillas Casual para motocicletas",quantity:2,price:"12,00",amount:54.45},
+    {code:323434,item:"Camperas para motocicletas",quantity:2,price:12000.00,amount:12000.00},
+    {code:1,item:"",quantity:0,price:0.00,amount:0.00},
+    {code:2,item:"",quantity:0,price:0.00,amount:0.00},
+    {code:3,item:"",quantity:0,price:0.00,amount:0.00}
+
+]
 
 const RegisterCash = () => {
+    
+    const handleBill = () =>{
+
+    }
+
     return (
         <div className={Style.mainContainer}>
             <Container>
@@ -27,7 +43,7 @@ const RegisterCash = () => {
                         
                     </div>
                     <div className={Style.row2}>
-
+                    <TableQuotation rows={item1} size={true} />
                     </div>
                     <div className={Style.row3}>
 
@@ -36,6 +52,13 @@ const RegisterCash = () => {
                 </div>
                 <div className={Style.column2}>
                 <MidTotal/>
+                    <div className={Style.BtnLarge}>
+                        <BtnVioletLarge onClick={handleBill} >Cobrar <FontAwesomeIcon icon={faWallet}/></BtnVioletLarge>
+                    </div>
+                    <div className={Style.BtnsShort}>
+                        <BtnCommon title={"Cliente "} colorViolet={true}><FontAwesomeIcon icon={faUserPlus}/></BtnCommon>
+                        <BtnCommon title={"Cancelar "} colorRed={true}> <FontAwesomeIcon icon={faXmark}/> </BtnCommon>
+                    </div>
                 </div>
                     
                 </article>

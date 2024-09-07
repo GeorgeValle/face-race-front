@@ -47,6 +47,18 @@
     justify-content: flex-start;
 }
 
+.BtnLarge{
+    width: 400px;
+    margin-top: 10px;
+}
+
+.BtnsShort{
+    width: 400px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
 /* .item3 {
     grid-area: item3;
 }
