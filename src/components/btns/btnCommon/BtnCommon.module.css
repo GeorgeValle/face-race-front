@@ -23,6 +23,8 @@
 
 
 
+
+
 .texts, .icon{
     color: #ffffff;
     text-align: center;
@@ -31,5 +33,9 @@
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+}
+
+.texts:hover{
+    color: #ccc;
 }
 
