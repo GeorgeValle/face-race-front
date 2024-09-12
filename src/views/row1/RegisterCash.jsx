@@ -1,15 +1,17 @@
-import React from 'react'
-import Container from '../../components/container/Container'
-import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
+import Container from '../../components/container/Container';
+import MiniNavBar from '../../components/miniNavbar/MIniNavBar';
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
-import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
-import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
-import MidTotal from '../../components/totals/midTotal/MidTotal'
-import Style from './RegisterCash.module.css'
+import BtnCommon from '../../components/btns/btnCommon/BtnCommon';
+import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled';
+import MidTotal from '../../components/totals/midTotal/MidTotal';
+import Style from './RegisterCash.module.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faPlus, faUserPlus, faWallet,faXmark} from "@fortawesome/free-solid-svg-icons";
-import { TableQuotation } from '../../components/tables/tableQuotation/TableQuotation'
-import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge'
+import { TableQuotation } from '../../components/tables/tableQuotation/TableQuotation';
+import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge';
+import InputDate from '../../components/inputs/inputDate/InputDate';
+import TextArea from '../../components/inputs/textArea/TextArea';
+import TextInput from '../../components/inputs/textInput/TextInput';
 
 
 const item1 =[
@@ -38,7 +40,7 @@ const RegisterCash = () => {
                         <TextInputStyled titleLabel={"Cantidad"} nameLabel={"cantidad"} placeholderText={"Ej: 12"} typeInput="number"/>
                         <div className={Style.btnLayout}>
                             <BtnCommon title={"Agregar"} colorViolet={true}> <FontAwesomeIcon icon={faPlus} /> </BtnCommon>
-                            <BtnCommon title={"Ver Precio"} colorViolet={true}> $</BtnCommon>
+                            <BtnCommon title={"Precio"} colorViolet={true}> $</BtnCommon>
                         </div>
                         
                     </div>
@@ -46,9 +48,19 @@ const RegisterCash = () => {
                     <TableQuotation rows={item1} size={true} />
                     </div>
                     <div className={Style.row3}>
+                        <div>
+                        <InputDate side={false} titleLabel={"Fecha:"} ></InputDate>
 
-                    </div>
+                        </div>
+                        <div className={Style.area1}>
+                        <TextArea titleLabel={"Observaciones:"} nameLabel={"observaciones"} placeholderText={"* Opcional: Detalles varios"} sideLabel={true}/>
+                        </div>
                     
+                    </div>
+                    <div className={Style.row4}>
+                    <TextInput  typeInput={"text"} isLabel={true} titleLabel={"Cliente:"} nameLabel={"cliente"} placeholderText={"Ej: Juan Gomez"} sideLabel={true} data={null} />
+                    <TextInput  typeInput={"number"} isLabel={true} titleLabel={"DNI / CUIT:"} nameLabel={"dni"} placeholderText={"Ej: 40112233"} sideLabel={true} data={null}/>
+                    </div>
                 </div>
                 <div className={Style.column2}>
                 <MidTotal/>
@@ -60,7 +72,7 @@ const RegisterCash = () => {
                         <BtnCommon title={"Cancelar "} colorRed={true}> <FontAwesomeIcon icon={faXmark}/> </BtnCommon>
                     </div>
                 </div>
-                    
+                
                 </article>
             </Container>
         </div>
