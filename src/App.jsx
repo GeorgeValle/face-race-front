@@ -1,5 +1,5 @@
 //import { useState } from 'react'
-import {Navigate, BrowserRouter, Route, Routes} from 'react-router-dom'
+import { Navigate, BrowserRouter, Route, Routes } from 'react-router-dom'
 import MainNavBar from './components/mainNavBar/MainNavBar.jsx'
 import Logout from './views/auth/Logout.jsx'
 import Login from './views/auth/Login.jsx'
@@ -19,17 +19,16 @@ const App = () => {
 
   return (
     <>
-
-<BrowserRouter>
-    <MainNavBar></MainNavBar>
-  <Routes>
+        <BrowserRouter>
+          <MainNavBar></MainNavBar>
+          <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/lost_password" element={<Lost_Password/>}/>
-            <Route path="/logout" element={<Logout/>}/>
-            <Route path="/panel" element={<Panel/>}/>
-            <Route path="/budget" element={<Budget/>} />
-            <Route path="/client" element={<Client/>} />
-            <Route path="/register_cash" element={<RegisterCash/>} />
+            <Route path="/lost_password" element={<Lost_Password />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/panel" element={<Panel />} />
+            <Route path="/budget" element={<Budget />} />
+            <Route path="/client" element={<Client />} />
+            <Route path="/register_cash" element={<RegisterCash />} />
 
             {/* <Route path="/" element={<HomeView/>}/>
             <Route path="/wiki_ideas_front/" element={<Navigate to="/"/>}/>
@@ -37,13 +36,10 @@ const App = () => {
             {/* <Route path="/articles/:id" element={<ArticleView/>}/>
             <Route path="/edit/:id" element={<Edit/>}/> */}
             {/* <Route path="*" element={<HomeView/>}/> */}
-            
-  </Routes>
-          
-  </BrowserRouter>
-      
+
+          </Routes>
+        </BrowserRouter>
       {/* <h1>Vite + React</h1> */}
-      
     </>
   )
 }
