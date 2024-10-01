@@ -1,7 +1,7 @@
 import styleInput from './TextInputStyled.module.css'
 
 
-const TextInputStyled = ({typeInput="text", titleLabel="", nameLabel="", placeholderText="", size=true }) => {
+const TextInputStyled = ({typeInput="text", titleLabel="", nameLabel="", placeholderText="", size=true, onChange=null, value="" }) => {
 
     return (
         <>
@@ -9,7 +9,7 @@ const TextInputStyled = ({typeInput="text", titleLabel="", nameLabel="", placeho
                 
                     <label className={`${styleInput.label}`}>{titleLabel}</label>
                 
-                <input autoComplete="off" name={nameLabel} className={`${styleInput.inputText} ${size?styleInput.sizeS:styleInput.sizeM} `} type={typeInput} placeholder={placeholderText} />
+                <input autoComplete="off" name={nameLabel} className={`${styleInput.inputText} ${size?styleInput.sizeS:styleInput.sizeM} `} type={typeInput} placeholder={placeholderText} value={value} onChange={onChange}/>
             </div>
         </>    
         

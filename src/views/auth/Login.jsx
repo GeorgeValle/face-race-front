@@ -10,27 +10,34 @@ import axios from 'axios'
 import { useDispatch } from "react-redux";
 import { addUser } from "../../redux/UserSlice";
 
+
 const Login = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    
 
-    const handleSubmit = async (e) =>{
+    const handleLoginEvent = async (e) => {
         e.preventDefault();
-            try{
-                await axios.post('http://localhost:8080/api/session/login', {
-                    email: user.email,
-                    pasword: user.password
+        try {
+            setError("")
+            const request = await axios.post('http://localhost:8080/api/session/login', {
+                    email: email,
+                    password: password
                 })
-                .then((response)=>response.json)
-                .then((data)=>dispatch(addUser(data)))
-                .catch((error)=>console.log(error))
-            }catch(error){
-                console.log(error);
-            }
-        navigate('/panel')
+                const response =  request.data;
+                dispatch(addUser(response.user))
+                navigate('/panel')
+                //console.log(response.user.access)
+
+        } catch (er) {
+            setError(er);
+
+        }
+        
     }
 
 
@@ -40,18 +47,19 @@ const Login = () => {
         <div style={{ width: "876px", heigth: "700px", margin: "auto" }}>
             <Container>
                 <MiniNavBar miniTitle={"BIENVENIDO"} />
-                <form>
+                <form onSubmit={handleLoginEvent}>
                     <article className={Style.content}>
                         <div className={Style.item1}>
-                            <TextInput typeInput={"email"} isLabel={true} titleLabel={"Email"} nameLabel={"email"} value={email}  placeholderText={"micorreo@gmail.com"} onChange={(e)=>setEmail(e.target.value)} />
+                            <TextInput typeInput={"email"} isLabel={true} titleLabel={"Email"} nameLabel={"email"} value={email} placeholderText={"micorreo@gmail.com"} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                         <div className={Style.item2}>
-                            <TextInput typeInput={"password"} isLabel={true} titleLabel={"Contraseña"} value={password} nameLabel={"password"} placeholderText={"***********"} onChange={(e)=>setPassword(e.target.value)} />
+                            <TextInput typeInput={"password"} isLabel={true} titleLabel={"Contraseña"} value={password} nameLabel={"password"} placeholderText={"***********"} onChange={(e) => setPassword(e.target.value)} />
                         </div>
                         <div className={Style.item3}>
-                            { <BtnVioletLarge onClick={()=>handleSubmit /*() => navigate('/panel')*/}>Iniciar Sesión</BtnVioletLarge> }
+                            {<BtnVioletLarge  btnType={"submit"}>Iniciar Sesión</BtnVioletLarge>}
                         </div>
                         <div className={Style.item4}>
+                            {error&&(<p className={Style.item5}>Usuario o contraseña incorrectos</p>)}
                             <LinkCommon>¿Has olvidado la contraseña?</LinkCommon>
                         </div>
                     </article>

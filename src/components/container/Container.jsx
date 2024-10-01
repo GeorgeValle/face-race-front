@@ -2,7 +2,7 @@ import ContainerStyles from './Container.module.css'
 
 
 
-const Container = ({ children}) => {
+const Container = ({children}) => {
     
 
     return (
