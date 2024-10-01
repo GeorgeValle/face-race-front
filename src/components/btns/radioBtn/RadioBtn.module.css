@@ -1,0 +1,15 @@
+.label {
+    display: flex;
+    margin-bottom: .3rem;
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+    color: #FFF;
+    text-shadow: 7px 6px 6px 0px rgba(0, 0, 0, 0.35);
+    -webkit-text-stroke-width: .5px;
+    -webkit-text-stroke-color: #000000;
+    font-family: "Roboto";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+

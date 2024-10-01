@@ -34,7 +34,6 @@ const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=fal
                 {
                     btnClose && <BtnClose close={close}/>
                 }
-
             </nav>
         </>    
         

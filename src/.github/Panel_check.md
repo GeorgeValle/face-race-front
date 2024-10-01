@@ -1,8 +1,6 @@
 ## Tasks description in Panel View
 
-- change all buttons icons
-- add shadows in text and icons
-- change layout icons in btns
+- add function logout
 
 
 ## Checklist
@@ -12,4 +10,7 @@
 -  [x] Add button Quit in the navigation of minibar
 -  [x] Add buttons links
 -  [x] change all buttons icons
--  [] add link in all btns
+-  [X] add link in btns not disabled
+-  [ ] add link in all btns
+-  [X] add function logout
+

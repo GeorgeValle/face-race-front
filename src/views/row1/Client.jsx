@@ -7,7 +7,7 @@ import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
 import Style from './Client.module.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faMagnifyingGlass, faPlus, faPencil} from "@fortawesome/free-solid-svg-icons"
 import TextViewClient from '../../components/textViews/textViewClient/TextViewClient'
@@ -15,6 +15,7 @@ import NewClientModal from '../../components/modals/newClientModal/NewClientModa
 import { createPortal } from 'react-dom'
 import EditClientModal from '../../components/modals/editClientModal/EditClientModal'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
+import {useFetchGet} from '../../hooks/UseFetchGet'
 
 
 
@@ -23,13 +24,56 @@ const Client = () => {
     const [modalOpenEditClient, setModalOpenEditClient] = useState(false);
     const [message, setMessage] = useState("");
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
+    const [dni, setDni] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [client, setClient] = useState({});
 
     const client1={id:1,name:"Victor",surname:"Perez",date:"",email:"losespinos@gmail.com",dni:23456789,phone:3514585956,cel:234564554,address:"Pino 134",city:"Santa Fe",province:"Santa Fe" ,cp:"2542",obs:"Es un nuevo cliente"}
     
+    //const { data, loading: fetchLoading, error: fetchError } = useFetchGet(`http://localhost:8080/api/client/dni/${dni}`);
+
+    // useEffect(() => {
+    //     setLoading(fetchLoading);
+    //     setError(fetchError);
+    //     setClient(data);
+    // }, [data, fetchLoading, fetchError]);
+
+
+    useEffect(() => {
+        setLoading(true)
+        fetch(`http://localhost:8080/api/client/dni/${dni}`)
+            .then((response) => response.json())
+            .then((json) => setClient(json))
+            .catch((error) => setError(error))
+            .finally(() => setLoading(false));
+            console.log(client)
+    }, [dni]);
+
+
     const handleClose=()=>{
         setModalOpenNewModal(false);
         setModalOpenEditClient(false);
         setModalOpenMessage(false);
+    }
+
+    const handleSubmitDNI=(e)=>{
+        e.preventDefault();
+        //const {data, error, loading} = useFetchGet(`http://localhost:8080/api/client/dni/${dni}`)
+
+        useEffect(() => {
+            setLoading(true)
+            fetch(`http://localhost:8080/api/client/dni/${dni}`)
+                .then((response) => response.json())
+                .then((json) => setClient(json))
+                .catch((error) => setError(error))
+                .finally(() => setLoading(false));
+        }, []);
+
+        // setLoading(loading);
+        // setError(error);
+        // setClient(data);
+
     }
 
     const handleSubmitEdit=(messageModal)=>{
@@ -67,10 +111,10 @@ return (
                                 <article className={Style.separate}>
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
-                                    <div className={Style.article}>
-                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" />
-                                        <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
-                                    </div>
+                                    <form className={Style.article} onSubmit={handleSubmitDNI}>
+                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" value={dni} onChange={(e) => setDni(e.target.value)} />
+                                        <MiniBtn btnType={"submit"} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                    </form>
                                     <div className={Style.article}>
                                         <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} />
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
@@ -87,7 +131,7 @@ return (
                         </article>
                     </div>
                     <div className={Style.item2}>
-                        <TextViewClient />
+                        <TextViewClient TheClient={client} />
                     </div>
                     <div className={Style.item3}>
                         <article>

@@ -33,7 +33,7 @@ const TextViewClient = (TheClient) => {
               <th>Provincia:</th>
               <td>{TheClient.province}</td>
               <th>Código Postal:</th>
-              <td>{TheClient.cp}</td>
+              <td>{TheClient.postalCode}</td>
             </tr>
             <tr>
               <th>Teléfono:</th>
@@ -43,7 +43,7 @@ const TextViewClient = (TheClient) => {
             </tr>
             <tr>
               <th>Observación:</th>
-              <td colSpan="3">{TheClient.obs}</td>
+              <td colSpan="3">{TheClient.description}</td>
             </tr>
           </tbody>
         </table>
