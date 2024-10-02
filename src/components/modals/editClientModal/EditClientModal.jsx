@@ -39,7 +39,7 @@ const EditClientModal = ({onSubmit, onCancel, onClose, client}) => {
                     <TextInput  typeInput={"text"} isLabel={true} titleLabel={"Provincia:"} nameLabel={"province"} placeholderText={"Ej: Santa Fe"} sideLabel={true} data={client.province}/>
                 </div>
                 <div className={Style.item8}>
-                    <TextInput  typeInput={"number"} isLabel={true} titleLabel={"Código Postal:"} nameLabel={"cp"} placeholderText={"Ej: 1251"} sideLabel={true} data={client.cp}/>
+                    <TextInput  typeInput={"number"} isLabel={true} titleLabel={"Código Postal:"} nameLabel={"postalCode"} placeholderText={"Ej: 1251"} sideLabel={true} data={client.postalCode}/>
                 </div>
                 <div className={Style.item9}>
                     <TextInput  typeInput={"number"} isLabel={true} titleLabel={"Teléfono:"} nameLabel={"phone"} placeholderText={"Ej: 4568569"} sideLabel={true} data={client.phone}/>   
@@ -48,7 +48,7 @@ const EditClientModal = ({onSubmit, onCancel, onClose, client}) => {
                     <TextInput  typeInput={"number"} isLabel={true} titleLabel={"Celular:"} nameLabel={"cel"} placeholderText={"Ej: 3426859647"} sideLabel={true} data={client.cel}/>
                 </div>
                 <div className={Style.item11}>
-                    <TextArea titleLabel={"Observaciones:"} nameLabel={"observaciones"} placeholderText={"* Opcional: Detalles varios"} data={client.obs}/>
+                    <TextArea titleLabel={"Observaciones:"} nameLabel={"description"} placeholderText={"* Opcional: Detalles varios"} data={client.description}/>
                 </div>
                 
             </div>

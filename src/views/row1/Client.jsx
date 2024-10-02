@@ -28,8 +28,10 @@ const Client = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [client, setClient] = useState({});
+    const [inputDNI, setInputDNI] = useState("");
+    const [results, setResults] = useState([]);
 
-    const client1={id:1,name:"Victor",surname:"Perez",date:"",email:"losespinos@gmail.com",dni:23456789,phone:3514585956,cel:234564554,address:"Pino 134",city:"Santa Fe",province:"Santa Fe" ,cp:"2542",obs:"Es un nuevo cliente"}
+    //const client1={_id:1,name:"Victor",surname:"Perez",email:"losespinos@gmail.com",dni:23456789,phone:3514585956,cel:234564554,address:"Pino 134",city:"Santa Fe",province:"Santa Fe" ,postalCode:"2542",description:"Es un nuevo cliente"}
     
     //const { data, loading: fetchLoading, error: fetchError } = useFetchGet(`http://localhost:8080/api/client/dni/${dni}`);
 
@@ -39,16 +41,21 @@ const Client = () => {
     //     setClient(data);
     // }, [data, fetchLoading, fetchError]);
 
+    
 
-    useEffect(() => {
+
+    
+    const fetchClient = async() => {
+        if(inputDNI){
         setLoading(true)
-        fetch(`http://localhost:8080/api/client/dni/${dni}`)
+        await fetch(`http://localhost:8080/api/client/dni/${inputDNI}`)
             .then((response) => response.json())
             .then((json) => setClient(json))
             .catch((error) => setError(error))
             .finally(() => setLoading(false));
-            console.log(client)
-    }, [dni]);
+        }
+            
+    }
 
 
     const handleClose=()=>{
@@ -57,24 +64,6 @@ const Client = () => {
         setModalOpenMessage(false);
     }
 
-    const handleSubmitDNI=(e)=>{
-        e.preventDefault();
-        //const {data, error, loading} = useFetchGet(`http://localhost:8080/api/client/dni/${dni}`)
-
-        useEffect(() => {
-            setLoading(true)
-            fetch(`http://localhost:8080/api/client/dni/${dni}`)
-                .then((response) => response.json())
-                .then((json) => setClient(json))
-                .catch((error) => setError(error))
-                .finally(() => setLoading(false));
-        }, []);
-
-        // setLoading(loading);
-        // setError(error);
-        // setClient(data);
-
-    }
 
     const handleSubmitEdit=(messageModal)=>{
         setMessage(messageModal);
@@ -111,10 +100,10 @@ return (
                                 <article className={Style.separate}>
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
-                                    <form className={Style.article} onSubmit={handleSubmitDNI}>
-                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" value={dni} onChange={(e) => setDni(e.target.value)} />
-                                        <MiniBtn btnType={"submit"} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
-                                    </form>
+                                    <div className={Style.article} >
+                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" value={inputDNI} onChange={(e) =>setInputDNI(e.target.value)} />
+                                        <MiniBtn onClick={fetchClient} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                    </div>
                                     <div className={Style.article}>
                                         <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} />
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
@@ -131,7 +120,13 @@ return (
                         </article>
                     </div>
                     <div className={Style.item2}>
-                        <TextViewClient TheClient={client} />
+                        
+                            
+                            {/* <TextViewClient TheClient={client1} /> */}
+                            {
+                            client &&<TextViewClient TheClient={client}/>
+                            }
+                        
                     </div>
                     <div className={Style.item3}>
                         <article>

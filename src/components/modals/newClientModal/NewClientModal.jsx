@@ -9,7 +9,7 @@ const NewClientModal = ({onSubmit, onCancel, onClose }) =>{
     <div className={Style.modal_container}  onClick={(e)=>{
         if(e.target.className === Style.modal_container){onClose()}}
     }>  
-        <div className={Style.modal}>
+        <form className={Style.modal} onSubmit={() => onSubmit("Datos de Cliente Guardados")}>
             <div className={Style.modal_header}>
                 <MIniNavBar miniTitle={"Nuevo Cliente"} btnClose={true} close={onClose} />
             </div>
@@ -37,7 +37,7 @@ const NewClientModal = ({onSubmit, onCancel, onClose }) =>{
                     <TextInput  typeInput={"text"} isLabel={true} titleLabel={"Provincia:"} nameLabel={"province"} placeholderText={"Ej: Santa Fe"} sideLabel={true} />
                 </div>
                 <div className={Style.item8}>
-                    <TextInput  typeInput={"number"} isLabel={true} titleLabel={"Código Postal:"} nameLabel={"cp"} placeholderText={"Ej: 1251"} sideLabel={true} />
+                    <TextInput  typeInput={"number"} isLabel={true} titleLabel={"Código Postal:"} nameLabel={"postalCode"} placeholderText={"Ej: 1251"} sideLabel={true} />
                 </div>
                 <div className={Style.item9}>
                     <TextInput  typeInput={"number"} isLabel={true} titleLabel={"Teléfono:"} nameLabel={"phone"} placeholderText={"Ej: 4568569"} sideLabel={true} />    
@@ -46,15 +46,15 @@ const NewClientModal = ({onSubmit, onCancel, onClose }) =>{
                     <TextInput  typeInput={"number"} isLabel={true} titleLabel={"Celular:"} nameLabel={"cel"} placeholderText={"Ej: 3426859647"} sideLabel={true} />
                 </div>
                 <div className={Style.item11}>
-                    <TextArea titleLabel={"Observaciones:"} nameLabel={"observaciones"} placeholderText={"* Opcional: Detalles varios"}  />
+                    <TextArea titleLabel={"Observaciones:"} nameLabel={"description"} placeholderText={"* Opcional: Detalles varios"}  />
                 </div>
                 
             </div>
             <div className={Style.modal_buttons}>
-                <button className={`${Style.btn} ${Style.btn_submit}`} onClick={() => onSubmit("Datos de Cliente Guardados")}>Guardar </button>
+                <button type="submit" className={`${Style.btn} ${Style.btn_submit}`} >Guardar </button>
                 <button className={`${Style.btn} ${Style.btn_cancel}`} onClick={() => onCancel()}>Cancelar </button>
             </div>
-        </div>
+        </form>
     </div>
 );
 };

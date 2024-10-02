@@ -1,7 +1,7 @@
 
 import Style from './TextViewClient.module.css'
 
-const TextViewClient = (TheClient) => {
+const TextViewClient = ({TheClient}) => {
   return (
     <div className={Style.client}>
         <table className={`${Style.table} ${Style.content}`}>
