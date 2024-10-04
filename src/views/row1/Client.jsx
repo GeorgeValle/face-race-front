@@ -15,21 +15,30 @@ import NewClientModal from '../../components/modals/newClientModal/NewClientModa
 import { createPortal } from 'react-dom'
 import EditClientModal from '../../components/modals/editClientModal/EditClientModal'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
-import {useFetchGet} from '../../hooks/UseFetchGet'
+// import {useFetchGet} from '../../hooks/UseFetchGet'
+import { useDispatch } from "react-redux";
+import { addClient, changeClient, deleteClient  } from "../../redux/ClientSlice";
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 
 
 const Client = () => {
+
+    
+
     const [modalOpenNewClient, setModalOpenNewModal] = useState(false);
     const [modalOpenEditClient, setModalOpenEditClient] = useState(false);
     const [message, setMessage] = useState("");
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
-    const [dni, setDni] = useState("");
+    //const [cliente, setCliente] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [client, setClient] = useState({});
     const [inputDNI, setInputDNI] = useState("");
-    const [results, setResults] = useState([]);
+    const client = useSelector((state)=> state.client);
+    
+    
+    const dispatch = useDispatch();
 
     //const client1={_id:1,name:"Victor",surname:"Perez",email:"losespinos@gmail.com",dni:23456789,phone:3514585956,cel:234564554,address:"Pino 134",city:"Santa Fe",province:"Santa Fe" ,postalCode:"2542",description:"Es un nuevo cliente"}
     
@@ -42,20 +51,43 @@ const Client = () => {
     // }, [data, fetchLoading, fetchError]);
 
     
-
-
     
-    const fetchClient = async() => {
-        if(inputDNI){
-        setLoading(true)
-        await fetch(`http://localhost:8080/api/client/dni/${inputDNI}`)
-            .then((response) => response.json())
-            .then((json) => setClient(json))
-            .catch((error) => setError(error))
-            .finally(() => setLoading(false));
-        }
+
+   
+        const fetchClient = async() => {
+        
+            // setLoading(true)
+            // await fetch(`http://localhost:8080/api/client/dni/${inputDNI}`)
+            //     .then((response) => response.json())
+            //     .then((json) => dispatch(addClient(json)))
+            //     .catch((error) => setError(error))
+            //     .finally(() => setLoading(false)); 
+            try{
+                const request = await axios.get((`http://localhost:8080/api/client/dni/${inputDNI}`))
+                const response = request.data
+                dispatch(addClient(response.client))
+            }catch(error){
+                setMessage("Cliente NO encontrado")
+                setModalOpenMessage(true)
+                const timer = setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);
+            }
             
-    }
+            
+
+
+            // const request = await axios.post('http://localhost:8080/api/session/login', {
+            //     email: email,
+            //     password: password
+            // })
+            // const response =  request.data;
+            // dispatch(addUser(response.user))
+            // navigate('/panel')
+        }
+
+   
+    
 
 
     const handleClose=()=>{
@@ -65,32 +97,57 @@ const Client = () => {
     }
 
 
-    const handleSubmitEdit=(messageModal)=>{
-        setMessage(messageModal);
+    const handleSubmitEdit=()=>{
+        
         setModalOpenEditClient(false);
         setModalOpenMessage(true);
-        const timer = setTimeout(() => {
-            setModalOpenMessage(false);
-                    }, 3500);
+                    setMessage("Cliente Editado")
+                setModalOpenMessage(true)
+                const timer = setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);
     }
 
-    const handleSubmitNewClient=(messageModal)=>{
-        setMessage(messageModal);
+    const handleSubmitNewClient= (message)=>{
+        
+        setMessage(message);
         setModalOpenNewModal(false);
         setModalOpenMessage(true);
         const timer = setTimeout(() => {
             setModalOpenMessage(false);
                     }, 3500);
-    }
+                    
+        
+}
 
+const handleDeleteClient = async () => {
+
+    try{
+        await axios.delete(`http://localhost:8080/api/client/dni/${client.dni}`)
+        dispatch(deleteClient())
+        setMessage("Cliente Eliminado")
+                setModalOpenMessage(true)
+                const timer = setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);
+    }catch(error){
+        console.log(error);
+        setMessage("Cliente NO encontrado")
+                setModalOpenMessage(true)
+                const timer = setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);
+    }
+    
+}
 
 
 return (
     <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"CLIENTE"} btnBack={true}/>
-                {modalOpenEditClient&&createPortal(<EditClientModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose} client={client1} />,document.body)}
-                {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={handleSubmitNewClient} onCancel={handleClose} onClose={handleClose} />,document.body)}
+                {modalOpenEditClient&&createPortal(<EditClientModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose}  />,document.body)}
+                {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={handleSubmitNewClient} onCancel={handleClose} onClose={handleClose}  />,document.body)}
                 {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
@@ -108,7 +165,7 @@ return (
                                         <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} />
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
-                                    <BtnCommon title={"Editar"} onClick={()=>setModalOpenEditClient(true)} colorViolet={true}> <FontAwesomeIcon icon={faPencil}/></BtnCommon>
+                                    {/* <BtnCommon title={"Editar"}  onClick={()=>setModalOpenEditClient(true)} colorViolet={true}> <FontAwesomeIcon  icon={faPencil}/></BtnCommon> */}
                                 </article> 
                                 
                             </div>
@@ -123,8 +180,10 @@ return (
                         
                             
                             {/* <TextViewClient TheClient={client1} /> */}
+                            {/* onEdit={()=>setModalOpenEditClient(true)} */}
                             {
-                            client &&<TextViewClient TheClient={client}/>
+                            client&&<TextViewClient TheClient={client} onEdit={()=>setModalOpenEditClient(true)} onDelete={handleDeleteClient} />
+                            
                             }
                         
                     </div>

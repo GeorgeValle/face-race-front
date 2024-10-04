@@ -1,9 +1,8 @@
-## Tasks description
+## Tasks description in client view
 
-- config layout of components 
-- Add all btns, inputs, textview and tables
+- add function search in code input 
+- 
 
- 
 
 ## Checklist
 
@@ -18,7 +17,6 @@
 -  [x] navigate to this page from panel
 -  [X] Add Inputs
 -  [X] Add table "DATOS DEL CLIENTE"
--   [] add functions in  register btn
--   [] add functions in edit btn
--   [] add function search in dni input
--   [] add function search in code input
+-  [ ] add functions in  register btn
+-  [ ] add functions in edit btn
+-   [X] add function search in code input
