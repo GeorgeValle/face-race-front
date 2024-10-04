@@ -85,3 +85,12 @@
   font-size: 28px;
 }
 
+.row_title{
+  display:flex;
+  flex-direction: row;
+  justify-content:left;
+  justify-items:left;
+  width: 250px;
+  padding-bottom: 4px;
+}
+

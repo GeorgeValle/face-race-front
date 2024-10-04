@@ -1,13 +1,20 @@
 
 import Style from './TextViewClient.module.css'
+import MiniBtn from '../../btns/miniBtn/MiniBtn'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faTrash, faPencil} from "@fortawesome/free-solid-svg-icons"
 
-const TextViewClient = ({TheClient}) => {
+// ,onEdit=null, onDelete=null
+//<div className={Style.row_title}><MiniBtn onClick={onEdit} isWhite={true}><FontAwesomeIcon icon={faPencil}/></MiniBtn><MiniBtn onClick={onDelete} isRed={true}><FontAwesomeIcon icon={faTrash}/></MiniBtn></div>
+
+const TextViewClient = ({TheClient=null,onEdit=null, onDelete=null }) => {
   return (
     <div className={Style.client}>
+      <div className={Style.row_title}><MiniBtn onClick={onEdit} isWhite={true}><FontAwesomeIcon icon={faPencil}/></MiniBtn><MiniBtn onClick={onDelete} isRed={true}><FontAwesomeIcon icon={faTrash}/></MiniBtn></div>
         <table className={`${Style.table} ${Style.content}`}>
           <thead >
             <tr>
-              <th colSpan="4">DATOS DEL CLIENTE</th>
+              <th colSpan="4" >DATOS DEL CLIENTE</th>
             </tr>
           </thead>
           <tbody>
