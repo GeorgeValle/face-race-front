@@ -1,7 +1,9 @@
 ## Tasks description in client view
 
-- add function search in code input 
-- 
+- add functions in  register btn
+- add functions in edit btn
+- add function search in code input
+- add function delete client
 
 
 ## Checklist
@@ -17,6 +19,7 @@
 -  [x] navigate to this page from panel
 -  [X] Add Inputs
 -  [X] Add table "DATOS DEL CLIENTE"
--  [ ] add functions in  register btn
--  [ ] add functions in edit btn
--   [X] add function search in code input
+-  [X] add functions in  register btn
+-  [X] add functions in edit btn
+-  [X] add function search in code input
+-  [X] add function delete client
