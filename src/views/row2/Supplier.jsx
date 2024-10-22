@@ -10,7 +10,7 @@ import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
 import Style from './Client.module.css'
 import { useState, /*useEffect*/} from 'react'
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faMagnifyingGlass, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
 import TextViewClient from '../../components/textViews/textViewClient/TextViewClient'
 import NewSupplierModal from '../../components/modals/newSupplierModal/NewSupplierModal'
@@ -19,7 +19,7 @@ import EditSupplierModal from '../../components/modals/editClientModal/EditClien
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 // import {useFetchGet} from '../../hooks/UseFetchGet'
 import { useDispatch } from "react-redux";
-import { addClient,/* changeClient,*/ deleteClient  } from "../../redux/ClientSlice";
+import { addSupplier,/* changeClient,*/ deleteSupplier  } from "../../redux/ClientSlice";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
@@ -66,9 +66,9 @@ const Supplier = () => {
             try{
                 const request = await axios.get((`http://localhost:8080/api/client/dni/${inputDNI}`))
                 const response = request.data
-                dispatch(addClient(response.client))
+                dispatch(addSupplier(response.supplier))
             }catch(error){
-                setMessage("Cliente NO encontrado")
+                setMessage("Proveedor NO encontrado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -125,15 +125,15 @@ const handleDeleteSupplier = async () => {
 
     try{
         await axios.delete(`http://localhost:8080/api/client/dni/${client.dni}`)
-        dispatch(deleteClient())
-        setMessage("Cliente Eliminado")
+        dispatch(deleteSupplier())
+        setMessage("Proveedor Eliminado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
                             }, 3500);
     }catch(error){
         console.log(error);
-        setMessage("Cliente NO encontrado")
+        setMessage("Proveedor NO encontrado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -159,11 +159,11 @@ return (
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
-                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" value={inputDNI} onChange={(e) =>setInputDNI(e.target.value)} />
+                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Proveedor" value={inputDNI} onChange={(e) =>setInputDNI(e.target.value)} />
                                         <MiniBtn onClick={fetchSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
-                                        <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} />
+                                        <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} />
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                 </article> 
