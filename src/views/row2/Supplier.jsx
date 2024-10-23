@@ -19,9 +19,10 @@ import EditSupplierModal from '../../components/modals/editClientModal/EditClien
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 // import {useFetchGet} from '../../hooks/UseFetchGet'
 import { useDispatch } from "react-redux";
-import { addSupplier,/* changeClient,*/ deleteSupplier  } from "../../redux/ClientSlice";
+import { addSupplier,/* changeClient,*/ deleteSupplier  } from "../../redux/SupplierSlice";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import config from "../../config/Envs"
 
 
 
@@ -36,35 +37,24 @@ const Supplier = () => {
     //const [cliente, setCliente] = useState([]);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
-    const [inputDNI, setInputDNI] = useState("");
-    const client = useSelector((state)=> state.client);
+    const [inputCUIL, setInputCUIL] = useState("");
+    const supplier = useSelector((state)=> state.supplier);
     
     
     const dispatch = useDispatch();
 
     
     
-    //const { data, loading: fetchLoading, error: fetchError } = useFetchGet(`http://localhost:8080/api/client/dni/${dni}`);
-
-    // useEffect(() => {
-    //     setLoading(fetchLoading);
-    //     setError(fetchError);
-    //     setClient(data);
-    // }, [data, fetchLoading, fetchError]);
+    
 
     
     
 
         const fetchSupplier = async() => {
         
-            // setLoading(true)
-            // await fetch(`http://localhost:8080/api/client/dni/${inputDNI}`)
-            //     .then((response) => response.json())
-            //     .then((json) => dispatch(addClient(json)))
-            //     .catch((error) => setError(error))
-            //     .finally(() => setLoading(false)); 
+            
             try{
-                const request = await axios.get((`http://localhost:8080/api/client/dni/${inputDNI}`))
+                const request = await axios.get((`${config.API_BASE}supplier/cuil/${inputCUIL}`))
                 const response = request.data
                 dispatch(addSupplier(response.supplier))
             }catch(error){
@@ -76,18 +66,9 @@ const Supplier = () => {
             }
             
             
-
-
-            // const request = await axios.post('http://localhost:8080/api/session/login', {
-            //     email: email,
-            //     password: password
-            // })
-            // const response =  request.data;
-            // dispatch(addUser(response.user))
-            // navigate('/panel')
         }
 
-   
+
     
 
 
@@ -124,7 +105,7 @@ const Supplier = () => {
 const handleDeleteSupplier = async () => {
 
     try{
-        await axios.delete(`http://localhost:8080/api/client/dni/${client.dni}`)
+        await axios.delete(`${config.API_BASE}supplier/cuil/${supplier.cuil}`)
         dispatch(deleteSupplier())
         setMessage("Proveedor Eliminado")
                 setModalOpenMessage(true)
@@ -159,7 +140,7 @@ return (
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
-                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Proveedor" value={inputDNI} onChange={(e) =>setInputDNI(e.target.value)} />
+                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Proveedor" value={inputCUIL} onChange={(e) =>setInputCUIL(e.target.value)} />
                                         <MiniBtn onClick={fetchSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
@@ -182,7 +163,7 @@ return (
                             {/* <TextViewClient TheClient={client1} /> */}
                             {/* onEdit={()=>setModalOpenEditClient(true)} */}
                             {
-                            client&&<TextViewClient TheClient={client} onEdit={()=>setModalOpenEditSupplier(true)} onDelete={handleDeleteSupplier} />
+                            supplier&&<TextViewClient TheClient={client} onEdit={()=>setModalOpenEditSupplier(true)} onDelete={handleDeleteSupplier} />
                             
                             }
                         

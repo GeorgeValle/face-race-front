@@ -23,7 +23,7 @@ const Budget = () =>{
 
         // window.print();
         setModalOpen(true)
-        const timer = setTimeout(() => {
+        setTimeout(() => {
             setModalOpen(false);
                     }, 3500);
     }

@@ -12,13 +12,13 @@ const [email, setEmail] = useState("");
 const [name, setName] = useState("");
 const [phone, setPhone] = useState("");
 const [address, setAddress] = useState("");
-const [description, setDescription] = useState("");
 const [dni, setDni]= useState("");
 const [surname, setSurname] =useState("");
 const [city,setCity]= useState("");
-const [cel, setCel] = useState("");
 const [province, setProvince]= useState("");
 const [postalCode, setPostalCode] = useState("");
+const [cel, setCel] = useState("");
+const [description, setDescription] = useState("");
 
 //const [error, setError] = useState(false);
 //const [loading, setLoading] = useState(false);

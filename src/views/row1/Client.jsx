@@ -19,6 +19,7 @@ import MessageModal from '../../components/modals/messageModal/MessageModal'
 import { useDispatch } from "react-redux";
 import { addClient,/* changeClient,*/ deleteClient  } from "../../redux/ClientSlice";
 import { useSelector } from 'react-redux';
+import config from '../../config/Envs'
 import axios from 'axios';
 
 
@@ -42,7 +43,7 @@ const Client = () => {
 
     
     
-    //const { data, loading: fetchLoading, error: fetchError } = useFetchGet(`http://localhost:8080/api/client/dni/${dni}`);
+    //const { data, loading: fetchLoading, error: fetchError } = useFetchGet(`${config.API_BASE}client/dni/${dni}`);
 
     // useEffect(() => {
     //     setLoading(fetchLoading);
@@ -56,13 +57,13 @@ const Client = () => {
         const fetchClient = async() => {
         
             // setLoading(true)
-            // await fetch(`http://localhost:8080/api/client/dni/${inputDNI}`)
+            // await fetch(`${config.API_BASE}client/dni/${inputDNI}`)
             //     .then((response) => response.json())
             //     .then((json) => dispatch(addClient(json)))
             //     .catch((error) => setError(error))
             //     .finally(() => setLoading(false)); 
             try{
-                const request = await axios.get((`http://localhost:8080/api/client/dni/${inputDNI}`))
+                const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
                 const response = request.data
                 dispatch(addClient(response.client))
             }catch(error){
@@ -76,7 +77,7 @@ const Client = () => {
             
 
 
-            // const request = await axios.post('http://localhost:8080/api/session/login', {
+            // const request = await axios.post('${config.API_BASE}session/login', {
             //     email: email,
             //     password: password
             // })
@@ -122,7 +123,7 @@ const Client = () => {
 const handleDeleteClient = async () => {
 
     try{
-        await axios.delete(`http://localhost:8080/api/client/dni/${client.dni}`)
+        await axios.delete(`${config.API_BASE}client/dni/${client.dni}`)
         dispatch(deleteClient())
         setMessage("Cliente Eliminado")
                 setModalOpenMessage(true)
