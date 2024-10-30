@@ -1,7 +1,6 @@
 
 export default {
-//Address api
-API_BASE: import.meta.VITE_API_BASE,
+API_BASE: import.meta.env.VITE_API_BASE
 
 
 }

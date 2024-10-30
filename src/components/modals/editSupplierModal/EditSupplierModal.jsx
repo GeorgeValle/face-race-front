@@ -114,7 +114,7 @@ const EditClientModal = ({ onSubmit, onCancel, onClose }) => {
             {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
             <form className={Style.modal} onSubmit={onSubmitEdit} >
                 <div className={Style.modal_header}>
-                    <MIniNavBar miniTitle={"Editar Cliente"} btnClose={true} close={onClose} />
+                    <MIniNavBar miniTitle={"Editar Proveedor"} btnClose={true} close={onClose} />
                 </div>
                 <div className={Style.modal_content}>
 
@@ -125,13 +125,13 @@ const EditClientModal = ({ onSubmit, onCancel, onClose }) => {
                     <TextInput  typeInput={"number"} value={cuit} nameInput={"cuit"} isLabel={true} titleLabel={"CUIT:"} nameLabel={"cuit"} placeholderText={"Ej: 40112233"} sideLabel={true} onChange={(e)=>setCuit(e.target.value)} />
                 </div>
                 <div className={Style.item3}>
-                    <TextInput  typeInput={"text"} value={"businessName"} nameInput={"businessName"} isLabel={true} titleLabel={"Nombre Comercial:"} nameLabel={"businessName"} placeholderText={"Ej: Cascos Rodas"} sideLabel={true} onChange={(e)=>setBusinessName(e.target.value)} />
+                    <TextInput  typeInput={"text"} value={businessName} nameInput={"businessName"} isLabel={true} titleLabel={"Nombre Comercial:"} nameLabel={"businessName"} placeholderText={"Ej: Cascos Rodas"} sideLabel={true} onChange={(e)=>setBusinessName(e.target.value)} />
                 </div>
                 <div className={Style.item4}>
                     <TextInput  typeInput={"text"} value={companyName} nameInput={"companyName"} isLabel={true} titleLabel={"Razón Social:"} nameLabel={"companyName"} placeholderText={"Ej: Grupo Rodas"} sideLabel={true} onChange={(e)=>setCompanyName(e.target.value)} />
                 </div>
                 <div className={Style.item5}>
-                    <TextInput  typeInput={"text"} value={coreBusiness} nameInput={"coreBusiness"} isLabel={true} titleLabel={"Actividad Principal:"} nameLabel={"coreBusiness"} placeholderText={"Ej: Venta cascos"} sideLabel={true} onChange={(e)=>setCoreBusiness(e.target.value)} />
+                    <TextInput  typeInput={"text"} value={coreBusiness} nameInput={"coreBusiness"} isLabel={true} titleLabel={"Ra                                                             mo:"} nameLabel={"coreBusiness"} placeholderText={"Ej: Venta cascos"} sideLabel={true} onChange={(e)=>setCoreBusiness(e.target.value)} />
                 </div>
                 <div className={Style.item6}>
                     <TextInput  typeInput={"text"} value={address} nameInput={"address"} isLabel={true} titleLabel={"Dirección:"} nameLabel={"address"} placeholderText={"Ej: Paso 1526"} sideLabel={true} onChange={(e)=>setAddress(e.target.value)} />

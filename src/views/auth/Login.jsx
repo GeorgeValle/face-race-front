@@ -9,7 +9,7 @@ import Style from './Login.module.css'
 import axios from 'axios'
 import { useDispatch } from "react-redux";
 import { addUser } from "../../redux/UserSlice";
-import config from '../../config/Envs'
+import Envs from '../../config/Envs'
 
 
 const Login = () => {
@@ -25,7 +25,7 @@ const Login = () => {
         e.preventDefault();
         try {
             setError("")
-            const request = await axios.post(`${config.API_BASE}session/login`, {
+            const request = await axios.post(`${Envs.API_BASE}session/login`, {
                     email: email,
                     password: password
                 })

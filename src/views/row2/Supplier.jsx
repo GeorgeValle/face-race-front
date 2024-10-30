@@ -8,14 +8,14 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
-import Style from './Client.module.css'
+import Style from './Supplier.module.css'
 import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faMagnifyingGlass, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
-import TextViewClient from '../../components/textViews/textViewClient/TextViewClient'
+import TextViewSupplier from '../../components/textViews/textViewSupplier/TextViewSupplier'
 import NewSupplierModal from '../../components/modals/newSupplierModal/NewSupplierModal'
 import { createPortal } from 'react-dom'
-import EditSupplierModal from '../../components/modals/editClientModal/EditClientModal'
+import EditSupplierModal from '../../components/modals/editSupplierModal/EditSupplierModal'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 // import {useFetchGet} from '../../hooks/UseFetchGet'
 import { useDispatch } from "react-redux";
@@ -37,7 +37,7 @@ const Supplier = () => {
     //const [cliente, setCliente] = useState([]);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
-    const [inputCUIL, setInputCUIL] = useState("");
+    const [inputCUIT, setInputCUIT] = useState("");
     const supplier = useSelector((state)=> state.supplier);
     
     
@@ -54,7 +54,7 @@ const Supplier = () => {
         
             
             try{
-                const request = await axios.get((`${config.API_BASE}supplier/cuil/${inputCUIL}`))
+                const request = await axios.get((`${config.API_BASE}supplier/cuit/${inputCUIT}`))
                 const response = request.data
                 dispatch(addSupplier(response.supplier))
             }catch(error){
@@ -83,7 +83,7 @@ const Supplier = () => {
         
         setModalOpenEditSupplier(false);
         setModalOpenMessage(true);
-                    setMessage("Cliente Editado")
+                    setMessage("Proveedor Editado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -105,7 +105,7 @@ const Supplier = () => {
 const handleDeleteSupplier = async () => {
 
     try{
-        await axios.delete(`${config.API_BASE}supplier/cuil/${supplier.cuil}`)
+        await axios.delete(`${config.API_BASE}supplier/cuit/${supplier.cuit}`)
         dispatch(deleteSupplier())
         setMessage("Proveedor Eliminado")
                 setModalOpenMessage(true)
@@ -140,7 +140,7 @@ return (
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
-                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Proveedor" value={inputCUIL} onChange={(e) =>setInputCUIL(e.target.value)} />
+                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Proveedor" value={inputCUIT} onChange={(e) =>setInputCUIT(e.target.value)} />
                                         <MiniBtn onClick={fetchSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
@@ -163,7 +163,7 @@ return (
                             {/* <TextViewClient TheClient={client1} /> */}
                             {/* onEdit={()=>setModalOpenEditClient(true)} */}
                             {
-                            supplier&&<TextViewClient TheClient={client} onEdit={()=>setModalOpenEditSupplier(true)} onDelete={handleDeleteSupplier} />
+                            supplier&&<TextViewSupplier TheSupplier={supplier} onEdit={()=>setModalOpenEditSupplier(true)} onDelete={handleDeleteSupplier} />
                             
                             }
                         
