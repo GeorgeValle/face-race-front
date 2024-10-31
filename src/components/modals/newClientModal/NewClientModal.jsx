@@ -4,6 +4,7 @@ import  TextInput from '../../inputs/textInput/TextInput'
 import TextArea from '../../inputs/textArea/TextArea'
 import axios from 'axios'
 import { useState } from 'react'
+import config from '../../../config/Envs'
 
 
 const NewClientModal = ({onSubmit, onCancel, onClose, }) =>{
@@ -11,22 +12,22 @@ const [email, setEmail] = useState("");
 const [name, setName] = useState("");
 const [phone, setPhone] = useState("");
 const [address, setAddress] = useState("");
-const [description, setDescription] = useState("");
 const [dni, setDni]= useState("");
 const [surname, setSurname] =useState("");
 const [city,setCity]= useState("");
-const [cel, setCel] = useState("");
 const [province, setProvince]= useState("");
 const [postalCode, setPostalCode] = useState("");
+const [cel, setCel] = useState("");
+const [description, setDescription] = useState("");
 
-const [error, setError] = useState(false);
-const [loading, setLoading] = useState(false);
+//const [error, setError] = useState(false);
+//const [loading, setLoading] = useState(false);
 
 const onSubmitCreate = async ( message) =>{
     try {
-        setLoading(true);
-        setError("")
-        const request = await axios.post('http://localhost:8080/api/client/register', {
+        //setLoading(true);
+        //setError("")
+        /*const request = */await axios.post(`${config.API_BASE}client/register`, {
             email:email,
             name:name,
             surname:surname,
@@ -39,11 +40,12 @@ const onSubmitCreate = async ( message) =>{
             postalCode:postalCode,
             cel:cel
             })
-            const response =  request.data;
-            setLoading(false);
+            //const response =  request.data;
+            //setLoading(false);
             onSubmit(message);
 } catch (err) {
-    setError(err);
+    //setError(err);
+    onSubmit(`Error al crear cliente`);
 }
 }
 

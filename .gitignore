@@ -24,3 +24,6 @@ extra
 *.njsproj
 *.sln
 *.sw?
+
+# custom
+.env

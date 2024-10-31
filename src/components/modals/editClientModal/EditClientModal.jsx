@@ -3,14 +3,15 @@ import MIniNavBar from '../../miniNavbar/MIniNavBar'
 import TextInput from '../../inputs/textInput/TextInput'
 import TextArea from '../../inputs/textArea/TextArea'
 import { useState } from 'react'
-import { useDispatch } from "react-redux";
-import {  changeClient, deleteClient  } from "../../../redux/ClientSlice";
+//import { useDispatch } from "react-redux";
+//import {  changeClient, deleteClient  } from "../../../redux/ClientSlice";
 import { useSelector } from 'react-redux';
 import axios from 'axios'
 import MessageModal from '../messageModal/MessageModal'
+import config from '../../../config/Envs'
 
 
-const EditClientModal = ({onSubmit, onCancel, onClose}) => {
+const EditClientModal = ({onSubmit=null, onCancel=null, onClose=null}) => {
 
     const client = useSelector((state)=> state.client);
 
@@ -40,9 +41,10 @@ const EditClientModal = ({onSubmit, onCancel, onClose}) => {
     const [province, setProvince]= useState("");
     const [postalCode, setPostalCode] = useState("");
 
-    const dispatch = useDispatch();
+    //active this function redux
+    //const dispatch = useDispatch();
     
-    // const handlesubmit = async (e) =>{
+    // const handleSubmit = async (e) =>{
     //     e.preventDefault();
     //     const formDataObject = new FormData(); 
 
@@ -76,7 +78,7 @@ const EditClientModal = ({onSubmit, onCancel, onClose}) => {
     const onSubmitEdit = async () =>{
         try {
             
-            const request = await axios.put(`http://localhost:8080/api/client/dni/${client.dni}`, {
+            const request = await axios.put(`${config.API_BASE}client/dni/${client.dni}`, {
                 email:email,
                 name:name,
                 surname:surname,
@@ -93,7 +95,7 @@ const EditClientModal = ({onSubmit, onCancel, onClose}) => {
                 console.log(response)
                 setMessage("Cliente Actualizado")
                 setModalOpenMessage(true)
-                const timer = setTimeout(() => {
+                setTimeout(() => {
                     setModalOpenMessage(false);
                             }, 3500);
                 onSubmit();
@@ -114,7 +116,7 @@ const EditClientModal = ({onSubmit, onCancel, onClose}) => {
             <div className={Style.modal_content}>
                 
                 <div className={Style.item1}>
-                    <TextInput  typeInput={"email"} value={email} nameInput={"email"}  isLabel={true} titleLabel={`Email:`} onChange={(e)=>setEmail(e.target.value)}  nameLabel={"email"} placeholderText={""} sideLabel={true} />
+                    <TextInput  typeInput={"email"} value={email} nameInput={"email"}  isLabel={true} titleLabel={`Email:`} onChange={(e)=>setEmail(e.target.value)}  nameLabel={"email"} placeholderText={"Ej: juanlopez@gmail.com"} sideLabel={true} />
                 </div>
                 <div className={Style.item2}>
                     <TextInput  typeInput={"number"} nameInput={"dni"} isLabel={true} value={dni} titleLabel={"DNI:"} onChange={(e)=>setDni(e.target.value)} nameLabel={"dni"} placeholderText={"Ej: 40112233"} sideLabel={true} />
@@ -144,12 +146,12 @@ const EditClientModal = ({onSubmit, onCancel, onClose}) => {
                     <TextInput  typeInput={"number"} nameInput={"cel"} isLabel={true} titleLabel={"Celular:"} nameLabel={"cel"} value={cel} placeholderText={"Ej: 3426859647"} onChange={(e)=>setCel(e.target.value)} sideLabel={true} />
                 </div>
                 <div className={Style.item11}>
-                    <TextArea titleLabel={"Observaciones:"} nameInput={"description"} nameLabel={"description"} value={description} onChange={(e)=>setDescription(e.target.value)} placeholderText={"* Opcional: Detalles varios"} />
+                    <TextArea titleLabel={"Observaciones:"}  nameLabel={"description"} value={description} onChange={(e)=>setDescription(e.target.value)} placeholderText={"* Opcional: Detalles varios"} />
                 </div>
                 
             </div>
             <div className={Style.modal_buttons}>
-                <button  className={`${Style.btn} ${Style.btn_submit}`} onClick={() => handlesubmit()}>Editar </button>
+                <button type="submit"  className={`${Style.btn} ${Style.btn_submit}`} >Editar </button>
                 <button className={`${Style.btn} ${Style.btn_cancel}`} onClick={() => onCancel()}>Cancelar </button>
             </div>
         </form>

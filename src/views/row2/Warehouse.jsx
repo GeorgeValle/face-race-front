@@ -1,4 +1,5 @@
-/* View Cliente whit modal New Client and modify client  */
+
+/* View Warehouse (Depósito) whit modal New Item and Edit Item  */
 
 
 import Container from '../../components/container/Container'
@@ -6,68 +7,57 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
-import Style from './Client.module.css'
+import Style from './Warehouse.module.css'
 import { useState, /*useEffect*/} from 'react'
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faMagnifyingGlass, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
-import TextViewClient from '../../components/textViews/textViewClient/TextViewClient'
-import NewClientModal from '../../components/modals/newClientModal/NewClientModal'
+import TextViewSupplier from '../../components/textViews/textViewSupplier/TextViewSupplier'
+import NewSupplierModal from '../../components/modals/newSupplierModal/NewSupplierModal'
 import { createPortal } from 'react-dom'
-import EditClientModal from '../../components/modals/editClientModal/EditClientModal'
+import EditSupplierModal from '../../components/modals/editSupplierModal/EditSupplierModal'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 // import {useFetchGet} from '../../hooks/UseFetchGet'
 import { useDispatch } from "react-redux";
-import { addClient,/* changeClient,*/ deleteClient  } from "../../redux/ClientSlice";
+import { addItem,/* changeClient,*/ deleteItem  } from "../../redux/ItemSlice";
 import { useSelector } from 'react-redux';
-import config from '../../config/Envs'
 import axios from 'axios';
+import config from "../../config/Envs"
 
 
 
-const Client = () => {
+const Warehouse = () => {
 
     
 
-    const [modalOpenNewClient, setModalOpenNewModal] = useState(false);
-    const [modalOpenEditClient, setModalOpenEditClient] = useState(false);
+    const [modalOpenNewSupplier, setModalOpenNewModal] = useState(false);
+    const [modalOpenEditSupplier, setModalOpenEditSupplier] = useState(false);
     const [message, setMessage] = useState("");
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
     //const [cliente, setCliente] = useState([]);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
-    const [inputDNI, setInputDNI] = useState("");
-    const client = useSelector((state)=> state.client);
+    const [inputCode, setInputCode] = useState("");
+    const supplier = useSelector((state)=> state.supplier);
     
     
     const dispatch = useDispatch();
 
     
     
-    //const { data, loading: fetchLoading, error: fetchError } = useFetchGet(`${config.API_BASE}client/dni/${dni}`);
-
-    // useEffect(() => {
-    //     setLoading(fetchLoading);
-    //     setError(fetchError);
-    //     setClient(data);
-    // }, [data, fetchLoading, fetchError]);
+    
 
     
     
 
-        const fetchClient = async() => {
+        const fetchSupplier = async() => {
         
-            // setLoading(true)
-            // await fetch(`${config.API_BASE}client/dni/${inputDNI}`)
-            //     .then((response) => response.json())
-            //     .then((json) => dispatch(addClient(json)))
-            //     .catch((error) => setError(error))
-            //     .finally(() => setLoading(false)); 
+            
             try{
-                const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
+                const request = await axios.get((`${config.API_BASE}supplier/cuit/${inputCode}`))
                 const response = request.data
-                dispatch(addClient(response.client))
+                dispatch(addItem(response.supplier))
             }catch(error){
-                setMessage("Cliente NO encontrado")
+                setMessage("Proveedor NO encontrado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -75,40 +65,31 @@ const Client = () => {
             }
             
             
-
-
-            // const request = await axios.post('${config.API_BASE}session/login', {
-            //     email: email,
-            //     password: password
-            // })
-            // const response =  request.data;
-            // dispatch(addUser(response.user))
-            // navigate('/panel')
         }
 
-   
+
     
 
 
     const handleClose=()=>{
         setModalOpenNewModal(false);
-        setModalOpenEditClient(false);
+        setModalOpenEditSupplier(false);
         setModalOpenMessage(false);
     }
 
 
     const handleSubmitEdit=()=>{
         
-        setModalOpenEditClient(false);
+        setModalOpenEditSupplier(false);
         setModalOpenMessage(true);
-                    setMessage("Cliente Editado")
+                    setMessage("Proveedor Editado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
                             }, 3500);
     }
 
-    const handleSubmitNewClient= (message)=>{
+    const handleSubmitNewSupplier= (message)=>{
         
         setMessage(message);
         setModalOpenNewModal(false);
@@ -120,19 +101,19 @@ const Client = () => {
         
 }
 
-const handleDeleteClient = async () => {
+const handleDeleteSupplier = async () => {
 
     try{
-        await axios.delete(`${config.API_BASE}client/dni/${client.dni}`)
-        dispatch(deleteClient())
-        setMessage("Cliente Eliminado")
+        await axios.delete(`${config.API_BASE}supplier/cuit/${supplier.cuit}`)
+        dispatch(deleteItem())
+        setMessage("Artículo Eliminado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
                             }, 3500);
     }catch(error){
         console.log(error);
-        setMessage("Cliente NO encontrado")
+        setMessage("Artículo NO encontrado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -145,9 +126,9 @@ const handleDeleteClient = async () => {
 return (
     <div className={Style.mainContainer}>
             <Container>
-                <MiniNavBar miniTitle={"CLIENTE"} btnBack={true}/>
-                {modalOpenEditClient&&createPortal(<EditClientModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose}  />,document.body)}
-                {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={handleSubmitNewClient} onCancel={handleClose} onClose={handleClose}  />,document.body)}
+                <MiniNavBar miniTitle={"Depósito"} btnBack={true}/>
+                {modalOpenEditSupplier&&createPortal(<EditSupplierModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose}  />,document.body)}
+                {modalOpenNewSupplier&&createPortal(<NewSupplierModal onSubmit={handleSubmitNewSupplier} onCancel={handleClose} onClose={handleClose}  />,document.body)}
                 {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
@@ -158,11 +139,11 @@ return (
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
-                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" value={inputDNI} onChange={(e) =>setInputDNI(e.target.value)} />
-                                        <MiniBtn onClick={fetchClient} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                        <TextInputStyled placeholderText={"Ej: 01122344"} typeInput={"number"} titleLabel="Código del Artículo" value={inputCUIT} onChange={(e) =>setInputCode(e.target.value)} />
+                                        <MiniBtn onClick={fetchSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
-                                        <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} />
+                                        <TextInputStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} />
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                 </article> 
@@ -181,7 +162,7 @@ return (
                             {/* <TextViewClient TheClient={client1} /> */}
                             {/* onEdit={()=>setModalOpenEditClient(true)} */}
                             {
-                            client&&<TextViewClient TheClient={client} onEdit={()=>setModalOpenEditClient(true)} onDelete={handleDeleteClient} />
+                            supplier&&<TextViewSupplier TheSupplier={supplier} onEdit={()=>setModalOpenEditSupplier(true)} onDelete={handleDeleteSupplier} />
                             
                             }
                         
@@ -202,4 +183,4 @@ return (
     )
 }
 
-export default Client
+export default Warehouse

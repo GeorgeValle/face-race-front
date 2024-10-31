@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState /*, useEffect */ } from 'react'
 import Container from '../../components/container/Container'
 import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import TextInput from '../../components/inputs/textInput/TextInput'
@@ -9,6 +9,7 @@ import Style from './Login.module.css'
 import axios from 'axios'
 import { useDispatch } from "react-redux";
 import { addUser } from "../../redux/UserSlice";
+import Envs from '../../config/Envs'
 
 
 const Login = () => {
@@ -24,7 +25,7 @@ const Login = () => {
         e.preventDefault();
         try {
             setError("")
-            const request = await axios.post('http://localhost:8080/api/session/login', {
+            const request = await axios.post(`${Envs.API_BASE}session/login`, {
                     email: email,
                     password: password
                 })
