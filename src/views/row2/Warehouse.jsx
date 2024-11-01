@@ -11,10 +11,10 @@ import Style from './Warehouse.module.css'
 import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faMagnifyingGlass, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
-import TextViewSupplier from '../../components/textViews/textViewSupplier/TextViewSupplier'
-import NewSupplierModal from '../../components/modals/newSupplierModal/NewSupplierModal'
+import TextViewItem from '../../components/textViews/textViewItem/TextViewItem'
+import NewItemModal from '../../components/modals/newItemModal/NewItemModal'
 import { createPortal } from 'react-dom'
-import EditSupplierModal from '../../components/modals/editSupplierModal/EditSupplierModal'
+import EditItemModal from '../../components/modals/editItemModal/EditItemModal'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 // import {useFetchGet} from '../../hooks/UseFetchGet'
 import { useDispatch } from "react-redux";
@@ -22,6 +22,7 @@ import { addItem,/* changeClient,*/ deleteItem  } from "../../redux/ItemSlice";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import config from "../../config/Envs"
+//import TextViewItem from '../../components/textViews/textViewItem/TextViewItem'
 
 
 
@@ -29,15 +30,15 @@ const Warehouse = () => {
 
     
 
-    const [modalOpenNewSupplier, setModalOpenNewModal] = useState(false);
-    const [modalOpenEditSupplier, setModalOpenEditSupplier] = useState(false);
+    const [modalOpenNewItem, setModalOpenNewModal] = useState(false);
+    const [modalOpenEditItem, setModalOpenEditItem] = useState(false);
     const [message, setMessage] = useState("");
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
     //const [cliente, setCliente] = useState([]);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
     const [inputCode, setInputCode] = useState("");
-    const supplier = useSelector((state)=> state.supplier);
+    const item = useSelector((state)=> state.item);
     
     
     const dispatch = useDispatch();
@@ -49,15 +50,15 @@ const Warehouse = () => {
     
     
 
-        const fetchSupplier = async() => {
+        const fetchItem = async() => {
         
             
             try{
-                const request = await axios.get((`${config.API_BASE}supplier/cuit/${inputCode}`))
+                const request = await axios.get((`${config.API_BASE}item/code/${inputCode}`))
                 const response = request.data
-                dispatch(addItem(response.supplier))
+                dispatch(addItem(response.item))
             }catch(error){
-                setMessage("Proveedor NO encontrado")
+                setMessage("Artículo NO encontrado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -73,23 +74,23 @@ const Warehouse = () => {
 
     const handleClose=()=>{
         setModalOpenNewModal(false);
-        setModalOpenEditSupplier(false);
+        setModalOpenEditItem(false);
         setModalOpenMessage(false);
     }
 
 
     const handleSubmitEdit=()=>{
         
-        setModalOpenEditSupplier(false);
+        setModalOpenEditItem(false);
         setModalOpenMessage(true);
-                    setMessage("Proveedor Editado")
+                    setMessage("Artículo Editado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
                             }, 3500);
     }
 
-    const handleSubmitNewSupplier= (message)=>{
+    const handleSubmitNewItem= (message)=>{
         
         setMessage(message);
         setModalOpenNewModal(false);
@@ -101,10 +102,10 @@ const Warehouse = () => {
         
 }
 
-const handleDeleteSupplier = async () => {
+const handleDeleteItem = async () => {
 
     try{
-        await axios.delete(`${config.API_BASE}supplier/cuit/${supplier.cuit}`)
+        await axios.delete(`${config.API_BASE}item/code/${item.code}`)
         dispatch(deleteItem())
         setMessage("Artículo Eliminado")
                 setModalOpenMessage(true)
@@ -127,8 +128,8 @@ return (
     <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"Depósito"} btnBack={true}/>
-                {modalOpenEditSupplier&&createPortal(<EditSupplierModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose}  />,document.body)}
-                {modalOpenNewSupplier&&createPortal(<NewSupplierModal onSubmit={handleSubmitNewSupplier} onCancel={handleClose} onClose={handleClose}  />,document.body)}
+                {modalOpenEditItem&&createPortal(<EditItemModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose}  />,document.body)}
+                {modalOpenNewItem&&createPortal(<NewItemModal onSubmit={handleSubmitNewItem} onCancel={handleClose} onClose={handleClose}  />,document.body)}
                 {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
@@ -139,8 +140,8 @@ return (
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
-                                        <TextInputStyled placeholderText={"Ej: 01122344"} typeInput={"number"} titleLabel="Código del Artículo" value={inputCUIT} onChange={(e) =>setInputCode(e.target.value)} />
-                                        <MiniBtn onClick={fetchSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                        <TextInputStyled placeholderText={"Ej: 01122344"} typeInput={"number"} titleLabel="Código del Artículo" value={inputCode} onChange={(e) =>setInputCode(e.target.value)} />
+                                        <MiniBtn onClick={fetchItem} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
                                         <TextInputStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} />
@@ -162,7 +163,7 @@ return (
                             {/* <TextViewClient TheClient={client1} /> */}
                             {/* onEdit={()=>setModalOpenEditClient(true)} */}
                             {
-                            supplier&&<TextViewSupplier TheSupplier={supplier} onEdit={()=>setModalOpenEditSupplier(true)} onDelete={handleDeleteSupplier} />
+                            item&&<TextViewItem TheItem={item} onEdit={()=>setModalOpenEditItem(true)} onDelete={handleDeleteItem} />
                             
                             }
                         
