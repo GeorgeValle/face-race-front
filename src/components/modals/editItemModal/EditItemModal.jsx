@@ -13,7 +13,7 @@ import config from '../../../config/Envs'
 
 const EditItemModal = ({ onSubmit, onCancel, onClose }) => {
 
-    const supplier = useSelector((state) => state.supplier);
+    const item = useSelector((state) => state.item);
 
     // const [formData, setFormData]= useState({
     //     email:client.email,name:client.name,phone:client.phone,address:client.address,description:client.description,dni:client.dni,surname:client.surname,city:client.city,cel:client.cel,province:client.province,postalCode:client.postalCode
@@ -28,18 +28,16 @@ const EditItemModal = ({ onSubmit, onCancel, onClose }) => {
     //     }; 
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
     const [message, setMessage] = useState('');
-    const [email, setEmail] = useState("");
-    const [cuit, setCuit]= useState("");
-    const [businessName, setBusinessName] = useState("");
-    const [companyName, setCompanyName] =useState("");
-    const [coreBusiness, setCoreBusiness] = useState("");
-    const [address, setAddress] = useState("");
-    const [city,setCity]= useState("");
-    const [province, setProvince]= useState("");
-    const [postalCode, setPostalCode] = useState("");
-    const [phone, setPhone] = useState("");
-    const [cel, setCel] = useState("");
-    const [description, setDescription] = useState("");
+    const [code, setCode] = useState("");
+const [name, setName]= useState("");
+const [stockQuantity, setStockQuantity] = useState("");
+const [price, setPrice] =useState("");
+const [category, setCategory] = useState("");
+const [brand, setBrand] = useState("");
+const [model,setModel]= useState("");
+const [origin, setOrigin]= useState("");
+const [warehouseLocation, setWarehouseLocation] = useState("");
+const [description, setDescription] = useState("");
 
 
 
@@ -79,23 +77,21 @@ const EditItemModal = ({ onSubmit, onCancel, onClose }) => {
     const onSubmitEdit = async () => {
         try {
 
-            const request = await axios.put(`${config.API_BASE}supplier/cuit/${supplier.cuit}`, {
-                email:email,
-            cuit:cuit,
-            businessName:businessName,
-            companyName:companyName,
-            coreBusiness:coreBusiness,
-            address:address,
-            city:city,
-            province:province,
-            postalCode:postalCode,
-            phone:phone,
-            cel:cel,
-            description:description,
+            const request = await axios.put(`${config.API_BASE}item/code/${item.code}`, {
+                code:code,
+                name:name,
+                stockQuantity:stockQuantity,
+                price:price,
+                category:category,
+                brand:brand,
+                model:model,
+                origin:origin,
+                warehouseLocation:warehouseLocation,
+                description:description,
             })
             const response = request.data;
             console.log(response)
-            setMessage("Proveedor Actualizado")
+            setMessage("Artículo Actualizado")
             setModalOpenMessage(true)
             setTimeout(() => {
                 setModalOpenMessage(false);
@@ -114,44 +110,38 @@ const EditItemModal = ({ onSubmit, onCancel, onClose }) => {
             {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
             <form className={Style.modal} onSubmit={onSubmitEdit} >
                 <div className={Style.modal_header}>
-                    <MIniNavBar miniTitle={"Editar Proveedor"} btnClose={true} close={onClose} />
+                    <MIniNavBar miniTitle={"Editar Artículo"} btnClose={true} close={onClose} />
                 </div>
                 <div className={Style.modal_content}>
 
                 <div className={Style.item1}>
-                    <TextInput  typeInput={"email"} value={email} nameInput={"email"} isLabel={true} titleLabel={`Email:`} nameLabel={"email"} placeholderText={"Ej: cliente@gmail.com"} sideLabel={true} onChange={(e)=>setEmail(e.target.value)} />
+                    <TextInput  typeInput={"number"} value={code} nameInput={"code"} isLabel={true} titleLabel={`Código:`} nameLabel={"code"} placeholderText={"119228"} sideLabel={true} onChange={(e)=>setCode(e.target.value)} />
                 </div>
                 <div className={Style.item2}>
-                    <TextInput  typeInput={"number"} value={cuit} nameInput={"cuit"} isLabel={true} titleLabel={"CUIT:"} nameLabel={"cuit"} placeholderText={"Ej: 40112233"} sideLabel={true} onChange={(e)=>setCuit(e.target.value)} />
+                    <TextInput  typeInput={"text"} value={name} nameInput={"name"} isLabel={true} titleLabel={"Nombre:"} nameLabel={"name"} placeholderText={"Ej: Casco Italy"} sideLabel={true} onChange={(e)=>setName(e.target.value)} />
                 </div>
                 <div className={Style.item3}>
-                    <TextInput  typeInput={"text"} value={businessName} nameInput={"businessName"} isLabel={true} titleLabel={"Nombre Comercial:"} nameLabel={"businessName"} placeholderText={"Ej: Cascos Rodas"} sideLabel={true} onChange={(e)=>setBusinessName(e.target.value)} />
+                    <TextInput  typeInput={"number"} value={stockQuantity} nameInput={"stockQuantity"} isLabel={true} titleLabel={"Cantidad:"} nameLabel={"stockQuantity"} placeholderText={"Ej: 52"} sideLabel={true} onChange={(e)=>setStockQuantity(e.target.value)} />
                 </div>
                 <div className={Style.item4}>
-                    <TextInput  typeInput={"text"} value={companyName} nameInput={"companyName"} isLabel={true} titleLabel={"Razón Social:"} nameLabel={"companyName"} placeholderText={"Ej: Grupo Rodas"} sideLabel={true} onChange={(e)=>setCompanyName(e.target.value)} />
+                    <TextInput  typeInput={"number"} value={price} nameInput={"price"} isLabel={true} titleLabel={"Precio:"} nameLabel={"price"} placeholderText={"Ej: 50.00"} sideLabel={true} onChange={(e)=>setPrice(e.target.value)} />
                 </div>
                 <div className={Style.item5}>
-                    <TextInput  typeInput={"text"} value={coreBusiness} nameInput={"coreBusiness"} isLabel={true} titleLabel={"Ra                                                             mo:"} nameLabel={"coreBusiness"} placeholderText={"Ej: Venta cascos"} sideLabel={true} onChange={(e)=>setCoreBusiness(e.target.value)} />
+                    <TextInput  typeInput={"text"} value={category} nameInput={"category"} isLabel={true} titleLabel={"Categoría:"} nameLabel={"categoria"} placeholderText={"Ej: Indumentaria"} sideLabel={true} onChange={(e)=>setCategory(e.target.value)} />
                 </div>
                 <div className={Style.item6}>
-                    <TextInput  typeInput={"text"} value={address} nameInput={"address"} isLabel={true} titleLabel={"Dirección:"} nameLabel={"address"} placeholderText={"Ej: Paso 1526"} sideLabel={true} onChange={(e)=>setAddress(e.target.value)} />
+                    <TextInput  typeInput={"text"} value={brand} nameInput={"brand"} isLabel={true} titleLabel={"Marca:"} nameLabel={"brand"} placeholderText={"Ej:Zx"} sideLabel={true} onChange={(e)=>setBrand(e.target.value)} />
                 </div>
                 <div className={Style.item7}>
-                    <TextInput  typeInput={"text"} value={city} nameInput={"city"} isLabel={true} titleLabel={"Ciudad:"} nameLabel={"city"} placeholderText={"Ej: Rosario"} sideLabel={true} onChange={(e)=>setCity(e.target.value)} />
+                    <TextInput  typeInput={"text"} value={model} nameInput={"model"} isLabel={true} titleLabel={"Modelo:"} nameLabel={"model"} placeholderText={"Ej: Vintage"} sideLabel={true} onChange={(e)=>setModel(e.target.value)} />
                 </div>
                 <div className={Style.item8}>
-                    <TextInput  typeInput={"text"} value={province} nameInput={"province"} isLabel={true} titleLabel={"Provincia:"} nameLabel={"province"} placeholderText={"Ej: Santa Fe"} sideLabel={true} onChange={(e)=>setProvince(e.target.value)} />
+                    <TextInput  typeInput={"text"} value={origin} nameInput={"origin"} isLabel={true} titleLabel={"Origen:"} nameLabel={"origin"} placeholderText={"Ej: Austria"} sideLabel={true} onChange={(e)=>setOrigin(e.target.value)} />
                 </div>
                 <div className={Style.item9}>
-                    <TextInput  typeInput={"number"} value={postalCode} nameInput={"postalCode"} isLabel={true} titleLabel={"Código Postal:"} nameLabel={"postalCode"} placeholderText={"Ej: 1251"} sideLabel={true} onChange={(e)=>setPostalCode(e.target.value)} />
+                    <TextInput  typeInput={"text"} value={warehouseLocation} nameInput={"warehouseLocation"} isLabel={true} titleLabel={"Ubicación:"} nameLabel={"warehouseLocation"} placeholderText={"Ej: AB 12"} sideLabel={true} onChange={(e)=>setWarehouseLocation(e.target.value)} />
                 </div>
                 <div className={Style.item10}>
-                    <TextInput  typeInput={"number"} value={phone} nameInput={"phone"} isLabel={true} titleLabel={"Teléfono:"} nameLabel={"phone"} placeholderText={"Ej: 4568569"} sideLabel={true} onChange={(e)=>setPhone(e.target.value)} />    
-                </div>
-                <div className={Style.item11}>
-                    <TextInput  typeInput={"number"} value={cel} nameInput={"cel"} isLabel={true} titleLabel={"Celular:"} nameLabel={"cel"} placeholderText={"Ej: 3426859647"} sideLabel={true} onChange={(e)=>setCel(e.target.value)} />
-                </div>
-                <div className={Style.item12}>
                     <TextArea titleLabel={"Observaciones:"} value={description} nameInput={"description"} nameLabel={"description"} onChange={(e)=>setDescription(e.target.value)} placeholderText={"* Opcional: Detalles varios"}  />
                 </div>
 
