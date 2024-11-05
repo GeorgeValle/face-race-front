@@ -1,5 +1,5 @@
 //import { useState } from 'react'
-import { Navigate, BrowserRouter, Route, Routes } from 'react-router-dom'
+import { /*Navigate, */BrowserRouter, Route, Routes } from 'react-router-dom'
 import MainNavBar from './components/mainNavBar/MainNavBar.jsx'
 import Logout from './views/auth/Logout.jsx'
 import Login from './views/auth/Login.jsx'
@@ -8,6 +8,7 @@ import Panel from './views/panel/Panel.jsx'
 import Budget from './views/row1/Budget.jsx'
 import Client from './views/row1/Client.jsx'
 import Supplier from './views/row2/Supplier.jsx'
+import Warehouse from './views/row2/Warehouse.jsx'
 import RegisterCash from './views/row1/RegisterCash.jsx'
 //import BodyPlane from './components/common/BodyPlane.jsx'
 // import reactLogo from './assets/react.svg'
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/budget" element={<Budget />} />
             <Route path="/client" element={<Client />} />
             <Route path="/supplier" element={<Supplier />} />
+            <Route path="/warehouse" element={<Warehouse />} />
             <Route path="/register_cash" element={<RegisterCash />} />
 
             {/* <Route path="/" element={<HomeView/>}/>
