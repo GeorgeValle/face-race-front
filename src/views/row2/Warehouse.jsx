@@ -12,6 +12,7 @@ import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faMagnifyingGlass, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
 import TextViewItem from '../../components/textViews/textViewItem/TextViewItem'
+import {TableCategoryItems} from '../../components/tables/tableCategoryItems/TableCategoryItems'
 import NewItemModal from '../../components/modals/newItemModal/NewItemModal'
 import { createPortal } from 'react-dom'
 import EditItemModal from '../../components/modals/editItemModal/EditItemModal'
@@ -38,6 +39,10 @@ const Warehouse = () => {
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
     const [inputCode, setInputCode] = useState("");
+    const [inputList, setInputList] = useState("");
+    const [isListItems, setIsListItems] = useState(false);
+    const [isItem, setIsItem ] = useState(false);
+    const [categoryList, setCategoryList] = useState([]);
     const item = useSelector((state)=> state.item);
     
     
@@ -51,7 +56,9 @@ const Warehouse = () => {
     
 
         const fetchItem = async() => {
-        
+            
+            setIsListItems(false)
+            setIsItem(true)
             
             try{
                 const request = await axios.get((`${config.API_BASE}item/code/${inputCode}`))
@@ -68,8 +75,24 @@ const Warehouse = () => {
             
         }
 
+        
 
-    
+        const fetchListItems = async() => {
+            
+            setIsItem(false)
+            setIsListItems(true)
+            try{
+                const request = await axios.get((`${config.API_BASE}item/category/${inputList}`))
+                const response = request.data
+                setCategoryList(response)
+            }catch(error){
+                setMessage("Artículo NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);
+            }
+        }
 
 
     const handleClose=()=>{
@@ -81,6 +104,9 @@ const Warehouse = () => {
 
     const handleSubmitEdit=()=>{
         
+        setIsListItems(false)
+        setIsItem(true)
+
         setModalOpenEditItem(false);
         setModalOpenMessage(true);
                     setMessage("Artículo Editado")
@@ -91,6 +117,8 @@ const Warehouse = () => {
     }
 
     const handleSubmitNewItem= (message)=>{
+        setIsListItems(false)
+        setIsItem(true)
         
         setMessage(message);
         setModalOpenNewModal(false);
@@ -147,6 +175,10 @@ return (
                                         <TextInputStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} />
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
+                                    <div className={Style.article}>
+                                        <TextInputStyled placeholderText={"Ej: casco or guante "} typeInput={"text"} titleLabel="Categoría" value={inputList} onChange={(e) =>setInputList(e.target.value)} size={true} />
+                                        <MiniBtn  onClick={fetchListItems} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                    </div>
                                 </article> 
                                 
                             </div>
@@ -163,9 +195,14 @@ return (
                             {/* <TextViewClient TheClient={client1} /> */}
                             {/* onEdit={()=>setModalOpenEditClient(true)} */}
                             {
-                            item&&<TextViewItem TheItem={item} onEdit={()=>setModalOpenEditItem(true)} onDelete={handleDeleteItem} />
+                           isItem&&<TextViewItem TheItem={item} onEdit={()=>setModalOpenEditItem(true)} onDelete={handleDeleteItem} />
                             
                             }
+                            {
+
+                             isListItems&&(<TableCategoryItems rows={categoryList} />)
+                            }
+                            
                         
                     </div>
                     <div className={Style.item3}>
