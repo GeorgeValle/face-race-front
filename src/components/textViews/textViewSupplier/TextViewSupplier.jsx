@@ -13,7 +13,7 @@ const TextViewSupplier = ({ TheSupplier = null, onEdit = null, onDelete = null }
             <table className={`${Style.table} ${Style.content}`}>
                 <thead >
                     <tr>
-                        <th colSpan="4" >DATOS DEL CLIENTE</th>
+                        <th colSpan="4" >DATOS DEL PROVEEDOR</th>
                     </tr>
                 </thead>
                 <tbody>

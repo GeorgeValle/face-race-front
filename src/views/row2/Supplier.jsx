@@ -17,6 +17,8 @@ import NewSupplierModal from '../../components/modals/newSupplierModal/NewSuppli
 import { createPortal } from 'react-dom'
 import EditSupplierModal from '../../components/modals/editSupplierModal/EditSupplierModal'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
+import Dialog from '../../components/modals/dialog/Dialog'
+import {TableSupplierList} from '../../components/tables/tableSupplierList/TableSuppliersList'
 // import {useFetchGet} from '../../hooks/UseFetchGet'
 import { useDispatch } from "react-redux";
 import { addSupplier,/* changeClient,*/ deleteSupplier  } from "../../redux/SupplierSlice";
@@ -33,12 +35,20 @@ const Supplier = () => {
     const [modalOpenNewSupplier, setModalOpenNewModal] = useState(false);
     const [modalOpenEditSupplier, setModalOpenEditSupplier] = useState(false);
     const [message, setMessage] = useState("");
+    const [messageModal, setMessageModal] = useState("");
+    const [messageDialog, setMessageDialog] = useState("");
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
+    const [modalOpenDialog, setModalOpenDialog] = useState(false);
+    const [openSupplier, setOpenSupplier] = useState(false);
+    const [openSupplierList, setOpenSupplierList] = useState(false);
     //const [cliente, setCliente] = useState([]);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
     const [inputCUIT, setInputCUIT] = useState("");
+    const [inputList, setInputList] = useState("");
+    const [list, setList] = useState([{}]);
     const supplier = useSelector((state)=> state.supplier);
+
     
     
     const dispatch = useDispatch();
@@ -52,7 +62,9 @@ const Supplier = () => {
 
         const fetchSupplier = async() => {
         
-            
+            setOpenSupplierList(false)
+            setOpenSupplier(true)
+
             try{
                 const request = await axios.get((`${config.API_BASE}supplier/cuit/${inputCUIT}`))
                 const response = request.data
@@ -69,21 +81,45 @@ const Supplier = () => {
         }
 
 
-    
+        const fetchListSupplier = async() => {
+            
+            setOpenSupplier(false)
+            setOpenSupplierList(true)
+        
+            try{
+                const request = await axios.get((`${config.API_BASE}supplier/list/${inputList}`))
+                const response = request.data
+
+                console.log('Response-s:',response.suppliersList )
+                console.log('Response-r:',response)
+                
+                setList(response)
+                console.log('list:',list)
+                
+            }catch(error){
+                setMessage("Proveedores NO encontrados")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);
+            }
+            
+            
+        }
 
 
     const handleClose=()=>{
         setModalOpenNewModal(false);
         setModalOpenEditSupplier(false);
         setModalOpenMessage(false);
+        setModalOpenDialog(false);
     }
 
 
-    const handleSubmitEdit=()=>{
+    const handleSubmitEdit=(message)=>{
         
         setModalOpenEditSupplier(false);
-        setModalOpenMessage(true);
-                    setMessage("Proveedor Editado")
+                    setMessage(message)
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -91,23 +127,33 @@ const Supplier = () => {
     }
 
     const handleSubmitNewSupplier= (message)=>{
-        
-        setMessage(message);
+        setOpenSupplierList(false)
+        setOpenSupplier(true)
         setModalOpenNewModal(false);
+        setMessage(message);
+        
         setModalOpenMessage(true);
         setTimeout(() => {
             setModalOpenMessage(false);
-                    }, 3500);
+                    }, 4500);
                     
         
 }
 
-const handleDeleteSupplier = async () => {
 
+
+const handleDialogDelete = () =>{
+    setMessageModal("¿Seguro quieres Borrar al Proveedor?");
+    setMessageDialog("Borrar");
+    setModalOpenDialog(true);
+}
+
+const handleDeleteSupplier = async () => {
+        setModalOpenDialog(false);
     try{
         await axios.delete(`${config.API_BASE}supplier/cuit/${supplier.cuit}`)
         dispatch(deleteSupplier())
-        setMessage("Proveedor Eliminado")
+        setMessage("Proveedor Borrado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -131,6 +177,7 @@ return (
                 {modalOpenEditSupplier&&createPortal(<EditSupplierModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose}  />,document.body)}
                 {modalOpenNewSupplier&&createPortal(<NewSupplierModal onSubmit={handleSubmitNewSupplier} onCancel={handleClose} onClose={handleClose}  />,document.body)}
                 {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
+                {modalOpenDialog&&(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeleteSupplier} onClose={handleClose}/>)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>     
@@ -146,6 +193,10 @@ return (
                                     <div className={Style.article}>
                                         <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} />
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                    </div>
+                                    <div className={Style.article}>
+                                        <TextInputStyled placeholderText={"Ej: aba or moto "} typeInput={"text"} titleLabel="Listado" value={inputList} onChange={(e) =>setInputList(e.target.value)} size={true} />
+                                        <MiniBtn  onClick={fetchListSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                 </article> 
                                 
@@ -163,8 +214,11 @@ return (
                             {/* <TextViewClient TheClient={client1} /> */}
                             {/* onEdit={()=>setModalOpenEditClient(true)} */}
                             {
-                            supplier&&<TextViewSupplier TheSupplier={supplier} onEdit={()=>setModalOpenEditSupplier(true)} onDelete={handleDeleteSupplier} />
+                                openSupplier&&<TextViewSupplier TheSupplier={supplier} onEdit={()=>setModalOpenEditSupplier(true)} onDelete={handleDialogDelete} />
                             
+                            }
+                            {
+                                openSupplierList&&<TableSupplierList rows={list || []}/>
                             }
                         
                     </div>
