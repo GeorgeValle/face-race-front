@@ -53,13 +53,6 @@ const Supplier = () => {
     
     const dispatch = useDispatch();
 
-    
-    
-    
-
-    
-    
-
         const fetchSupplier = async() => {
         
             setOpenSupplierList(false)

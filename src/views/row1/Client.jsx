@@ -15,6 +15,7 @@ import NewClientModal from '../../components/modals/newClientModal/NewClientModa
 import { createPortal } from 'react-dom'
 import EditClientModal from '../../components/modals/editClientModal/EditClientModal'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
+import Dialog from '../../components/modals/dialog/Dialog'
 // import {useFetchGet} from '../../hooks/UseFetchGet'
 import { useDispatch } from "react-redux";
 import { addClient,/* changeClient,*/ deleteClient  } from "../../redux/ClientSlice";
@@ -31,11 +32,15 @@ const Client = () => {
     const [modalOpenNewClient, setModalOpenNewModal] = useState(false);
     const [modalOpenEditClient, setModalOpenEditClient] = useState(false);
     const [message, setMessage] = useState("");
+    const [messageModal, setMessageModal] = useState("");
+    const [messageButton, setMessageButton] = useState("");
+    const [modalOpenDialog, setModalOpenDialog] = useState("");
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
-    //const [cliente, setCliente] = useState([]);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
     const [inputDNI, setInputDNI] = useState("");
+    const [isClient, setIsClient] = useState(false);
+    //const [isListCLient, setIsLIstClient] = useState(false);
     const client = useSelector((state)=> state.client);
     
     
@@ -55,7 +60,8 @@ const Client = () => {
     
 
         const fetchClient = async() => {
-        
+            //setIsLIstClient(false)
+            setIsClient(true)
             // setLoading(true)
             // await fetch(`${config.API_BASE}client/dni/${inputDNI}`)
             //     .then((response) => response.json())
@@ -65,7 +71,7 @@ const Client = () => {
             try{
                 const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
                 const response = request.data
-                dispatch(addClient(response.client))
+                dispatch(addClient(response.data))
             }catch(error){
                 setMessage("Cliente NO encontrado")
                 setModalOpenMessage(true)
@@ -86,7 +92,6 @@ const Client = () => {
             // navigate('/panel')
         }
 
-   
     
 
 
@@ -94,11 +99,13 @@ const Client = () => {
         setModalOpenNewModal(false);
         setModalOpenEditClient(false);
         setModalOpenMessage(false);
+        
     }
 
 
     const handleSubmitEdit=()=>{
         
+        //setIsClient(true)
         setModalOpenEditClient(false);
         setModalOpenMessage(true);
                     setMessage("Cliente Editado")
@@ -110,14 +117,22 @@ const Client = () => {
 
     const handleSubmitNewClient= (message)=>{
         
-        setMessage(message);
+        //setIsLIstClient(false)
+        setIsClient(true)
         setModalOpenNewModal(false);
+        setMessage(message);
         setModalOpenMessage(true);
         setTimeout(() => {
             setModalOpenMessage(false);
                     }, 3500);
                     
         
+}
+
+const handleDialogDelete = () =>{
+    setMessageModal("¿Seguro quieres Borrar al Proveedor?");
+    setMessageButton("Borrar");
+    setModalOpenDialog(true);
 }
 
 const handleDeleteClient = async () => {
@@ -149,6 +164,7 @@ return (
                 {modalOpenEditClient&&createPortal(<EditClientModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose}  />,document.body)}
                 {modalOpenNewClient&&createPortal(<NewClientModal onSubmit={handleSubmitNewClient} onCancel={handleClose} onClose={handleClose}  />,document.body)}
                 {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
+                {modalOpenDialog&&(<Dialog messageModal={messageModal} messageConfirm={messageButton} onSubmit={handleDeleteClient} onClose={()=> setModalOpenDialog(false)}/>)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>     
@@ -181,7 +197,7 @@ return (
                             {/* <TextViewClient TheClient={client1} /> */}
                             {/* onEdit={()=>setModalOpenEditClient(true)} */}
                             {
-                            client&&<TextViewClient TheClient={client} onEdit={()=>setModalOpenEditClient(true)} onDelete={handleDeleteClient} />
+                            isClient&&<TextViewClient TheClient={client} onEdit={()=>setModalOpenEditClient(true)} onDelete={handleDialogDelete} />
                             
                             }
                         
