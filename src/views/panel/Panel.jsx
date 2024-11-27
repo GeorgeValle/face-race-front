@@ -57,7 +57,7 @@ const Panel = () =>{
                         </BtnVioletPanel>
                     </div>
                     <div className={Style.item9}>
-                        <BtnVioletPanel title={"Turnos"} isDisabled={true} leftColor={true}>
+                        <BtnVioletPanel title={"Turnos"} leftColor={true} path={"/appointment"}>
                             <FontAwesomeIcon icon={faCalendarPlus} size="lg" />
                         </BtnVioletPanel>
                     </div>

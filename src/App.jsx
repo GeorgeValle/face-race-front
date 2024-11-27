@@ -10,6 +10,7 @@ import Client from './views/row1/Client.jsx'
 import Supplier from './views/row2/Supplier.jsx'
 import Warehouse from './views/row2/Warehouse.jsx'
 import RegisterCash from './views/row1/RegisterCash.jsx'
+import Appointment from './views/row2/Appointment.jsx'
 //import BodyPlane from './components/common/BodyPlane.jsx'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
@@ -33,6 +34,7 @@ const App = () => {
             <Route path="/supplier" element={<Supplier />} />
             <Route path="/warehouse" element={<Warehouse />} />
             <Route path="/register_cash" element={<RegisterCash />} />
+            <Route path="/appointment" element={<Appointment />} />
 
             {/* <Route path="/" element={<HomeView/>}/>
             <Route path="/wiki_ideas_front/" element={<Navigate to="/"/>}/>

@@ -56,8 +56,8 @@ const onSubmitCreate = async () =>{
     try {
         //setLoading(true);
         //setError("")
-        console.log(formData)
-        dispatch(changeSupplier(formData))
+        
+        
         const request = await axios.post(`${config.API_BASE}supplier/register`,formData 
             
             // {
@@ -76,8 +76,9 @@ const onSubmitCreate = async () =>{
             // }
         )
             const response =  request.data;
-            console.log(response);
+            
             //setLoading(false);
+            dispatch(changeSupplier(formData))
             onSubmit(response.message);
 } catch (err) {
     //setError(err);

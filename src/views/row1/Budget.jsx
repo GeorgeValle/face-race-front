@@ -13,7 +13,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass, faPlus, faPrint} from "@fortawesome/free-solid-svg-icons";
 import MessageModal from '../../components/modals/messageModal/MessageModal';
 import {useState} from 'react';
-import {modal} from 'react-dom';
+//import {modal} from 'react-dom';
 
 
 const Budget = () =>{
