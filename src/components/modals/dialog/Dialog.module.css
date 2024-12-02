@@ -22,7 +22,8 @@
     align-items: center;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 500px;
+    width: 550px;
+    height: 320px;
     border-radius: 15px;
     background: rgba(230, 139, 81, 0.80);
     backdrop-filter: blur( 3.75px );

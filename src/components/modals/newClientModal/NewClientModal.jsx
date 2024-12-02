@@ -74,7 +74,7 @@ const onSubmitCreate = async () =>{
             const response =  request.data;
             //setLoading(false);
             
-            onSubmit(response.message);
+            onSubmit(response.Message);
 } catch (err) {
     //setError(err);
     onSubmit(`Error al crear cliente`);
