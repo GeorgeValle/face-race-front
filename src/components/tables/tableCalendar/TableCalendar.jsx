@@ -8,11 +8,12 @@ import config from "../../../config/Envs"
 import TextInputStyled from "../../inputs/inputTextStyled/TextInputStyled"
 import TextViewInfoStyled from "../../textViews/textViewInfoStyled/TextViewInfoStyled"
 import MiniBtn from "../../btns/miniBtn/MiniBtn"
+import { createPortal } from 'react-dom'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faMagnifyingGlass, /*faPlus, faPencil*/} from "@fortawesome/free-solid-svg-icons"
 import { useDispatch } from "react-redux";
 import { addClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
-import {addShift,/* changeShift, deleteShift*/} from "../../../redux/ShiftSlice"
+import {addShift, deleteShift} from "../../../redux/ShiftSlice"
 import { addAppointmentsList, /* changeEvent, deleteEvent */} from "../../../redux/AppointmentsListSlice"
 import { useSelector } from 'react-redux';
 import MessageModal from "../../../components/modals/messageModal/MessageModal"
@@ -86,6 +87,51 @@ const handleConfirmNewAppointment = () =>{
   setModalOpenDialog2(false);
 }
 
+const handleConfirmDeleteAppointment = () =>{
+  setModalOpenAppointment(false);
+  setModalOpenDialog1(true);
+}
+
+const handleDelete = async ()=>{
+  // const key = `${new Date(shift.shiftDate).toISOString().split('T')[0]}-${shift.slotTime}`;
+
+  // //delete local state
+  // setAppointments((prev)=>{
+  //   const newAppointments = {...prev};
+  //   delete newAppointments[key];
+  //   return newAppointments;
+  // });
+
+  // setAppointments((prev) => {
+  //   return prev.filter((appointment) => {
+  //     const appointmentKey = `${appointment.shiftDate}-${appointment.slotTime}`;
+  //     return appointmentKey !== key;
+  //   });
+  // });
+
+  try{
+    //delete in DB
+  const request = await axios.delete(`${config.API_BASE}delete/${shift._id}`)
+  const response =request.data;
+  if(!response.data){throw Error("No se borró ningún turno")}
+  setMessage(response.message)
+  MessageResponse();
+  deleteShift();
+  const dateNow = selectedMonth;
+  setSelectedMonth(dateNow+1)
+  setSelectedMonth(dateNow-1)
+
+  
+
+  }catch(error){
+    setMessage(error)
+    MessageResponse();
+
+  }
+  
+
+}
+
 const fetchByDNI = async (dni) =>{
   try{
     const request = await axios.get(`${config.API_BASE}appointment/dni/${dni}`)
@@ -125,17 +171,6 @@ const fetchClient = async() => {
       //params: { month: selectedMonth + 1, year: selectedYear }
       const response =
       await axios.get(`${config.API_BASE}appointment/date/${selectedMonth + 1}/${selectedYear}`)
-      // .then(response => { 
-      //   const fetchedAppointments = response.data; 
-
-      //   const formattedAppointments = fetchedAppointments.reduce((acc, appointment) => {
-      //   const key = `${appointment.date.toISOString().split('T')[0]}-${appointment.timeSlot}`; 
-      //     acc[key] = appointment; 
-      //     return acc; }, {});
-      //   setAppointments(formattedAppointments);
-      // }) 
-      // .catch(error => console.error('Error fetching appointments:', error)); }
-    //   if(!response.data){
         setAppointments(response.data);
         
       }
@@ -263,10 +298,10 @@ const fetchClient = async() => {
 
   return (
     <div>
-      {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
-      {modalOpenDialog1&&(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDelete} onClose={handleClose}/>)}
-      {modalOpenDialog2&&(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose}/>)}
-      {modalOpenAppointment&&(<AppointmentModal TheShift={shift} onPrint={null} onDelete={handleConfirmNewAppointment} onClose={handleClose}/>)}
+      {modalOpenMessage&&createPortal(<MessageModal messageModal={message} onClose={handleClose}/>,document.body)}
+      {modalOpenDialog1&&createPortal(<Dialog messageModal={`¿Está seguro de ELIMINAR el turno para ${shift.person}?`} messageConfirm={"ELIMINAR"} onSubmit={handleDelete} onClose={handleClose}/>,document.body)}
+      {modalOpenDialog2&&createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose}/>,document.body)}
+      {modalOpenAppointment&&createPortal(<AppointmentModal TheShift={shift} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose}/>,document.body)}
     <div className={styles.center}>
       <div className={styles.separate} >
       <div className={styles.article} >
