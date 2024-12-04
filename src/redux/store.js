@@ -3,6 +3,8 @@ import userReducer from "./UserSlice";
 import clientReducer from "./ClientSlice";
 import supplierReduce from "./SupplierSlice";
 import itemReduce from "./ItemSlice";
+import shiftReduce from "./ShiftSlice"
+import appointmentsListReduce from "./AppointmentsListSlice"
 
 export const store = configureStore({
     reducer: {
@@ -10,5 +12,7 @@ export const store = configureStore({
         client: clientReducer,
         supplier: supplierReduce,
         item: itemReduce,
+        shift: shiftReduce,
+        appointmentsList: appointmentsListReduce
     },
 });

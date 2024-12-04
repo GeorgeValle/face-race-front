@@ -34,7 +34,7 @@ const Client = () => {
     const [message, setMessage] = useState("");
     const [messageModal, setMessageModal] = useState("");
     const [messageButton, setMessageButton] = useState("");
-    const [modalOpenDialog, setModalOpenDialog] = useState("");
+    const [modalOpenDialog, setModalOpenDialog] = useState(false);
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
