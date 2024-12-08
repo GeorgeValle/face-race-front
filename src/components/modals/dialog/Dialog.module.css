@@ -22,7 +22,7 @@
     align-items: center;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 550px;
+    width: 560px;
     height: 320px;
     border-radius: 15px;
     background: rgba(230, 139, 81, 0.80);
@@ -51,6 +51,7 @@
 
 .modal_content{
     padding-bottom: 2px;
+    padding-left: 3px;
     }
 
 .modal_footer{

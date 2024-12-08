@@ -14,7 +14,7 @@ import {faMagnifyingGlass, /*faPlus, faPencil*/} from "@fortawesome/free-solid-s
 import { useDispatch } from "react-redux";
 import { addClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
 import {addShift, deleteShift} from "../../../redux/ShiftSlice"
-import { addAppointmentsList, /* changeEvent, deleteEvent */} from "../../../redux/AppointmentsListSlice"
+//import { addAppointmentsList, /* changeEvent, deleteEvent */} from "../../../redux/AppointmentsListSlice"
 import { useSelector } from 'react-redux';
 import MessageModal from "../../../components/modals/messageModal/MessageModal"
 import Dialog from "../../../components/modals/dialog/Dialog"
@@ -25,11 +25,13 @@ const TableCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [theDate, setTheDate] = useState(new Date());
   const [theTimeSlot, setTheTimeSlot] = useState("");
+  const [theId, setTheId]= useState("");
+  //const[theStatus, setThe Status] = useState(false);
   const [weeks, setWeeks] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(date.getMonth());
   const [selectedYear, setSelectedYear] = useState(date.getFullYear());
 //   const [selectedWeek, setSelectedWeek] = useState(null);
-  const [appointments, setAppointments] = useState({});
+  const [appointments, setAppointments] = useState([]);
   const [inputDNI, setInputDNI] = useState("")
   const [message, setMessage] = useState("");
     const [messageModal, setMessageModal] = useState("");
@@ -39,7 +41,13 @@ const TableCalendar = () => {
     const [modalOpenMessage, setModalOpenMessage] = useState("");
     const [modalOpenDialog2, setModalOpenDialog2] = useState(false);
     const [modalOpenAppointment, setModalOpenAppointment] = useState(false);
+    const [isFetchClient, setIsFetchClient] = useState(false);
 
+
+
+
+    
+    
 //  const [isClient, setIsClient] = useState(false)
 
   const client = useSelector((state)=> state.client);
@@ -93,7 +101,22 @@ const handleConfirmDeleteAppointment = () =>{
 }
 
 const handleDelete = async ()=>{
-  // const key = `${new Date(shift.shiftDate).toISOString().split('T')[0]}-${shift.slotTime}`;
+  
+  // setAppointments(prevAppointments => {
+  //   const updatedAppointments = prevAppointments.filter(appointment => {
+  //     const appointmentKey = `${new Date(appointment.shiftDate).toISOString().split('T')[0]}-${appointment.timeSlot}`;
+  //     return appointmentKey !== key; 
+  //   });
+  //     return updatedAppointments; 
+  // });
+  
+  
+  // const appointmentKey = `${theDate.split('T')[0]}-${theTimeSlot}`;
+
+  // setAppointments(prevAppointments => {
+  //   const newAppointments = { ...prevAppointments };
+  //       delete newAppointments[appointmentKey];
+  //       return newAppointments; });
 
   // //delete local state
   // setAppointments((prev)=>{
@@ -108,25 +131,29 @@ const handleDelete = async ()=>{
   //     return appointmentKey !== key;
   //   });
   // });
+  setModalOpenDialog1(false);
 
   try{
     //delete in DB
-  const request = await axios.delete(`${config.API_BASE}delete/${shift._id}`)
+  const request = await axios.delete(`${config.API_BASE}appointment/delete/${theId}`)
   const response =request.data;
-  if(!response.data){throw Error("No se borró ningún turno")}
-  setMessage(response.message)
-  MessageResponse();
-  deleteShift();
-  const dateNow = selectedMonth;
-  setSelectedMonth(dateNow+1)
-  setSelectedMonth(dateNow-1)
-
   
+  if(response.deleted===true){
+    setMessage(response.message)
+    MessageResponse();
+    deleteShift();
+    
+    setAppointments(prevAppointments => 
+      prevAppointments.filter(appointment => appointment._id !== theId) 
+    );
+  }else{
+    setMessage(response.message||"NO se eliminó ningún turno")
+    MessageResponse();
+  }
 
   }catch(error){
-    setMessage(error)
+    setMessage('Error al eliminar el turno')
     MessageResponse();
-
   }
   
 
@@ -136,9 +163,16 @@ const fetchByDNI = async (dni) =>{
   try{
     const request = await axios.get(`${config.API_BASE}appointment/dni/${dni}`)
       const response = request.data
-      dispatch(addShift(response.data))
+      
       if(response.data){
+        dispatch(addShift(response.data))
         setModalOpenAppointment(true)
+        setTheDate(response.data.shiftDate)
+        
+        setTheTimeSlot(response.data.timeSlot)
+        setTheId(response.data._id)
+        
+
         
       }
   }catch(error){
@@ -155,7 +189,7 @@ const fetchClient = async() => {
         const response = request.data
         dispatch(addClient(response.data))
         if(response.data){
-          
+          setIsFetchClient(true);
           fetchByDNI(response.data.dni);
         }
     }catch(error){
@@ -166,20 +200,62 @@ const fetchClient = async() => {
   
 }
 
-  const fetchAppointments = async () => {
-    try {
-      //params: { month: selectedMonth + 1, year: selectedYear }
-      const response =
-      await axios.get(`${config.API_BASE}appointment/date/${selectedMonth + 1}/${selectedYear}`)
-        setAppointments(response.data);
-        
-      }
-    catch (error) {
-      console.error('Error fetching appointments:', error);
-    }
-  };
 
   useEffect(() => {
+    
+    const fetchAppointments = async () => {
+        //params: { month: selectedMonth + 1, year: selectedYear }
+        try{
+        const response =
+        await axios.get(`${config.API_BASE}appointment/date/${selectedMonth + 1}/${selectedYear}`)
+        
+          // Extraer los datos relevantes de la respuesta
+          // const fetchedAppointments = response.data || [];
+          // const formattedAppointments = fetchedAppointments.reduce((acc, appointment) => {
+          //   const key = `${new Date(appointment.shiftDate).toISOString().split('T')[0]}-${appointment.timeSlot}`;
+          //   acc[key] = {
+          //     _id: appointment._id,
+          //     person: appointment.person,
+          //     dni: appointment.dni,
+          //     email: appointment.email,
+          //     phone: appointment.phone,
+          //     shiftDate: appointment.shiftDate,
+          //     timeSlot: appointment.timeSlot
+          //   };
+          //   return acc;
+          // }, {});
+          // const newAppointments = Object.values(response.data);
+          setAppointments(response.data.data);
+}catch(error){
+setMessage("sin info")
+MessageResponse();
+}
+      
+          
+        // const appointmentsReceived = response.data.data.data
+        // if (Array.isArray(appointmentsReceived)) {
+        //   const formattedAppointments = appointmentsReceived.reduce((acc, appointmentsReceived) => {
+        //       const key = `${new Date(appointmentsReceived.shiftDate).toISOString().split('T')[0]}-${appointmentsReceived.timeSlot}`;
+        //       acc[key] = {
+        //           _id: appointmentsReceived._id, 
+        //           person: appointmentsReceived.person, 
+        //           dni: appointmentsReceived.dni, 
+        //           email: appointmentsReceived.email, 
+        //           phone: appointmentsReceived.phone, 
+        //           shiftDate: appointmentsReceived.shiftDate, 
+        //           timeSlot: appointmentsReceived.timeSlot 
+        //       };
+        //       return acc;
+        //   }, {});
+
+
+        // setAppointments(formattedAppointments);
+        // }
+          
+        
+      
+    };
+
     const generateWeeks = () => {
       const startOfMonth = new Date(selectedYear, selectedMonth, 1);
       const endOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
@@ -212,7 +288,7 @@ const fetchClient = async() => {
   }, [selectedMonth, selectedYear]);
 
   
-  const sendNewAppointment = (date, timeSlot) =>{
+  const sendNewAppointment = async (oneDate, timeSlot) =>{
     
     //personal data
     const person = `${client.name} ${client.surname}`;
@@ -220,51 +296,130 @@ const fetchClient = async() => {
     const email = client.email;
     const dni = client.dni;
 
-    const newAppointment = { person, phone, email, dni, date, timeSlot };
+    const shiftDate = new Date (oneDate);
+    shiftDate.setUTCHours(3,0,0,0);
+    //const newAppointment = { person, phone, email, dni, date, timeSlot };
+    const newAppointment = {person, dni, email, phone, shiftDate, timeSlot}
     //update local useState 
-    setAppointments((prev) => ({
-      ...prev,
-      [`${date.toISOString().split('T')[0]}-${timeSlot}`]: newAppointment
-    }));
-
+    // setAppointments((prev) => ({
+    //   ...prev,
+    //   [`${date.toISOString().split('T')[0]}-${timeSlot}`]: newAppointment
+    // }));
     
-    addAppointmentsList(appointments)
+    //setAppointments((prev) => [ ...prev, { ...newAppointment, shiftDate: new Date(newAppointment.shiftDate) } ]);
+    
+    try{
+      const request = await axios.post(`${config.API_BASE}appointment/register`, newAppointment);
+      const response = request.data;
+      if(response.registered===true){
+        
+        setAppointments((prev) => [ ...prev, response.data ]);
+        setMessage(response.message);
+        MessageResponse();
+
+      }else{
+        setMessage(response.message, "-",response.status);
+        MessageResponse();
+      }
+      // .then(response => setMessage(response.message)) //console.log( `${response.message}`))
+      // .catch(error => console.error('Error guardando datos:', error));
+    }catch(error){
+      setMessage("Error al registrar el turno ",);
+      MessageResponse();
+      
+      // console.error('Error guardando datos:', error);
+    }
+    //addAppointmentsList(appointments)
     // send data to server
-    axios.post(`${config.API_BASE}appointment/register`, newAppointment)
-      .then(response => setMessage(response.message)) //console.log( `${response.message}`))
-      .catch(error => console.error('Error guardando datos:', error));
+    
       
   }
   
-  const handleSlotClick = (date, timeSlot) => {
+  const handleSlotClick = async (theAppointment, isBooked, date, slot) => {
     // const person = prompt('Nombre de la persona:');
     // const phone = prompt('Teléfono:');
     // const email = prompt('Email:');
     // const dni = prompt('DNI:');
     //setDate(date)
-    setTheDate(date)
-    setTheTimeSlot(timeSlot)
+    // setTheDate(theAppointment.shiftDate)
+    // setTheTimeSlot(theAppointment.timeSlot)
+    // setTheStatus(isBooked)
+  
+    // const appointmentKey = `${new Date(theAppointment.shiftDate).toISOString().split('T')[0]}-${theAppointment.timeSlot}`;
+    //   const appointment = appointments[appointmentKey];
 
-    setMessageModal(`¿Está seguro de agendar un turno para ${client.name} ${client.surname}?`)
-    setMessageDialog('Agendar')
-    setModalOpenDialog2(true);
+    if(isBooked){
+      
+      const dni = theAppointment.dni
+      await fetchByDNI(dni);
+    }else if(isFetchClient){
+      setDate(date)
+      setTheDate(date)
+      setTheTimeSlot(slot)
+      setMessageModal(`¿Está seguro de agendar un turno para ${client.name} ${client.surname}?`)
 
-    // if(isConfirm){
-    //   sendNewAppointment(date, timeSlot);
-    // }
-
-      // setIsConfirm(false)
-    
+      setMessageDialog('Agendar')
+      setModalOpenDialog2(true);
+      setIsFetchClient(false);
+    }else{
+      setMessage("NO se seleccionó un cliente para agendar");
+      MessageResponse();
+    }
     
   };
 
   const renderColumns = () => {
+    // return weeks.map((week, index) => (
+    //   <div key={`week-${index}`} className={styles.weekRow}>
+    //     {week.map(date => {
+    //       const day = date.getDate();
+    //       const month = date.toLocaleString('es', { month: 'long' });
+    //       const dateString = date.toISOString().split('T')[0];
+
+    //       const timeSlots = ['10-12', '13-15', '16-18'];
+
+    //       return (
+    //         <div key={day} className={styles.dayColumn}>
+    //           <div className={styles.header}>
+    //             {day} - {month}
+    //           </div>
+    //           {timeSlots.map(slot => {
+    //             const appointmentKey = `${dateString}-${slot}`;
+    //             const appointment = appointments[appointmentKey];
+    //             const isBooked = !!appointment;
+    //             const slotClass = isBooked ? styles.bookedSlot : styles.availableSlot;
+                
+
+    //             return (
+    //               <div
+    //                 key={slot}
+    //                 className={slotClass}
+    //                 onClick={() => handleSlotClick(date, slot, isBooked)}
+    //               >
+    //                 {slot}
+    //               </div>
+    //             );
+    //           })}
+    //         </div>
+    //       );
+    //     })}
+    //   </div>
+    // ));
+    const groupedAppointments = appointments.reduce((acc, appointment) => {
+      const dateKey = new Date(appointment.shiftDate).toISOString().split('T')[0];
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(appointment);
+      return acc;
+    }, {});
+
     return weeks.map((week, index) => (
       <div key={`week-${index}`} className={styles.weekRow}>
         {week.map(date => {
+          const dateString = date.toISOString().split('T')[0];
           const day = date.getDate();
           const month = date.toLocaleString('es', { month: 'long' });
-          const dateString = date.toISOString().split('T')[0];
 
           const timeSlots = ['10-12', '13-15', '16-18'];
 
@@ -274,8 +429,8 @@ const fetchClient = async() => {
                 {day} - {month}
               </div>
               {timeSlots.map(slot => {
-                const appointmentKey = `${dateString}-${slot}`;
-                const appointment = appointments[appointmentKey];
+                const appointment = groupedAppointments[dateString]?.find(appt => appt.timeSlot === slot);
+                //if(!appointment){setTheDate(date),setTheTimeSlot(slot)}
                 const isBooked = !!appointment;
                 const slotClass = isBooked ? styles.bookedSlot : styles.availableSlot;
 
@@ -283,7 +438,7 @@ const fetchClient = async() => {
                   <div
                     key={slot}
                     className={slotClass}
-                    onClick={() => handleSlotClick(date, slot)}
+                    onClick={() => handleSlotClick(appointment, isBooked, date, slot) }
                   >
                     {slot}
                   </div>

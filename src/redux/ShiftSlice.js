@@ -36,7 +36,7 @@ export const shiftSlice = createSlice({
             state.email = email;
             state.dni = dni;
         },
-        deleteClient:(state)=>{
+        deleteShift:(state)=>{
             state._id=null;
             state.client=null;
             state.shiftDate=null;
