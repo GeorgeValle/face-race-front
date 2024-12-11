@@ -5,6 +5,9 @@ import BtnClose from '../../btns/btnClose/BtnClose'
 import MiniBtn from '../../btns/miniBtn/MiniBtn'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash, faPrint } from "@fortawesome/free-solid-svg-icons"
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import TextViewShiftPDF from "../../textViews/textViewShiftPDF/TextViewShiftPDF"
+
 // import axios from 'axios'
 // import { useState } from 'react'
 // import config from '../../../config/Envs'
@@ -14,6 +17,7 @@ import { faTrash, faPrint } from "@fortawesome/free-solid-svg-icons"
 
 const AppointmentModal = ({ TheShift= null, onPrint, onClose, onDelete  }) =>{
 
+    
 
     function formatDateToSpanish(dateString) { 
         // Create a object Date whit a String
@@ -63,7 +67,15 @@ const AppointmentModal = ({ TheShift= null, onPrint, onClose, onDelete  }) =>{
                         
                     </tbody>
                 </table>
-                <div className={Style.row_title}><MiniBtn onClick={onDelete} isRed={true}><FontAwesomeIcon icon={faTrash} /></MiniBtn><MiniBtn onClick={onPrint} isWhite={true}><FontAwesomeIcon icon={faPrint} /></MiniBtn></div>
+                <div className={Style.row_title}>
+                    <MiniBtn onClick={onDelete} isRed={true}><FontAwesomeIcon icon={faTrash} /></MiniBtn>
+                <PDFDownloadLink
+                    document={<TextViewShiftPDF shift={TheShift}/>}
+                    fileName="Turno rectificado.pdf"
+                    >
+                    <MiniBtn onClick={onPrint} isWhite={true}><FontAwesomeIcon icon={faPrint} /></MiniBtn>
+                </PDFDownloadLink>
+                </div>
             </div>
         </div>
     </div>
