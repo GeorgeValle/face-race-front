@@ -100,6 +100,26 @@ const handleConfirmDeleteAppointment = () =>{
   setModalOpenDialog1(true);
 }
 
+const handleEditStatus= async (oneStatus) =>{
+  try {
+    await axios.put(`${config.API_BASE}appointment/id/${shift._id}`, {
+      status: oneStatus,
+    });
+
+  } catch (error) {
+    //delete later
+    console.error('Error al actualizar los datos:', error);
+    setMessage('error al actualizar el estado')
+    MessageResponse();
+  }
+  //update local appointment.status 
+  setAppointments(prevAppointments =>
+      prevAppointments.map(appointment =>
+        appointment._id === shift._id
+        ? { ...appointment, status: oneStatus }
+        : appointment ))
+};
+
 const handleDelete = async ()=>{
   
   // setAppointments(prevAppointments => {
@@ -442,7 +462,7 @@ MessageResponse();
                 //slotClass = isBooked ? styles.bookedSlot : styles.availableSlot;
                   if (appointment){
                     switch(appointment.status){
-                      case 'attended':
+                        case 'attended':
                         slotClass=styles.attendedSlot;
                         break;
                         case 'canceled':
@@ -484,7 +504,7 @@ MessageResponse();
       {modalOpenMessage&&createPortal(<MessageModal messageModal={message} onClose={handleClose}/>,document.body)}
       {modalOpenDialog1&&createPortal(<Dialog messageModal={`¿Está seguro de ELIMINAR el turno para ${shift.person}?`} messageConfirm={"ELIMINAR"} onSubmit={handleDelete} onClose={handleClose}/>,document.body)}
       {modalOpenDialog2&&createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose}/>,document.body)}
-      {modalOpenAppointment&&createPortal(<AppointmentModal TheShift={shift} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose}/>,document.body)}
+      {modalOpenAppointment&&createPortal(<AppointmentModal TheShift={shift} onEditStatus={handleEditStatus} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose}/>,document.body)}
     <div className={styles.center}>
       <div className={styles.separate} >
       <div className={styles.article} >
