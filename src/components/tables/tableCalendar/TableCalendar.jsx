@@ -405,6 +405,10 @@ MessageResponse();
     //     })}
     //   </div>
     // ));
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
     const groupedAppointments = appointments.reduce((acc, appointment) => {
       const dateKey = new Date(appointment.shiftDate).toISOString().split('T')[0];
       if (!acc[dateKey]) {
@@ -420,6 +424,7 @@ MessageResponse();
           const dateString = date.toISOString().split('T')[0];
           const day = date.getDate();
           const month = date.toLocaleString('es', { month: 'long' });
+          const isPastDate = date < yesterday;
 
           const timeSlots = ['10-12', '13-15', '16-18'];
 
@@ -432,13 +437,36 @@ MessageResponse();
                 const appointment = groupedAppointments[dateString]?.find(appt => appt.timeSlot === slot);
                 //if(!appointment){setTheDate(date),setTheTimeSlot(slot)}
                 const isBooked = !!appointment;
-                const slotClass = isBooked ? styles.bookedSlot : styles.availableSlot;
+                let slotClass = styles.availableSlot;
+                
+                //slotClass = isBooked ? styles.bookedSlot : styles.availableSlot;
+                  if (appointment){
+                    switch(appointment.status){
+                      case 'attended':
+                        slotClass=styles.attendedSlot;
+                        break;
+                        case 'canceled':
+                          slotClass=styles.canceledSlot;
+                          break;
+                        case 'missing':
+                          slotClass=styles.missingSlot;
+                          break;
+                        case 'pending':
+                          slotClass=styles.pendingSlot;
+                          break;
+                        default:
+                          slotClass=styles.bookedSlot;
+                    }
+                  }
 
+                if (isPastDate) { 
+                  slotClass = styles.pastSlot;
+                }
                 return (
                   <div
                     key={slot}
                     className={slotClass}
-                    onClick={() => handleSlotClick(appointment, isBooked, date, slot) }
+                    onClick={() => !isPastDate && handleSlotClick(appointment, isBooked, date, slot) }
                   >
                     {slot}
                   </div>
