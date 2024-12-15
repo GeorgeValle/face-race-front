@@ -51,8 +51,52 @@
 }
 
 .bookedSlot {
+    background-color: #dd641e;
+    /* orange */
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.pastSlot {
+    background-color: #8f8e8e;
+    /* gray */
+    cursor:not-allowed;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.pendingSlot {
+    background-color: #d4f153;
+    /* Yellow */
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.attendedSlot {
+    background-color: #2421ec;
+    /* Blue */
+    cursor: pointer;
+    color: white;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.canceledSlot {
     background-color: #ff6347;
-    /* Rojo */
+    /* red */
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.missingSlot {
+    background-color: #dd641e;
+    /* orange */
+    color: white;
     cursor: pointer;
     padding: 5px;
     margin: 2px 0;
@@ -62,6 +106,8 @@
     display: flex;
     justify-content: center;
 }
+
+
 
 .separate {
     display: flex;
