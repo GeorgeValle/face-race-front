@@ -11,7 +11,7 @@ export const TableClient = ({row}) => {
                         <th>ID Cliente</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>Fecha / Hora</th>
+                        <th>Fecha</th>
                         <th>Correo</th>
                         <th>DNI</th>
                         <th>Tel.</th>

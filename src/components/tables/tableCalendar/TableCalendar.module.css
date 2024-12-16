@@ -147,7 +147,7 @@
 
 .inputDate_group:hover .label, .input:focus {
     color: #ccc;
-  }
+}
 
 .styledSelect {
     display:flex;
