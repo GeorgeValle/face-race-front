@@ -33,9 +33,9 @@ const Budget = () =>{
     }
     
     
-    const item1 =[{code:323434,item:"Zapatillas Casual para motocicletas",quantity:2,price:"12,00",amount:54.45},{code:323434,item:"Camperas para motocicletas",quantity:2,price:12000.00,amount:12000.00}]
+    const item1 =[{code:323434,item:"Zapatillas Casual para motocicletas",quantity:2,price:"120250",amount:240500.00},{code:323434,item:"Camperas para motocicletas",quantity:2,price:190000.00,amount:380000.00}]
 
-    const row1={id:1,name:"Victor",surname:"Perez",date:"",email:"losespinos@gmail.com",dni:23456789,phone:3514585956,cel:234564554}
+    const row1={id:1,name:"Victor",surname:"Perez",date:"15/12/2024",email:"losespinos@gmail.com",dni:23456789,phone:3514585956,cel:234564554}
     return(
 
         <div className={Style.mainContainer}>
@@ -74,7 +74,7 @@ const Budget = () =>{
                                     <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                 </div>
                                 <BtnCommon title={"Imprimir "} ColorRed={true} onClick={()=>print()} ><FontAwesomeIcon icon={faPrint} /></BtnCommon>
-                                <MiniTotal>0,00</MiniTotal>
+                                <MiniTotal>620500,00</MiniTotal>
                         </article> 
                     </div>
                 </article>

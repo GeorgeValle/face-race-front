@@ -1,10 +1,10 @@
 import Style from './AppointmentModal.module.css'
 // import MIniNavBar from '../../miniNavbar/MIniNavBar'
 import BtnClose from '../../btns/btnClose/BtnClose'
-
+import TextInputStyled from '../../inputs/inputTextStyled/TextInputStyled'
 import MiniBtn from '../../btns/miniBtn/MiniBtn'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faTrash, faPrint } from "@fortawesome/free-solid-svg-icons"
+import { faTrash, faPrint,faPencil } from "@fortawesome/free-solid-svg-icons"
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import TextViewShiftPDF from "../../textViews/textViewShiftPDF/TextViewShiftPDF"
 
@@ -18,6 +18,7 @@ import { useState, useEffect } from 'react'
 const AppointmentModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
 
     const [theStatus, setTheStatus] = useState("");
+    const [theDescription, setTheDescription] = useState(TheShift.description);
     const [selectedOption, setSelectedOption] = useState(TheShift.status);
 
     function formatDateToSpanish(dateString) { 
@@ -33,6 +34,9 @@ const AppointmentModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDe
         return `${day}-${month}-${year}`;   
     }
 
+    const handleDescription = () =>{
+        onEditDescription(theDescription)
+    }
     const handleBlur = () =>{
         if(!selectedOption==""){
         onEditStatus(selectedOption)
@@ -83,9 +87,15 @@ useEffect(() => {
                         </tr>
                         <tr>
                             <th>Email:</th>
-                            <td>{TheShift.email}</td>
-                            <th>Teléfono:</th>
-                            <td>{TheShift.phone}</td>
+                            <td colSpan={3}>{TheShift.email}</td>
+                            
+                        </tr>
+                        <tr>
+                        <th>Estado:</th>
+                        <td>{theStatus}</td>
+                        <th>Teléfono:</th>
+                        <td>{TheShift.phone}</td>    
+                            
                         </tr>
                         <tr>
                             <th>Fecha:</th>
@@ -94,10 +104,9 @@ useEffect(() => {
                             <td>{TheShift.timeSlot}</td>
                         </tr>
                         <tr>
-                            <th>Estado:</th>
-                            <td>{theStatus}</td>
                             <th>Observación:</th>
-                            <td>{TheShift.description}</td>
+                            <td colSpan={3}>{theDescription}</td>
+                            
                         </tr>
                     </tbody>
                 </table>
@@ -121,6 +130,8 @@ useEffect(() => {
                             <option value="pending">Pendiente</option>
                         </select>
                     </div>
+                    <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setTheDescription(e.target.value)} value={theDescription} />
+                    <MiniBtn onClick={handleDescription} isWhite={true}><FontAwesomeIcon icon={faPencil} /></MiniBtn>
                 </div>
             </div>
         </div>
