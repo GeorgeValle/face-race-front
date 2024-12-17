@@ -4,7 +4,7 @@ import BtnClose from '../../btns/btnClose/BtnClose'
 import TextInputStyled from '../../inputs/inputTextStyled/TextInputStyled'
 import MiniBtn from '../../btns/miniBtn/MiniBtn'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faTrash, faPrint,faPencil } from "@fortawesome/free-solid-svg-icons"
+import { faTrash, faPrint,faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import TextViewShiftPDF from "../../textViews/textViewShiftPDF/TextViewShiftPDF"
 
@@ -131,7 +131,7 @@ useEffect(() => {
                         </select>
                     </div>
                     <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setTheDescription(e.target.value)} value={theDescription} />
-                    <MiniBtn onClick={handleDescription} isWhite={true}><FontAwesomeIcon icon={faPencil} /></MiniBtn>
+                    <MiniBtn onClick={handleDescription} isWhite={true}><FontAwesomeIcon icon={faFloppyDisk} /></MiniBtn>
                 </div>
             </div>
         </div>

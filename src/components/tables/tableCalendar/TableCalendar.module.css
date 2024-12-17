@@ -51,7 +51,7 @@
 }
 
 .bookedSlot {
-    background-color: #dd641e;
+    background-color: #eeb899;
     /* orange */
     color: white;
     cursor: pointer;
@@ -111,7 +111,7 @@
 
 .separate {
     display: flex;
-    width: 70%;
+    width: 78%;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
