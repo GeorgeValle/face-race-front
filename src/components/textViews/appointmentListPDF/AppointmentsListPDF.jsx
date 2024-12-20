@@ -44,6 +44,53 @@ const styles = StyleSheet.create({
 const AppointmentsPDF = ({ appointments }) => {
     const totalPages = Math.ceil(appointments.length / 10);
 
+    function formatDateToSpanish(dateString) { 
+        // Create a object Date whit a String
+        const date = new Date(dateString);
+        
+        // Obtain day, month and year
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const year = date.getFullYear();
+        
+        // Format to spanish DD-MM-YYYY
+        return `${day}-${month}-${year}`;   
+    }
+
+    function formatStatusToSpanish(status){
+        switch(status){
+            case 'pending':
+                return 'Pendiente';
+                
+            case 'canceled':
+                return 'Cancelado';
+            
+            case 'attended':
+                return 'Atendido';
+                
+            case 'missing':
+                return 'Ausente';
+            default:
+                return "";
+    }
+}
+
+function formatHour(hour){
+    switch(hour){
+        case '10-12':
+            return '10:00 a 12:00';
+            
+        case '13-15':
+            return '13:00 a 15:00';
+        
+        case '16-18':
+            return '16:00 a 18:00';
+            
+        default:
+            return "";
+    }
+}
+
     return (
         <Document>
             {Array.from({ length: totalPages }).map((_, pageIndex) => (
@@ -53,9 +100,9 @@ const AppointmentsPDF = ({ appointments }) => {
                         <View key={index} style={styles.section}>
                             <Text style={styles.appointment}>{`Nombre: ${appointment.person}`}</Text>
                             <Text style={styles.appointment}>{`Email: ${appointment.email}`}</Text>
-                            <Text style={styles.appointment}>{`Fecha: ${appointment.shiftDate}`}</Text>
-                            <Text style={styles.appointment}>{`Hora: ${appointment.timeSlot}`}</Text>
-                            <Text style={styles.appointment}>{`Estado: ${appointment.status}`}</Text>
+                            <Text style={styles.appointment}>{`Fecha: ${formatDateToSpanish(appointment.shiftDate)}`}</Text>
+                            <Text style={styles.appointment}>{`Hora: ${formatHour(appointment.timeSlot)}`}</Text>
+                            <Text style={styles.appointment}>{`Estado: ${formatStatusToSpanish(appointment.status)}`}</Text>
                             <View style={styles.line} />
                         </View>
                     ))}
