@@ -24,6 +24,21 @@ const TextViewShiftPDF = ({shift}) => {
         return `${day}-${month}-${year}`;
     }
 
+    function formatHour(hour){
+        switch(hour){
+            case '10-12':
+                return '10:00 a 12:00';
+                
+            case '13-15':
+                return '13:00 a 15:00';
+            
+            case '16-18':
+                return '16:00 a 18:00';
+                
+            default:
+                return "";
+        }
+    }
     return (
         <>
         <Document>
@@ -37,31 +52,37 @@ const TextViewShiftPDF = ({shift}) => {
             backgroundColor: "#ccc",
             padding: "8",
         }}>
-            <View style={{flexDirection: "column", justifyContent: "flex-start", alignItems: "center"}}>
+            <View style={{flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
                 <Text style={{ color: "#3388af", fontSize: "13px" }}>
-                    TURNO PARA RECTIFICACIÓN
+                    TURNO PARA PRESUPUESTAR
+                </Text>
+                <Text style={{ color: "#3388af", fontSize: "13px" }}>
+                    RECTIFICACIÓN
                 </Text>
                 <Text style={{ color: "#3388af"}}>
                     __________________________________________________________
                 </Text>
             </View>
-            <View  style={{marginTop: "22px", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+            <View  style={{marginTop: "22px", flexDirection: "column", justifyContent: "left", alignItems: "left"}}>
                 <Text style={{ marginBottom: "10px", color: "#3388af", fontSize: "8px" }} >
                     {`Nombre: ${shift.person}`}
                 </Text>
                 <Text style={{ marginBottom: "10px", color: "#3388af", fontSize: "8px" }} >
-                    {` Email: ${shift.email}`}
+                    {`Email: ${shift.email}`}
                 </Text>
                 <Text style={{ marginBottom: "10px", color: "#3388af", fontSize: "8px" }} >
-                    {`Dia: ${formatDateToSpanish(shift.shiftDate)}`}
+                    {`Día: ${formatDateToSpanish(shift.shiftDate)}`}
                 </Text>
-                <Text style={{ marginBottom: "10px", color: "#3388af", fontSize: "8px" }} >
-                    {`Hora entre: ${shift.timeSlot}`}
+                <Text style={{ marginBottom: "20px", color: "#3388af", fontSize: "8px" }} >
+                    {`Hora entre: ${formatHour(shift.timeSlot)}`}
+                </Text>
+                <Text style={{ marginBottom: "10px", color: "#3388af", fontSize: "8px" }}>
+                    {`Recuerde que al dejar la moto en la brevedad nos contactaremos para enviarle el presupuesto`}
                 </Text>
 
                 
             </View>
-            <View style={{marginTop: "70px",flexDirection: "column", justifyContent: "flex-end", alignItems: "center"}}>
+            <View style={{marginTop: "30px",flexDirection: "column", justifyContent: "flex-end", alignItems: "center"}}>
                 <Text style={{ color: "#3388af", marginBottom: "4px"}}>
                     __________________________________________________________
                 </Text>

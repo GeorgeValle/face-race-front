@@ -111,7 +111,7 @@
 
 .separate {
     display: flex;
-    width: 78%;
+    width: 85%;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
