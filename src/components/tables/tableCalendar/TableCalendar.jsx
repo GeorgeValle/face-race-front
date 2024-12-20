@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from 'react';
 // import Calendar from 'react-calendar';
+// import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 import styles from './TableCalendar.module.css';
-// import 'react-calendar/dist/Calendar.css';
 import config from "../../../config/Envs"
 import TextInputStyled from "../../inputs/inputTextStyled/TextInputStyled"
 import TextViewInfoStyled from "../../textViews/textViewInfoStyled/TextViewInfoStyled"
@@ -14,7 +14,6 @@ import { faMagnifyingGlass, /*faPlus, faPencil*/ } from "@fortawesome/free-solid
 import { useDispatch } from "react-redux";
 import { addClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
 import { addShift, deleteShift } from "../../../redux/ShiftSlice"
-//import { addAppointmentsList, /* changeEvent, deleteEvent */} from "../../../redux/AppointmentsListSlice"
 import { useSelector } from 'react-redux';
 import MessageModal from "../../../components/modals/messageModal/MessageModal"
 import Dialog from "../../../components/modals/dialog/Dialog"
@@ -27,16 +26,16 @@ const TableCalendar = () => {
   const [theDate, setTheDate] = useState(new Date());
   const [theTimeSlot, setTheTimeSlot] = useState("");
   const [theId, setTheId] = useState("");
-  //const[theStatus, setThe Status] = useState(false);
   const [weeks, setWeeks] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(date.getMonth());
   const [selectedYear, setSelectedYear] = useState(date.getFullYear());
+  const [selectedOption, setSelectedOption] = useState("");
   //   const [selectedWeek, setSelectedWeek] = useState(null);
   const [appointments, setAppointments] = useState([]);
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [inputDNI, setInputDNI] = useState("")
   const [message, setMessage] = useState("");
   const [messageModal, setMessageModal] = useState("");
-  //const [messageButton, setMessageButton] = useState("");
   const [messageDialog, setMessageDialog] = useState("");
   const [modalOpenDialog1, setModalOpenDialog1] = useState(false);
   const [modalOpenMessage, setModalOpenMessage] = useState("");
@@ -44,22 +43,11 @@ const TableCalendar = () => {
   const [modalOpenAppointment, setModalOpenAppointment] = useState(false);
   const [isFetchClient, setIsFetchClient] = useState(false);
 
-
-
-
-
-
-  //  const [isClient, setIsClient] = useState(false)
-
   const client = useSelector((state) => state.client);
   const shift = useSelector((state) => state.shift);
 
 
   const dispatch = useDispatch();
-
-  //   const handleDateChange = (newDate) => {
-  //     setDate(newDate);
-  //   };
 
   const handleMonthChange = (event) => {
     setSelectedMonth(parseInt(event.target.value));
@@ -80,9 +68,23 @@ const TableCalendar = () => {
     setMessage("")
   }
 
-  //   const handleWeekChange = (event) => {
-  //     setSelectedWeek(parseInt(event.target.value));
-  //   };
+  const filterAppointmentsByStatus = (status) => {
+    
+    if(!status==""){
+    const filtered =
+      appointments.filter(appointment => appointment.status === status);
+    setFilteredAppointments(filtered); 
+    }else{
+      setFilteredAppointments(appointments)
+    }
+  };
+
+  const handleFilteredByStatus = (event)=>{
+    const selectedStatus = event.target.value;
+    filterAppointmentsByStatus(selectedStatus);
+    setSelectedOption(selectedStatus);
+  }
+    
   const MessageResponse = () => {
     setModalOpenMessage(true)
     setTimeout(() => {
@@ -144,35 +146,6 @@ const TableCalendar = () => {
 
   const handleDelete = async () => {
 
-    // setAppointments(prevAppointments => {
-    //   const updatedAppointments = prevAppointments.filter(appointment => {
-    //     const appointmentKey = `${new Date(appointment.shiftDate).toISOString().split('T')[0]}-${appointment.timeSlot}`;
-    //     return appointmentKey !== key; 
-    //   });
-    //     return updatedAppointments; 
-    // });
-
-
-    // const appointmentKey = `${theDate.split('T')[0]}-${theTimeSlot}`;
-
-    // setAppointments(prevAppointments => {
-    //   const newAppointments = { ...prevAppointments };
-    //       delete newAppointments[appointmentKey];
-    //       return newAppointments; });
-
-    // //delete local state
-    // setAppointments((prev)=>{
-    //   const newAppointments = {...prev};
-    //   delete newAppointments[key];
-    //   return newAppointments;
-    // });
-
-    // setAppointments((prev) => {
-    //   return prev.filter((appointment) => {
-    //     const appointmentKey = `${appointment.shiftDate}-${appointment.slotTime}`;
-    //     return appointmentKey !== key;
-    //   });
-    // });
     setModalOpenDialog1(false);
 
     try {
@@ -210,12 +183,8 @@ const TableCalendar = () => {
         dispatch(addShift(response.data))
         setModalOpenAppointment(true)
         setTheDate(response.data.shiftDate)
-
         setTheTimeSlot(response.data.timeSlot)
         setTheId(response.data._id)
-
-
-
       }
     } catch (error) {
       console.log("Error shift by dni", error)
@@ -223,8 +192,6 @@ const TableCalendar = () => {
   }
 
   const fetchClient = async () => {
-    //setIsLIstClient(false)
-    //setIsClient(true)
 
     try {
       const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
@@ -250,50 +217,12 @@ const TableCalendar = () => {
       try {
         const response =
           await axios.get(`${config.API_BASE}appointment/date/${selectedMonth + 1}/${selectedYear}`)
-
-        // Extraer los datos relevantes de la respuesta
-        // const fetchedAppointments = response.data || [];
-        // const formattedAppointments = fetchedAppointments.reduce((acc, appointment) => {
-        //   const key = `${new Date(appointment.shiftDate).toISOString().split('T')[0]}-${appointment.timeSlot}`;
-        //   acc[key] = {
-        //     _id: appointment._id,
-        //     person: appointment.person,
-        //     dni: appointment.dni,
-        //     email: appointment.email,
-        //     phone: appointment.phone,
-        //     shiftDate: appointment.shiftDate,
-        //     timeSlot: appointment.timeSlot
-        //   };
-        //   return acc;
-        // }, {});
-        // const newAppointments = Object.values(response.data);
         setAppointments(response.data.data);
+        setFilteredAppointments(response.data.data)
       } catch (error) {
         setMessage("sin info")
         MessageResponse();
       }
-
-
-      // const appointmentsReceived = response.data.data.data
-      // if (Array.isArray(appointmentsReceived)) {
-      //   const formattedAppointments = appointmentsReceived.reduce((acc, appointmentsReceived) => {
-      //       const key = `${new Date(appointmentsReceived.shiftDate).toISOString().split('T')[0]}-${appointmentsReceived.timeSlot}`;
-      //       acc[key] = {
-      //           _id: appointmentsReceived._id, 
-      //           person: appointmentsReceived.person, 
-      //           dni: appointmentsReceived.dni, 
-      //           email: appointmentsReceived.email, 
-      //           phone: appointmentsReceived.phone, 
-      //           shiftDate: appointmentsReceived.shiftDate, 
-      //           timeSlot: appointmentsReceived.timeSlot 
-      //       };
-      //       return acc;
-      //   }, {});
-
-
-      // setAppointments(formattedAppointments);
-      // }
-
 
 
     };
@@ -308,12 +237,12 @@ const TableCalendar = () => {
         const currentDate = new Date(selectedYear, selectedMonth, day);
         const dayOfWeek = currentDate.getDay();
 
-        // Excluir sábados (6) y domingos (0)
+        // Not saturdays (6) and sundays (0)
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
           week.push(currentDate);
         }
 
-        // Si es domingo (fin de semana) o el último día del mes, agregar la semana a las semanas
+        // if sunday (weekend) o last day of month, add week to the weeks
         if (dayOfWeek === 0 || day === endOfMonth.getDate()) {
           if (week.length > 0) {
             weeksData.push(week);
@@ -340,15 +269,8 @@ const TableCalendar = () => {
 
     const shiftDate = new Date(oneDate);
     shiftDate.setUTCHours(3, 0, 0, 0);
-    //const newAppointment = { person, phone, email, dni, date, timeSlot };
     const newAppointment = { person, dni, email, phone, shiftDate, timeSlot }
-    //update local useState 
-    // setAppointments((prev) => ({
-    //   ...prev,
-    //   [`${date.toISOString().split('T')[0]}-${timeSlot}`]: newAppointment
-    // }));
-
-    //setAppointments((prev) => [ ...prev, { ...newAppointment, shiftDate: new Date(newAppointment.shiftDate) } ]);
+    
 
     try {
       const request = await axios.post(`${config.API_BASE}appointment/register`, newAppointment);
@@ -363,32 +285,19 @@ const TableCalendar = () => {
         setMessage(response.message, "-", response.status);
         MessageResponse();
       }
-      // .then(response => setMessage(response.message)) //console.log( `${response.message}`))
-      // .catch(error => console.error('Error guardando datos:', error));
+    
     } catch (error) {
       setMessage("Error al registrar el turno ",);
       MessageResponse();
 
-      // console.error('Error guardando datos:', error);
+    
     }
-    //addAppointmentsList(appointments)
-    // send data to server
+
 
 
   }
 
   const handleSlotClick = async (theAppointment, isBooked, date, slot) => {
-    // const person = prompt('Nombre de la persona:');
-    // const phone = prompt('Teléfono:');
-    // const email = prompt('Email:');
-    // const dni = prompt('DNI:');
-    //setDate(date)
-    // setTheDate(theAppointment.shiftDate)
-    // setTheTimeSlot(theAppointment.timeSlot)
-    // setTheStatus(isBooked)
-
-    // const appointmentKey = `${new Date(theAppointment.shiftDate).toISOString().split('T')[0]}-${theAppointment.timeSlot}`;
-    //   const appointment = appointments[appointmentKey];
 
     if (isBooked) {
 
@@ -411,42 +320,6 @@ const TableCalendar = () => {
   };
 
   const renderColumns = () => {
-    // return weeks.map((week, index) => (
-    //   <div key={`week-${index}`} className={styles.weekRow}>
-    //     {week.map(date => {
-    //       const day = date.getDate();
-    //       const month = date.toLocaleString('es', { month: 'long' });
-    //       const dateString = date.toISOString().split('T')[0];
-
-    //       const timeSlots = ['10-12', '13-15', '16-18'];
-
-    //       return (
-    //         <div key={day} className={styles.dayColumn}>
-    //           <div className={styles.header}>
-    //             {day} - {month}
-    //           </div>
-    //           {timeSlots.map(slot => {
-    //             const appointmentKey = `${dateString}-${slot}`;
-    //             const appointment = appointments[appointmentKey];
-    //             const isBooked = !!appointment;
-    //             const slotClass = isBooked ? styles.bookedSlot : styles.availableSlot;
-
-
-    //             return (
-    //               <div
-    //                 key={slot}
-    //                 className={slotClass}
-    //                 onClick={() => handleSlotClick(date, slot, isBooked)}
-    //               >
-    //                 {slot}
-    //               </div>
-    //             );
-    //           })}
-    //         </div>
-    //       );
-    //     })}
-    //   </div>
-    // ));
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
@@ -477,11 +350,9 @@ const TableCalendar = () => {
               </div>
               {timeSlots.map(slot => {
                 const appointment = groupedAppointments[dateString]?.find(appt => appt.timeSlot === slot);
-                //if(!appointment){setTheDate(date),setTheTimeSlot(slot)}
                 const isBooked = !!appointment;
                 let slotClass = styles.availableSlot;
 
-                //slotClass = isBooked ? styles.bookedSlot : styles.availableSlot;
                 if (appointment) {
                   switch (appointment.status) {
                     case 'attended':
@@ -561,9 +432,22 @@ const TableCalendar = () => {
               ))}
             </select>
           </div>
-          <AppointmentsListPDF appointments={appointments} />
+          <AppointmentsListPDF appointments={filteredAppointments} />
+          <div className={styles.inputDate_group}>
+            <label className={styles.label}>
+              Filtrar por Estado:
+            </label>
+            <div className={styles.selectContainer}>
+                          <select className={styles.styledSelect} value={selectedOption} onChange={handleFilteredByStatus} >
+                              <option value="">Todos</option>
+                              <option value="attended">Atendido</option>
+                              <option value="canceled">Cancelado</option>
+                              <option value="missing">Ausente</option>
+                              <option value="pending">Pendiente</option>
+                          </select>
+                      </div>
+          </div>
         </div>
-            
         {/* <label>
           Semana:
           <select value={selectedWeek} onChange={handleWeekChange}>

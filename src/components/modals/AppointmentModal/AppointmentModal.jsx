@@ -44,6 +44,22 @@ const AppointmentModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDe
         }
     }
 
+    function formatHour(hour){
+        switch(hour){
+            case '10-12':
+                return '10:00 a 12:00';
+                
+            case '13-15':
+                return '13:00 a 15:00';
+            
+            case '16-18':
+                return '16:00 a 18:00';
+                
+            default:
+                return "";
+        }
+    }
+
 useEffect(() => {
         switch(selectedOption){
             case 'pending':
@@ -101,7 +117,7 @@ useEffect(() => {
                             <th>Fecha:</th>
                             <td>{formatDateToSpanish(TheShift.shiftDate)}</td>
                             <th>Hora:</th>
-                            <td>{TheShift.timeSlot}</td>
+                            <td>{formatHour(TheShift.timeSlot)}</td>
                         </tr>
                         <tr>
                             <th>Observación:</th>
