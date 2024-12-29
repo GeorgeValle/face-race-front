@@ -187,7 +187,8 @@ const TableCalendar = () => {
         setTheId(response.data._id)
       }
     } catch (error) {
-      console.log("Error shift by dni", error)
+      setMessage("Error al buscar Turno con el DNI")
+      MessageResponse();
     }
   }
 
@@ -374,7 +375,7 @@ const TableCalendar = () => {
 
                 if (isPastDate && !isBooked) {
                   slotClass = styles.pastSlot;
-                }
+                } 
                 return (
                   <div
                     key={slot}
