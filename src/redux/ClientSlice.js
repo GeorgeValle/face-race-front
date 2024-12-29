@@ -10,8 +10,8 @@ const initialState = {
     city:null,
     province:null,
     postalCode:null,
-    phone: null,
-    cel: null,
+    phone:null,
+    cel:null,
     description:null
     
 };
