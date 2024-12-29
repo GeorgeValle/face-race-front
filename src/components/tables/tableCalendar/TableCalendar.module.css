@@ -51,8 +51,52 @@
 }
 
 .bookedSlot {
+    background-color: #eeb899;
+    /* orange */
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.pastSlot {
+    background-color: #8f8e8e;
+    /* gray */
+    cursor:not-allowed;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.pendingSlot {
+    background-color: #d4f153;
+    /* Yellow */
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.attendedSlot {
+    background-color: #2421ec;
+    /* Blue */
+    cursor: pointer;
+    color: white;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.canceledSlot {
     background-color: #ff6347;
-    /* Rojo */
+    /* red */
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.missingSlot {
+    background-color: #dd641e;
+    /* orange */
+    color: white;
     cursor: pointer;
     padding: 5px;
     margin: 2px 0;
@@ -63,9 +107,11 @@
     justify-content: center;
 }
 
+
+
 .separate {
     display: flex;
-    width: 70%;
+    width: 85%;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -101,7 +147,7 @@
 
 .inputDate_group:hover .label, .input:focus {
     color: #ccc;
-  }
+}
 
 .styledSelect {
     display:flex;

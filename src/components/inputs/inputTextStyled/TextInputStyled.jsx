@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import styleInput from './TextInputStyled.module.css'
 
 

@@ -8,6 +8,8 @@ const initialState = {
     phone:null,
     email:null,
     dni:null,
+    status:null,
+    description:null
 };
 
 export const shiftSlice = createSlice({
@@ -15,7 +17,7 @@ export const shiftSlice = createSlice({
     initialState,
     reducers: {
         addShift: (state, action) => {
-            const {_id, person,phone, email, dni, shiftDate, timeSlot} = action.payload;
+            const {_id, person,phone, email, dni, shiftDate, timeSlot,status,description} = action.payload;
 
             state._id = _id;
             state.person = person;
@@ -24,10 +26,12 @@ export const shiftSlice = createSlice({
             state.dni = dni;
             state.shiftDate = shiftDate;
             state.timeSlot = timeSlot;
+            state.status = status;
+            state.description = description;
             
         },
         changeShift: (state, action) => {
-            const { person,phone, email, dni, shiftDate, timeSlot } = action.payload;
+            const { person,phone, email, dni, shiftDate, timeSlot,status, description } = action.payload;
         
             state.shiftDate = shiftDate;
             state.timeSlot = timeSlot;
@@ -35,6 +39,8 @@ export const shiftSlice = createSlice({
             state.phone = phone;
             state.email = email;
             state.dni = dni;
+            state.status = status;
+            state.description = description;
         },
         deleteShift:(state)=>{
             state._id=null;
@@ -45,6 +51,8 @@ export const shiftSlice = createSlice({
             state.phone=null;
             state.email=null;
             state.dni=null;
+            state.status=null;
+            state.description=null;
         },
     },
 });
