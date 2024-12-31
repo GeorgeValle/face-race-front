@@ -17,6 +17,10 @@
     background: linear-gradient(90deg, #5161E6 0%, #D551E6 100%);
 }
 
+.btnGray{
+    background: linear-gradient(90deg, rgba(29,30,32,1) 0%, rgba(164,163,164,1) 100%);
+}
+
 .btn:hover{
     border: .5px solid #5161E6;
 }

@@ -19,6 +19,9 @@ import axios from 'axios';
 import config from "../../config/Envs"
 import { addItem, deleteItem } from "../../redux/ItemSlice";
 import { addItems, removeItem, clearItems, updateItemQuantity } from '../../redux/ItemsListSlice';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import BudgetPDF from '../../components/pdf/budgetPDF/BudgetPDF'
+
 //import Dialog from "../../../components/modals/dialog/Dialog"
 //import {modal} from 'react-dom';
 
@@ -136,6 +139,9 @@ const Budget = () => {
         dispatch(clearItems()); // Borra todo el contenido del array
     };
 
+    // Verificar si los datos del cliente y los items son válidos
+    const isDataValid = client && itemsList && itemsList.length > 0;
+
     const item1 = [{ code: 323434, name: "Zapatillas Casual para motocicletas", quantity: 2, price: "120250", amount: 240500.00 }, { code: 323435, name: "Camperas para motocicletas", quantity: 2, price: 190000.00, amount: 380000.00 }]
 
     //const row1 = { id: 1, name: "Victor", surname: "Perez", date: "15/12/2024", email: "losespinos@gmail.com", dni: 23456789, phone: 3514585956, cel: 234564554 }
@@ -176,7 +182,22 @@ const Budget = () => {
                                 <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" value={inputDNI} onChange={handleInputDNI} />
                                 <MiniBtn onClick={fetchClient} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                             </div>
-                            <BtnCommon title={"Imprimir "} ColorRed={true} onClick={() => print()} ><FontAwesomeIcon icon={faPrint} /></BtnCommon>
+                            {isDataValid ? (
+                            <PDFDownloadLink
+                                document={<BudgetPDF clientData={client} items={itemsList} />}
+                                fileName="presupuesto.pdf"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                {({ loading }) => (
+                                <BtnCommon title={"Imprimir "} colorRed={true} onClick={() => print()}>
+                                    {loading ? "Cargando..." : <FontAwesomeIcon icon={faPrint} />}
+                                </BtnCommon>
+                                )}
+                            </PDFDownloadLink>
+                            ) : (
+                                <BtnCommon title={"Imprimir "} colorGray={true}  ><FontAwesomeIcon icon={faPrint} /></BtnCommon>
+                            )}   
+                            {/* <BtnCommon title={"Imprimir "} ColorRed={true} onClick={() => print()} ><FontAwesomeIcon icon={faPrint} /></BtnCommon> */}
                             <MiniTotal>{formatNumber(totalAmount)}</MiniTotal>
                         </article>
                     </div>
