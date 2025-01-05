@@ -32,11 +32,10 @@ const Login = () => {
                 const response =  request.data;
                 dispatch(addUser(response.user))
                 navigate('/panel')
-                //console.log(response.user.access)
+                
 
         } catch (er) {
             setError(er);
-
         }
         
     }
@@ -60,8 +59,15 @@ const Login = () => {
                             {<BtnVioletLarge  btnType={"submit"}>Iniciar Sesión</BtnVioletLarge>}
                         </div>
                         <div className={Style.item4}>
-                            {error&&(<p className={Style.item5}>Usuario o contraseña incorrectos</p>)}
-                            <LinkCommon>¿Has olvidado la contraseña?</LinkCommon>
+                            
+                            <LinkCommon link={"/lost_password"}>¿Has olvidado la contraseña? Cambiala</LinkCommon>
+                            
+                        </div>
+                        <div className={Style.item5}>
+                            <LinkCommon link={"/register"}>¿No tienes cuenta? Registrate</LinkCommon>
+                        </div>
+                        <div >
+                        {error&&(<p className={Style.item6}>Usuario o contraseña incorrectos</p>)}
                         </div>
                     </article>
                 </form>

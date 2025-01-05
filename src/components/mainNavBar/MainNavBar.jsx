@@ -18,7 +18,7 @@ const MainNavBar = () => {
                 </NavLink>
 
                 <div >
-                    <h1 className={navStyles.main_title} >COLANERI MOTOSHOP</h1>                
+                    <h1 className={navStyles.main_title} >COLANERI E HIJOS</h1>                
                 </div>
             </nav>
             
