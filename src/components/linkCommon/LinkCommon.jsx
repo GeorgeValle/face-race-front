@@ -2,9 +2,9 @@ import StyleLink from './LinkCommon.module.css'
 import { Link } from "react-router-dom";
 
 
-const LinkCommon = ({children}) =>{
+const LinkCommon = ({children, link="/lost_password"}) =>{
     return(
-        <Link to="/lost_password" className={StyleLink.linkStyle}>{children}</Link>
+        <Link to={link} className={StyleLink.linkStyle}>{children}</Link>
     )
 }
 

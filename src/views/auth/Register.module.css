@@ -1,0 +1,61 @@
+.article {
+    display: flex;
+    max-width: 400px;
+}
+
+.content {
+    /* margin-top: 50px;
+    display: grid;
+    justify-content: center; */
+    padding-bottom: 2px;
+    margin-top:13px;
+    /* max-width: 994px; */
+    display: grid;
+    
+
+
+    grid:
+        "item1 item1 " .8fr
+        "item2  item3" .8fr
+        "item4 item5 " .8fr
+        "item6 item6 " .5fr
+        "item7 item7" .5fr
+        "item8 item8" .5fr
+        "item9 item9" .5fr
+        /  .5fr .5fr;
+    gap: 30px;
+
+}
+
+.item1 {
+    grid-area: item1;
+}
+.item2 {
+    grid-area: item2;
+}
+.item3 {
+    grid-area: item3;
+}
+.item4 {
+    grid-area: item4;
+}
+.item5 {
+    grid-area: item5;
+}
+.item6 {
+    grid-area: item6;
+}
+.item7 {
+    grid-area: item7;
+}
+.item8 {
+    grid-area: item8;
+}
+.item9 {
+    grid-area: item9;
+}
+.itemError {
+    color: red;
+    background-color: yellow;
+}
+
