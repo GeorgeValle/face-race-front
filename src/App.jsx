@@ -3,6 +3,8 @@ import { /*Navigate, */BrowserRouter, Route, Routes } from 'react-router-dom'
 import MainNavBar from './components/mainNavBar/MainNavBar.jsx'
 import Logout from './views/auth/Logout.jsx'
 import Login from './views/auth/Login.jsx'
+import Register from './views/auth/Register.jsx'
+import Verify from './views/auth/Verify.jsx'
 import Lost_Password from './views/auth/Lost_Password.jsx'
 import Panel from './views/panel/Panel.jsx'
 import Budget from './views/row1/Budget.jsx'
@@ -28,6 +30,8 @@ const App = () => {
             <Route path="/" element={<Login />} />
             <Route path="/lost_password" element={<Lost_Password />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/verify/:token" element={<Verify />} />
             <Route path="/panel" element={<Panel />} />
             <Route path="/budget" element={<Budget />} />
             <Route path="/client" element={<Client />} />
