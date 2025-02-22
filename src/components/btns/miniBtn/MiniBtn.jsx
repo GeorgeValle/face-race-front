@@ -4,11 +4,12 @@ import StyleBtn from './MiniBtn.module.css';
 
 
 
-const MiniBtn = ({children, onClick=null, btnType="button",isRed=false, isWhite=false}) => {
+// eslint-disable-next-line react/prop-types
+const MiniBtn = ({children, tooltip="", onClick=null, btnType="button",isRed=false, isWhite=false, bgDisable=false, bgViolet=true, bgRed=false,}) => {
 
     return(
         <>
-            <button  type={btnType} onClick={onClick} className={StyleBtn.miniBtn}>
+            <button title={tooltip} type={btnType} onClick={onClick} className={`${StyleBtn.miniBtn} ${bgViolet&&StyleBtn.bgViolet} ${bgRed&&StyleBtn.bgRed} ${bgDisable&&StyleBtn.bgDisable}`}>
                 <span className={`${StyleBtn.icon} ${isRed&&StyleBtn.red_icon} ${isWhite&&StyleBtn.white_icon}`}>{children}</span>                   
             </button>
         </>  

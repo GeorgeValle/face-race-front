@@ -57,7 +57,7 @@ const Budget = () => {
         setModalOpen(false);
     }
 
-    // Función para formatear números
+    // Function for format numbers
     const formatNumber = (number) => {
         return number.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
@@ -121,7 +121,7 @@ const Budget = () => {
 
     }
 
-
+    //Items list functions
     const handleAddItem = () => {
         const newItem = { code: item.code, name: item.name, quantity: inputQuantity, price: item.price };
         dispatch(addItems(newItem)); // Agrega un nuevo item o suma la cantidad si ya existe
@@ -139,11 +139,13 @@ const Budget = () => {
         dispatch(clearItems()); // Borra todo el contenido del array
     };
 
-    // Verificar si los datos del cliente y los items son válidos
+    // Verify client data and items for enable print button
     const isDataValid = client && itemsList && itemsList.length > 0;
 
-    const item1 = [{ code: 323434, name: "Zapatillas Casual para motocicletas", quantity: 2, price: "120250", amount: 240500.00 }, { code: 323435, name: "Camperas para motocicletas", quantity: 2, price: 190000.00, amount: 380000.00 }]
+    //Example of item
+    //const item1 = [{ code: 323434, name: "Zapatillas Casual para motocicletas", quantity: 2, price: "120250", amount: 240500.00 }, { code: 323435, name: "Camperas para motocicletas", quantity: 2, price: 190000.00, amount: 380000.00 }]
 
+    //example of client
     //const row1 = { id: 1, name: "Victor", surname: "Perez", date: "15/12/2024", email: "losespinos@gmail.com", dni: 23456789, phone: 3514585956, cel: 234564554 }
     return (
 

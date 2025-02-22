@@ -9,29 +9,20 @@ import axios from 'axios';
 import Envs from '../../config/Envs';
 
 const Verify = () => {
-    // Obtener el código de la URL usando useParams
+    // Obtain URL code whit Use params 
     const { token } = useParams();
 
-    // Estado para manejar el mensaje de verificación
+    // verify state message
     const [verificationStatus, setVerificationStatus] = useState('Verificando...');
 
-    // Función para validar el código
+    // validate function token
     const validateToken = async (oneToken) => {
         try {
-            // Hacer la solicitud fetch a tu API
-            // const response = await fetch(`https://tu-api.com/verify?code=${code}`);
-            // const data = await response.json();
 
-            // if (data.success) {
-            //     setVerificationStatus('Cuenta verificada');
-            // } else {
-            //     setVerificationStatus('Cuenta no verificada');
-            // }
-
-            // Hacer la solicitud con Axios
+            // axios query
             const response = await axios.get(`${Envs.API_BASE}session/verify/${oneToken}`);
 
-            // Verificar la respuesta
+            // Verify response 
             if (response.data.validated) {
                 setVerificationStatus('Cuenta verificada');
             } else {
@@ -43,7 +34,7 @@ const Verify = () => {
         }
     };
 
-    // Ejecutar la validación cuando el componente se monta
+    // validate when page loading
     useEffect(() => {
         if (token) {
             validateToken(token);
@@ -58,7 +49,7 @@ const Verify = () => {
                 <MiniNavBar miniTitle={"Verificación"} />
                 <article className={Style.content}>
                     <div className={Style.item1}>
-                        {/* Mostrar el estado de la verificación */}
+                        {/* show verify message state */}
                         <p className={Style.text_description} >{verificationStatus}</p>
                     </div>
                     <div className={Style.item2}>
