@@ -19,6 +19,7 @@ import MessageModal from "../../../components/modals/messageModal/MessageModal"
 import Dialog from "../../../components/modals/dialog/Dialog"
 import AppointmentModal from '../../modals/AppointmentModal/AppointmentModal';
 import AppointmentsListPDF from '../../textViews/appointmentListPDF/AppointmentsListPDF'
+import AppointmentPieChartModal from '../../modals/appointmentPieChartModal/AppointmentPieChartModal'
 
 
 const TableCalendar = () => {
@@ -41,6 +42,7 @@ const TableCalendar = () => {
   const [modalOpenMessage, setModalOpenMessage] = useState("");
   const [modalOpenDialog2, setModalOpenDialog2] = useState(false);
   const [modalOpenAppointment, setModalOpenAppointment] = useState(false);
+  const [modalOpenAppointmentPieChart, setModalOpenAppointmentPieChart] = useState(false);
   const [isFetchClient, setIsFetchClient] = useState(false);
 
   const client = useSelector((state) => state.client);
@@ -101,6 +103,11 @@ const TableCalendar = () => {
   const handleConfirmDeleteAppointment = () => {
     setModalOpenAppointment(false);
     setModalOpenDialog1(true);
+  }
+
+  const handle AppointmentPieChart = () =>{
+    setModalOpenAppointmentPieChart(true)
+
   }
 
   const handleEditDescription = async (oneDescription) => {
@@ -398,6 +405,7 @@ const TableCalendar = () => {
       {modalOpenMessage && createPortal(<MessageModal messageModal={message} onClose={handleClose} />, document.body)}
       {modalOpenDialog1 && createPortal(<Dialog messageModal={`¿Está seguro de ELIMINAR el turno para ${shift.person}?`} messageConfirm={"ELIMINAR"} onSubmit={handleDelete} onClose={handleClose} />, document.body)}
       {modalOpenDialog2 && createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose} />, document.body)}
+      {modalOpenAppointmentPieChart && createPortal(<AppointmentPieChartModal appointments={null} onClose={handleClose} />, document.body)}
       {modalOpenAppointment && createPortal(<AppointmentModal TheShift={shift} onEditStatus={handleEditStatus} onEditDescription={handleEditDescription} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose} />, document.body)}
       <div className={styles.center}>
         <div className={styles.separate} >

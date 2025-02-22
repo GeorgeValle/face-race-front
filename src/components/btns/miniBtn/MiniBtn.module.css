@@ -4,11 +4,23 @@
     position: relative;
     width: 57px;
     height: 35px;
-    background: linear-gradient(90deg, #5161E6 0%, #D551E6 100%);
+    /* background: linear-gradient(90deg, #5161E6 0%, #D551E6 100%); */
     border-radius: 15px;
     border: .5px solid #E65152;
     box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.35);
     margin:auto;  
+}
+
+.bgViolet{
+    background: linear-gradient(90deg, #5161E6 0%, #D551E6 100%);
+}
+
+.bgRed{
+    background: linear-gradient(90deg, #E65152 0%, #E651AC 100%);
+}
+
+.bgDisable{
+    background: linear-gradient(90deg, rgba(29,30,32,1) 0%, rgba(164,163,164,1) 100%);
 }
 
 .btnRed:hover{

@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react'
 // import {  changeClient  } from "../../../redux/ClientSlice";
 
 
+// eslint-disable-next-line react/prop-types
 const AppointmentModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
 
     const [theStatus, setTheStatus] = useState("");
