@@ -63,6 +63,20 @@
     margin-bottom: 30px;
 }
 
+.pieChart{
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    width: 50%;
+
+}
+
+.item{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 .table {
     display: block;
     overflow: hidden;
