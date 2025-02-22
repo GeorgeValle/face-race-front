@@ -68,8 +68,9 @@
 }
 
 .pendingSlot {
-    background-color: #d4f153;
-    /* Yellow */
+    /* background-color: #d4f153; */
+    background-color: #8bc34a;
+    /* Green */
     cursor: pointer;
     padding: 5px;
     margin: 2px 0;
@@ -94,9 +95,12 @@
 }
 
 .missingSlot {
-    background-color: #dd641e;
     /* orange */
-    color: white;
+    /* background-color: #dd641e; */
+    /* yellow */
+    background-color: #d4f153;
+    
+    /* color: white; */
     cursor: pointer;
     padding: 5px;
     margin: 2px 0;
@@ -182,6 +186,15 @@
     justify-content: flex-start;
     align-content: flex-start;
     margin-right: 9px;
+}
+
+.buttonsPositions{
+    display: flex;
+    justify-content:space-between;
+    flex-direction: column;
+    gap: 5px;
+    padding-bottom: 2px;
+    padding-top: 2px;
 }
 
 

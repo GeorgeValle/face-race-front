@@ -41,7 +41,9 @@ const styles = StyleSheet.create({
 });
 
 //  PDF Component
+// eslint-disable-next-line react/prop-types
 const AppointmentsPDF = ({ appointments }) => {
+    // eslint-disable-next-line react/prop-types
     const totalPages = Math.ceil(appointments.length / 10);
 
     function formatDateToSpanish(dateString) { 
@@ -114,6 +116,7 @@ function formatHour(hour){
 };
 
 // primary Component and download button
+// eslint-disable-next-line react/prop-types
 const AppointmentsListPDF = ({ appointments }) => {
     // const [loading, setLoading] = useState(false);
 

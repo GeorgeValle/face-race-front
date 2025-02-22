@@ -48,6 +48,16 @@ export const itemSlice = createSlice({
             state.warehouseLocation = warehouseLocation;
             state.description = description;
         },
+        updatePrice: (state, action) =>{
+            const {price} = action.payload;
+            state.price = price;
+        },
+        subtractStock: (state, action) => {
+            const { quantity } = action.payload;
+            if (state.stockQuantity !== null && state.stockQuantity>0 && state.stockQuantity>=quantity) {
+                state.stockQuantity - quantity
+            }
+        },
         deleteClient:(state)=>{
             state._id = null;
             state.code = null;
@@ -65,5 +75,5 @@ export const itemSlice = createSlice({
     },
 });
 
-export const { addItem, changeItem, deleteItem } = itemSlice.actions;
+export const { addItem, changeItem, deleteItem, updatePrice, subtractStock } = itemSlice.actions;
 export default itemSlice.reducer;
