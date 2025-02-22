@@ -1,8 +1,6 @@
 import StyleBtn from './BtnVioletLarge.module.css';
 
-
-
-
+// eslint-disable-next-line react/prop-types
 const BtnVioletLarge = ({children, onClick, btnType="button"}) => {
 
     return(

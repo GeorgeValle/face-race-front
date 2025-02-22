@@ -2,13 +2,13 @@ import './TableQuotation.module.css';
 import Style from './TableQuotation.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EditQuantityItemModal from '../../modals/editQuantityItemModal/EditQuantityItemModal';
 import Dialog from '../../modals/dialog/Dialog';
 
 // deleteRow, editRow
 
-export const TableQuotation = ({ rows , size=false, totals=null, modalRemoveItem=null, modalUpdateItem=null}) => {
+export const TableQuotation = ({ rows , size=false, totals=null, modalRemoveItem=null, modalUpdateItem=null, isEdit=true}) => {
     const itemsPerPage = 6; // Número de items por página
     const [currentPage, setCurrentPage] = useState(0); // Página actual
     const [isModalQuantity, setIsModalQuantity] = useState(false);
@@ -43,13 +43,20 @@ export const TableQuotation = ({ rows , size=false, totals=null, modalRemoveItem
     const startIndex = currentPage * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     //const currentItems = rows.slice(startIndex, endIndex); // Items a mostrar en la página actual
+    
+    
     // Crear un array de items a mostrar, rellenando con objetos vacíos si es necesario
     const currentItems = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ code: '', item: '', quantity: '', price: 0 })];
 
-    // Calcular el número total de páginas
+    // useEffect(() => {
+    //     const currentItems = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ code: '', item: '', quantity: '', price: 0 })];
+    //     setCurrentItems(currentItems);
+    //   }, [rows, startIndex, endIndex, itemsPerPage]);
+
+    // Calculate the total number of pages 
     const totalPages = Math.ceil(rows.length / itemsPerPage);
 
-    // Funciones para cambiar de página
+    // Function for change the page
     const nextPage = () => {
         if (currentPage < totalPages - 1) {
             setCurrentPage(currentPage + 1);
@@ -62,12 +69,12 @@ export const TableQuotation = ({ rows , size=false, totals=null, modalRemoveItem
         }
     };
 
-    // Función para calcular el amount de cada item
+    // Function for calculate amount of each item 
     const calculateAmount = (quantity, price) => {
         return quantity * price;
     };
 
-    // Función para sumar todos los amounts
+    // Function for add all amounts 
     const sumTotalAmount = () => {
         return rows.reduce((total, row) => total + calculateAmount(row.quantity, row.price), 0);
     };
@@ -76,7 +83,7 @@ export const TableQuotation = ({ rows , size=false, totals=null, modalRemoveItem
 
     totals(totalAmount);
 
-    // Función para formatear números
+    // Function for format price numbers
     const formatNumber = (number) => {
         return number.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };  
@@ -106,7 +113,7 @@ export const TableQuotation = ({ rows , size=false, totals=null, modalRemoveItem
                                 <td>
                                     <span className={Style.actions}>
                                         <FontAwesomeIcon icon={faTrash} className={Style.delete_btn} onClick={()=>handleModalDialogDeleteRow(row.code||0)} />
-                                        <FontAwesomeIcon icon={faPencil} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />
+                                        {isEdit&&<FontAwesomeIcon icon={faPencil} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />}
                                     </span>
                                 </td>
                                 <td>{row.code|| '-'}</td>
