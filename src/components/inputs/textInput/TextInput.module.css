@@ -21,9 +21,9 @@
     transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
     color: #FFF;
     text-shadow: 7px 6px 6px 0px rgba(0, 0, 0, 0.35);
-    -webkit-text-stroke-width: .5px;
+    -webkit-text-stroke-width: .3px;
     -webkit-text-stroke-color: #000000;
-    font-family: "Roboto";
+    font-family: "Open Sans", sans-serif;
     font-size: 24px;
     font-style: normal;
     font-weight: 700;
