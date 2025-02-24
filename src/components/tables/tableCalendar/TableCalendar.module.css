@@ -34,7 +34,7 @@
     text-shadow: 2px 2px 2px  rgba(0, 0, 0, 0.65);
     -webkit-text-stroke-width: .6px;
     -webkit-text-stroke-color: #000000;
-    font-family: "Roboto";
+    font-family: "Open Sans", sans-serif;
     font-size: 20px;
     font-style:normal;
     font-weight: 700;
@@ -157,6 +157,8 @@
     display:flex;
     width: 100%; /* Adjust width as needed */
     padding: 10px; /* Add padding */
+    
+    
     border: 1px solid #ccc; /* Border style */
     border: 1px solid #05060f;
     border-radius: 4px; /* Rounded corners */
@@ -172,10 +174,10 @@
     transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
     color: #FFF;
     text-shadow: 2px 2px 2px  rgba(0, 0, 0, 0.65);
-    -webkit-text-stroke-width: .6px;
+    -webkit-text-stroke-width: thin;
     -webkit-text-stroke-color: #000000;
-    font-family: "Roboto";
-    font-size: 20px;
+    font-family: "Lato", sans-serif;
+    font-size: 19px;
     font-style:normal;
     font-weight: 700;
     line-height:normal;
