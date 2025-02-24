@@ -25,13 +25,13 @@ box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.25);
     text-align: center;
     text-shadow:  4px 4px 6px rgba(0, 0, 0, 0.25);
     /* -webkit-text-stroke: 1px #51ACE6; */
-    -webkit-text-stroke-width: .5px;
+    -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: #51ACE6;
-    font-family: "Roboto", sans-serif;
-    font-size: 40px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 42px;
     font-style: normal;
     font-weight: 700;
-    line-height: normal;
+    line-height:normal;
 }
 
 
