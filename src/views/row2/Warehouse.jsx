@@ -7,6 +7,7 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
+import InputSelectStyled from '../../components/inputs/inputSelectStyled/InputSelectStyled'
 import Style from './WareHouse.module.css'
 import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
@@ -77,12 +78,12 @@ const Warehouse = () => {
 
         
 
-        const fetchListItems = async() => {
+        const fetchListItems = async(category) => {
             
             setIsItem(false)
             setIsListItems(true)
             try{
-                const request = await axios.get((`${config.API_BASE}item/category/${inputList}`))
+                const request = await axios.get((`${config.API_BASE}item/category/${category}`))
                 const response = request.data
                 setCategoryList(response)
             }catch(error){
@@ -102,6 +103,14 @@ const Warehouse = () => {
     }
 
 
+    const handleFetchCategory= async(category)=>{
+        if(category!==""){
+        setInputList(category);
+        await fetchListItems(category);
+        }
+
+
+    }
     const handleSubmitEdit=()=>{
         
         setIsListItems(false)
@@ -150,8 +159,8 @@ const handleDeleteItem = async () => {
     }
     
 }
-
-
+//to du
+const categories =[{label:"Selecciona una opción",value:""},{label:"Indumentaria", value:'Indumentaria'}, {label:'Protección Personal',value:'Protección Personal'}, {label:'Equipaje', value:'Equipaje'}, {label:'Lingas y Trabas', value:'Lingas y Trabas'}, {label:'Luces', value:"Luces"}, {label:'Cobertores', value:'Cobertores'},{label:'Redes y sujetadores', value:'Redes y sujetadores'},{label:'Parlantes',value:'Parlantes'},{label:'Parabrisas',value:'Parabrisas'},{label:'Herramientas',value:'Herramientas'},{label:'Emblemas',value:'Emblemas'},{label:'Tableros y Velocimetros',value:'Tableros y Velocimetros'},{label:'Pisadores', value:'Pisadores'},{label:'Escapes',value:'Escapes'},{label:'Frenos',value:'Frenos'},{label:'Repuestos',value:'Repuestos'},{label:'Servicios',value:'Servicios'},{label:'Otros',value:'Otros'}];
 return (
     <div className={Style.mainContainer}>
             <Container>
@@ -176,8 +185,9 @@ return (
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
-                                        <TextInputStyled placeholderText={"Ej: casco or guante "} typeInput={"text"} titleLabel="Categoría" value={inputList} onChange={(e) =>setInputList(e.target.value)} size={true} />
-                                        <MiniBtn  onClick={fetchListItems} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                        {/* <TextInputStyled placeholderText={"Ej: casco or guante "} typeInput={"text"} titleLabel="Categoría" value={inputList} onChange={(e) =>setInputList(e.target.value)} size={true} />
+                                        <MiniBtn  onClick={fetchListItems} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
+                                        <InputSelectStyled defaultValue={inputList} onSetValue={handleFetchCategory} onLabel={"Categoría"} options={categories} />
                                     </div>
                                 </article> 
                                 
