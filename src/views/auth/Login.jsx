@@ -4,6 +4,7 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import TextInput from '../../components/inputs/textInput/TextInput'
 import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge'
 import LinkCommon from '../../components/linkCommon/LinkCommon'
+import LoaderMotorcycle from '../../components/loaders/loaderMotorcycle/LoaderMotorcycle'
 import { useNavigate } from 'react-router-dom';
 import Style from './Login.module.css'
 import axios from 'axios'
@@ -19,22 +20,26 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     
 
     const handleLoginEvent = async (e) => {
         e.preventDefault();
         try {
             setError("")
+            setLoading(true)
             const request = await axios.post(`${Envs.API_BASE}session/login`, {
                     email: email,
                     password: password
                 })
-                const response =  request.data;
-                dispatch(addUser(response.user))
-                navigate('/panel')
+            const response =  request.data;
+            dispatch(addUser(response.user))
+            setLoading(false)
+            navigate('/panel')
                 
 
         } catch (er) {
+            setLoading(false)
             setError(er);
         }
         
@@ -44,9 +49,11 @@ const Login = () => {
 
     return (
 
-        <div style={{ width: "876px", heigth: "700px", margin: "auto" }}>
+        <div style={{ width: "876px", heigth: "730px", margin: "auto" }}>
+            
             <Container>
                 <MiniNavBar miniTitle={"BIENVENIDO"} />
+                
                 <form onSubmit={handleLoginEvent}>
                     <article className={Style.content}>
                         <div className={Style.item1}>
@@ -58,6 +65,7 @@ const Login = () => {
                         <div className={Style.item3}>
                             {<BtnVioletLarge  btnType={"submit"}>Iniciar Sesión</BtnVioletLarge>}
                         </div>
+                        <div className={Style.loading}> {loading&&<LoaderMotorcycle/>} </div>
                         <div className={Style.item4}>
                             
                             <LinkCommon link={"/lost_password"}>¿Has olvidado la contraseña? Cambiala</LinkCommon>
