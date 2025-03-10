@@ -20,7 +20,7 @@ import Dialog from "../../../components/modals/dialog/Dialog"
 import AppointmentModal from '../../modals/AppointmentModal/AppointmentModal';
 import AppointmentsListPDF from '../../textViews/appointmentListPDF/AppointmentsListPDF'
 import AppointmentPieChartModal from '../../modals/appointmentPieChartModal/AppointmentPieChartModal'
-
+import LoaderMotorcycle from '../../loaders/loaderMotorcycle/LoaderMotorcycle';
 
 const TableCalendar = () => {
     const [date, setDate] = useState(new Date());
@@ -44,6 +44,7 @@ const TableCalendar = () => {
     const [modalOpenAppointment, setModalOpenAppointment] = useState(false);
     const [modalOpenAppointmentPieChart, setModalOpenAppointmentPieChart] = useState(false);
     const [isFetchClient, setIsFetchClient] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const client = useSelector((state) => state.client);
     const shift = useSelector((state) => state.shift);
@@ -184,6 +185,7 @@ const TableCalendar = () => {
 
     const fetchByDNI = async (dni) => {
         try {
+            setLoading(true)
             const request = await axios.get(`${config.API_BASE}appointment/dni/${dni}`)
             const response = request.data
 
@@ -193,8 +195,10 @@ const TableCalendar = () => {
                 setTheDate(response.data.shiftDate)
                 setTheTimeSlot(response.data.timeSlot)
                 setTheId(response.data._id)
+                setLoading(false)
             }
         } catch (error) {
+            setLoading(false)
             setMessage("Error al buscar Turno con el DNI")
             MessageResponse();
         }
@@ -203,14 +207,18 @@ const TableCalendar = () => {
     const fetchClient = async () => {
 
         try {
+            setLoading(true)
             const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
             const response = request.data
             dispatch(addClient(response.data))
+            
             if (response.data) {
                 setIsFetchClient(true);
                 fetchByDNI(response.data.dni);
+                setLoading(false)
             }
         } catch (error) {
+            setLoading(false)
             setMessage("Cliente NO encontrado")
             MessageResponse();
         }
@@ -408,6 +416,7 @@ const TableCalendar = () => {
             {modalOpenDialog2 && createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose} />, document.body)}
             {modalOpenAppointmentPieChart && createPortal(<AppointmentPieChartModal appointments={appointments} onClose={handleClose} />, document.body)}
             {modalOpenAppointment && createPortal(<AppointmentModal TheShift={shift} onEditStatus={handleEditStatus} onEditDescription={handleEditDescription} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose} />, document.body)}
+            {loading&&<LoaderMotorcycle/>}
             <div className={styles.center}>
                 <div className={styles.separate} >
                     <div className={styles.article} >

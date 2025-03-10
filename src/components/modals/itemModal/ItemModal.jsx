@@ -4,23 +4,27 @@ import BtnClose from '../../btns/btnClose/BtnClose'
 import TextInputStyled from '../../inputs/inputTextStyled/TextInputStyled'
 import MiniBtn from '../../btns/miniBtn/MiniBtn'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faTrash, faXmark,faFloppyDisk, faPencil } from "@fortawesome/free-solid-svg-icons"
-import { addItem, deleteItem, updatePrice, subtractStock } from "../../../redux/ItemSlice";
+import { /* faTrash, faPencil,*/ faXmark,faFloppyDisk  } from "@fortawesome/free-solid-svg-icons"
+import { /* addItem, deleteItem, updatePrice, */ subtractStock } from "../../../redux/ItemSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useState} from 'react'
 // import { PDFDownloadLink } from "@react-pdf/renderer";
 // import TextViewShiftPDF from "../../textViews/textViewShiftPDF/TextViewShiftPDF"
 
 // import axios from 'axios'
-import { useState, useEffect } from 'react'
+
 // import config from '../../../config/Envs'
-// import { useDispatch } from "react-redux";
+//import { useDispatch } from "react-redux";
 // import {  changeClient  } from "../../../redux/ClientSlice";
 
 
-const ItemModal = ({  size=false, addItemList=null, onAdjustment=null, onEditStock=null, onClose=null  }) =>{
+
+const ItemModal = ({  size=false, addItemList=null, onEditStock=null, handleCancel=null  }) =>{
 
     //Variables Redux
     const item = useSelector((state) => state.item);
+
+    const dispatch = useDispatch();
     
     
     // const [selectedOption, setSelectedOption] = useState(TheShift.status);
@@ -28,9 +32,14 @@ const ItemModal = ({  size=false, addItemList=null, onAdjustment=null, onEditSto
     const [inputQuantity, setInputQuantity] = useState(1);
     const [inputPrice, setInputPrice] = useState(item.price);
     const [localStock, setLocalStock] = useState(item.stockQuantity);
-    const [defaultStock, setDefaultStock] = useState(item.stockQuantity)
-    const [adjustments, setAdjustments] = useState(0);
+    // const [defaultStock, setDefaultStock] = useState(item.stockQuantity)
+    const [discount, setDiscount] = useState(0);
+    const [amountDiscount, setAmountDiscount] = useState(0);
+    const [surcharge, setSurcharge] = useState(0);
+    const [amountSurcharge, setAmountSurcharge] = useState(0);
+    // const [amountAdjustment, setAmountAdjustment] =useState(0);
     const [referencePrice, setReferencePrice] = useState(item.price||0);
+    const [amount, setAmount] = useState(item.price||0)
 
     
     
@@ -93,46 +102,229 @@ const ItemModal = ({  size=false, addItemList=null, onAdjustment=null, onEditSto
 // formatStatusToSpanish(TheShift.status);
 
 const handleQuantityChange = (e) => {
-    let quantity = e.target.value;
+    let quantity = parseFloat(e.target.value);
+    
     setInputQuantity(quantity);
-    let stock = localStock
-    if (quantity >= stock) {
-        onEditStock(stock-quantity)
-        setLocalStock(stock-quantity)
-    }else{
-        alert('No hay suficiente stock')
+    if (quantity!=""||quantity > 0 ) {
+        // setInputQuantity(quantity);
+        let stock = localStock
+        if (quantity <= stock) {
+            if(!discount && !surcharge){
+                setAmount(quantity*inputPrice)
+                
+            }else{
+                // let newAmount = ((inputPrice * quantity ) * (1 - (adjustments / 100))).toFixed(2);
+                // setAmount(Number(newAmount));
+                // setAmountAdjustment((inputPrice * quantity) - Number(newAmount))
+                if(surcharge!=discount){ 
+                    if(surcharge>discount){
+                        const newAdjustment = surcharge - discount;
+                         // calculate the amount of adjustment in money
+                         const surchargeValue = ((inputPrice * quantity) * (newAdjustment / 100)).toFixed(2);
+                        setAmountDiscount(0);
+                        setAmountSurcharge(Number(surchargeValue));
+            
+                        const newAmount = ((inputPrice * quantity ) * (1 + newAdjustment / 100)).toFixed(2);
+                
+                        setAmount(Number(newAmount))
+                    }
+                    if(discount>surcharge){
+                        const newAdjustment = discount - surcharge;
+                        // calculate the amount of adjustment in money
+                        const discountValue = ((inputPrice * quantity) * (newAdjustment / 100)).toFixed(2);
+                        setAmountSurcharge(0);
+                        setAmountDiscount(Number(discountValue));
+            
+                        const newAmount = ((inputPrice * quantity ) * (1 - newAdjustment / 100)).toFixed(2);
+                
+                        setAmount(Number(newAmount))
+                    }
+            }
+                
+                
+            }
+        }else{
+            alert('No hay suficiente stock')
+        }
     }
 };
+
 const handlePriceChange = (e) =>{
-    let priceEdited = e.target.value;
-    setInputPrice(priceEdited);
+    let inputValue = (parseFloat(e.target.value)).toFixed(2);
+    let priceEdited = Number(inputValue);
+    if(priceEdited!=""){
+        setInputPrice(priceEdited);
+        // If the discount and surcharge are worth zero
+        if(!discount && !surcharge){
+            setAmount(inputQuantity*priceEdited)
+            
+        }else{
+            if(surcharge!=discount){ 
+                if(surcharge>discount){
+                    const newAdjustment = surcharge - discount;
+                     // calculate the amount of adjustment in money
+                     const surchargeValue = ((priceEdited * inputQuantity) * (newAdjustment / 100)).toFixed(2);
+                    setAmountDiscount(0);
+                    setAmountSurcharge(Number(surchargeValue));
+        
+                    const newAmount = ((priceEdited * inputQuantity ) * (1 + newAdjustment / 100)).toFixed(2);
+            
+                    setAmount(Number(newAmount))
+                }
+                if(discount>surcharge){
+                    const newAdjustment = discount - surcharge;
+                    // calculate the amount of adjustment in money
+                    const discountValue = ((priceEdited * inputQuantity) * (newAdjustment / 100)).toFixed(2);
+                    setAmountSurcharge(0);
+                    setAmountDiscount(Number(discountValue));
+        
+                    const newAmount = ((priceEdited * inputQuantity ) * (1 - newAdjustment / 100)).toFixed(2);
+            
+                    setAmount(Number(newAmount))
+                }
+            }
+        }
+    }
 }
 
-const handleAdjustmentsChange = (e) =>{
-    const newAdjustment = parseFloat(e.target.value);
-    setAdjustments(newAdjustment);
-
-    // Calculamos el valor del ajuste en moneda
-    const adjustmentValue = inputPrice * (newAdjustment / 100);
-    onAdjustment(adjustmentValue);
-
-    const newPrice = inputPrice * (1 - newAdjustment / 100);
+const handleDiscountChange = (e) =>{
+    let inputDiscount = parseFloat(e.target.value);
+    //If inputDiscount is an empty string, then it will be zero.
+    inputDiscount=inputDiscount||0
     
-    setInputPrice(newPrice);
+    setDiscount(inputDiscount);
+    if(surcharge==0){
+        const newDiscount = inputDiscount;
+        if(newDiscount!=0){
+            // calculate the amount of adjustment in money
+             const discountValue = ((inputPrice * inputQuantity) * (newDiscount / 100)).toFixed(2);
+            setAmountDiscount(Number(discountValue));
+
+        
+            const newAmount = ((inputPrice * inputQuantity ) * (1 - newDiscount / 100)).toFixed(2);
     
+            setAmount(Number(newAmount))
+        }else{
+            setAmount(inputPrice*inputQuantity)
+        }
+    }else{
+        if(surcharge==inputDiscount){
+            setAmountDiscount(0)
+            setAmountSurcharge(0)
+            setAmount(inputPrice*inputQuantity)
+        }
+        if(surcharge>inputDiscount){
+            const newAdjustment = surcharge - inputDiscount;
+             // calculate the amount of adjustment in money
+             const surchargeValue = ((inputPrice * inputQuantity) * (newAdjustment / 100)).toFixed(2);
+            setAmountDiscount(0);
+            setAmountSurcharge(Number(surchargeValue));
+
+            const newAmount = ((inputPrice * inputQuantity ) * (1 + newAdjustment / 100)).toFixed(2);
+    
+            setAmount(Number(newAmount))
+        }
+        if(inputDiscount>surcharge){
+            const newAdjustment = inputDiscount - surcharge;
+            // calculate the amount of adjustment in money
+            const discountValue = ((inputPrice * inputQuantity) * (newAdjustment / 100)).toFixed(2);
+            setAmountSurcharge(0);
+            setAmountDiscount(Number(discountValue));
+
+            const newAmount = ((inputPrice * inputQuantity ) * (1 - newAdjustment / 100)).toFixed(2);
+    
+            setAmount(Number(newAmount))
+        }
+    }
 }
-// adjustment:
-const handleAddItemList = () =>{
-const newItem = { code: item.code, name: item.name, quantity: inputQuantity, price: inputPrice, referencePrice: referencePrice, adjustmentPercentage:adjustments  };
-onclose()
-addItemList(newItem)
+
+const handleSurchargeChange = (e) =>{
+    let inputSurcharge = parseFloat(e.target.value);
+    //If inputSurcharge is an empty string, then it will be zero.
+    inputSurcharge = inputSurcharge || 0;
+    
+    setSurcharge(inputSurcharge);
+    if(discount==0){
+        const newSurcharge = inputSurcharge;
+        if(newSurcharge!=0){
+            // calculate the amount of adjustment in money
+            const surchargeValue = (inputPrice * inputQuantity) * (newSurcharge / 100).toFixed(2);
+            setAmountSurcharge(Number(surchargeValue));
+
+            
+            const newAmount = ((inputPrice * inputQuantity ) * (1 + newSurcharge / 100)).toFixed(2);
+        
+            //assign the new total amount
+            setAmount(Number(newAmount))
+                
+        }else{
+                //assign the new total amount
+                setAmount(inputPrice*inputQuantity)
+        }
+    }else{
+        if(inputSurcharge==discount){
+            setAmountDiscount(0)
+            setAmountSurcharge(0)
+            setAmount(inputPrice*inputQuantity)
+        }
+        if(inputSurcharge>discount){
+            const newAdjustment = inputSurcharge - discount;
+             // calculate the amount of adjustment in money
+             const surchargeValue = ((inputPrice * inputQuantity) * (newAdjustment / 100)).toFixed(2);
+            setAmountDiscount(0);
+            setAmountSurcharge(Number(surchargeValue));
+
+            const newAmount = ((inputPrice * inputQuantity ) * (1 + newAdjustment / 100)).toFixed(2);
+    
+            setAmount(Number(newAmount))
+        }
+        if(discount>inputSurcharge){
+            const newAdjustment = discount - inputSurcharge;
+            // calculate the amount of adjustment in money
+            const discountValue = ((inputPrice * inputQuantity) * (newAdjustment / 100)).toFixed(2);
+            setAmountSurcharge(0);
+            setAmountDiscount(Number(discountValue));
+
+            const newAmount = ((inputPrice * inputQuantity ) * (1 - newAdjustment / 100)).toFixed(2);
+    
+            setAmount(Number(newAmount))
+        }
+    }
+}
+
+
+
+const handleAddItemList = async () =>{
+    //edit mount of stock
+    await onEditStock(item.code, localStock-inputQuantity)
+    // setLocalStock(localStock-inputQuantity)
+    dispatch(subtractStock(inputQuantity))
+
+    // adjustment:
+    let amountAdjustment =0;
+    if(discount>surcharge){
+        amountAdjustment= -amountDiscount;
+    }
+    if(surcharge>discount){
+        amountAdjustment = amountSurcharge;
+    }
+    //subAmount:
+    const subAmount = (inputPrice* inputQuantity)
+
+    //add this custom item in array itemList
+    const newItem = { code: item.code, name: item.name, quantity: Number(inputQuantity), price: inputPrice, referencePrice: referencePrice, discountPercentage:discount, amountDiscount: amountDiscount, surchargePercentage:surcharge, amountSurcharge: amountSurcharge, amountAdjustment: amountAdjustment, subAmount: subAmount, amount: amount };
+    addItemList(newItem)
 
 }
 
-const handleCancel = () =>{
-    onClose();
-    onEditStock(defaultStock);
-}
+
+
+// const handleCancel = async () =>{
+//     onclose()
+//     await onEditStock(defaultStock);
+//     dispatch(subtractStock(defaultStock))
+    
+// }
 
 // const handleEditQuantity = ( quantity) => {
 //     setDefaultQuantity(quantity);
@@ -140,24 +332,27 @@ const handleCancel = () =>{
 //     setIsModalQuantity(true);
 //     }
 
- // Function for calculate amount of each item 
-const calculateAmount = (quantity, price) => {
-    return quantity * price;
-};
+
 
 // Function for format price numbers
 const formatNumber = (number) => {
     return number.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };  
 
-let amount;
+// function for close 
+const closeBtn = () =>{
+    handleCancel()
+}
+
+// let amount;
+// amount = calculateAmount(inputQuantity, inputPrice)
+
     return(
-    <div className={Style.modal_container}  onClick={(e)=>{
-        if(e.target.className === Style.modal_container){handleCancel()}}}>
+    <div className={Style.modal_container}  >
         <div className={Style.modal} >
             <div className={Style.item}>
                 {/* <MIniNavBar miniTitle={""} btnClose={true} close={onClose} /> */}
-                <div className={Style.close} ><BtnClose close={handleCancel}/></div>
+                <div className={Style.close} ><BtnClose close={closeBtn}/></div>
                 {/* <table className={`${Style.table} ${Style.content}`}>
                     <thead >
                         <tr>
@@ -213,8 +408,6 @@ let amount;
                             </thead>
                             
                             <tbody>
-                            {amount = calculateAmount(inputQuantity, inputPrice)}
-                                        
                                             <tr>
                                                 
                                                 <td>{item.code|| '-'}</td>
@@ -236,15 +429,18 @@ let amount;
                             </tbody>
                         </table>
                 <div className={Style.row_title}>
-                    <TextInputStyled titleLabel={"Cantidad"} size={false} onChange={handleQuantityChange} value={inputQuantity} />
-                    <TextInputStyled titleLabel={"Precio"} size={false} onChange={handlePriceChange} value={inputPrice} />
-                    <TextInputStyled titleLabel={"Descuento"} size={false} onChange={handleAdjustmentsChange} value={adjustments} />
-                    
-                    <div>
-                    <MiniBtn tooltip={"Cancelar"} onClick={handleCancel} isRed={true}><FontAwesomeIcon icon={faXmark} /></MiniBtn>
+                    <TextInputStyled titleLabel={"Cantidad"} size={false} onChange={handleQuantityChange} value={inputQuantity} typeInput={"number"} />
+                    <TextInputStyled titleLabel={"Precio"} size={false} onChange={handlePriceChange} value={inputPrice} typeInput={"number"} />
+                    <TextInputStyled titleLabel={"Descuento"} size={true} onChange={handleDiscountChange} value={discount} typeInput={"number"} />
+                    <TextInputStyled titleLabel={"Recargo"} size={true} onChange={handleSurchargeChange} value={surcharge} typeInput={"number"} />
+                    <div className={Style.row_title}>
+                        <div className={Style.btn_position}>
+                            <MiniBtn tooltip={"Cancelar"} onClick={closeBtn} isRed={true}><FontAwesomeIcon icon={faXmark} /></MiniBtn>
+                        </div>
+                        <div className={Style.btn_position}>
+                            <MiniBtn tooltip={"Agregar Item"} onClick={handleAddItemList} isWhite={true}><FontAwesomeIcon icon={faFloppyDisk} /></MiniBtn>
+                        </div>
                     </div>
-                
-                    <MiniBtn tooltip={"Guardar en la factura"} onClick={handleAddItemList} isWhite={true}><FontAwesomeIcon icon={faFloppyDisk} /></MiniBtn>
                 </div>
             </div>
         </div>
