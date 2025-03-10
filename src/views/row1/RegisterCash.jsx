@@ -128,15 +128,16 @@ const RegisterCash = () => {
         setTotalAmount(total);
     }
 
-    const handleTotalAdjustment = (adjustment) => {
-        // Actualizamos el estado del ajuste total (sin cambios)
-        setTotalAdjustment(prevTotal => prevTotal + adjustment);
-    }
+    // const handleTotalAdjustment = (adjustment) => {
+    //     // Actualizamos el estado del ajuste total (sin cambios)
+    //     setTotalAdjustment(prevTotal => prevTotal + adjustment);
+    // }
 
     //inputs handles
     const handleInputItemName = (e) => {
         setInputItemName(e.target.value)
     }
+
     const handleInputDNI = (e) => {
         setInputDNI(e.target.value);
     }
@@ -145,9 +146,9 @@ const RegisterCash = () => {
         setInputCode(e.target.value);
     }
 
-    const handleInputQuantity = (e) => {
-        setInputQuantity(e.target.value);
-    }
+    // const handleInputQuantity = (e) => {
+    //     setInputQuantity(e.target.value);
+    // }
 
 
     // modals handles
@@ -160,8 +161,12 @@ const RegisterCash = () => {
 
     const CloseModals = () => {
         setModalOpen(false);
-        setModalItemOpen(false);
+        // setModalItemOpen(false);
     }
+
+    // const CloseItemsModal = () =>{
+    //     setModalItemOpen(false);
+    // }
 
     const handleOpenItemModal= () =>{
         setModalItemOpen(true)
@@ -175,8 +180,19 @@ const RegisterCash = () => {
     // redux handles
     const handleAddItem = (newItem) => {
 
-        dispatch(addItems(newItem)); // Agrega un nuevo item o suma la cantidad si ya existe
+        dispatch(addItems(newItem)); // add a new item or change quantity if already exist
+        // setMessage("Item agregado a la factura")
+        // MessageResponse();
+        // CloseModals();
+        setModalItemOpen(false);
     };
+
+    const handleCancelItemModal =  () =>{
+        
+        // dispatch(subtractStock(defaultStock))
+        // await handleEditStockItem(code, defaultStock);
+        setModalItemOpen(false);    
+    }
 
     const handleUpdateQuantity = (code, quantity) => {
         dispatch(updateItemQuantity({ code, quantity })); // update item quantity
@@ -212,7 +228,7 @@ const RegisterCash = () => {
             <Container>
                 <MiniNavBar miniTitle={"Caja"} btnBack={true} />
                 {modalOpen && (<MessageModal onClose={CloseModals} messageModal={"Impreso"} />)}
-                {modalItemOpen &&createPortal( <ItemModal onClose={CloseModals}  addItemList={handleAddItem} onAdjustment={null} onEditStock={null} />, document.body)}
+                {modalItemOpen && createPortal( <ItemModal size={false}  addItemList={handleAddItem}  onEditStock={handleEditStockItem} handleCancel={handleCancelItemModal}  />, document.body)}
                 <article className={Style.content}>
                     <div className={Style.column1}>
                         <div className={Style.row1}>
@@ -220,8 +236,8 @@ const RegisterCash = () => {
                             <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />
                             <div className={Style.btnLayout}>
                                 <MiniBtn onClick={handleOpenItemModal} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>
-                                <MiniBtn onClick={handleShowPrice} isWhite={true}> $<FontAwesomeIcon icon={faMagnifyingGlass} />  </MiniBtn>
-                                <MiniBtn onClick={handleEditPrice} isWhite={true}> $<FontAwesomeIcon icon={faPencil} />  </MiniBtn>
+                                {/* <MiniBtn onClick={handleShowPrice} isWhite={true}> $<FontAwesomeIcon icon={faMagnifyingGlass} />  </MiniBtn>
+                                <MiniBtn onClick={handleEditPrice} isWhite={true}> $<FontAwesomeIcon icon={faPencil} />  </MiniBtn> */}
                                 {/* <BtnCommon title={"Agregar"} colorViolet={true}> <FontAwesomeIcon icon={faPlus} /> </BtnCommon> */}
                                 {/* <BtnCommon title={"Precio"} colorViolet={true}> $</BtnCommon> */}
                             </div>
