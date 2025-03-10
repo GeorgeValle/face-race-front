@@ -128,6 +128,8 @@
     align-items: center;
     width: 830px;
     padding-top: 8px;
+    
+    
 }
 
 .inputs{
@@ -205,5 +207,9 @@
     background-color: #f9f9f9; 
     font-size: 16px; 
     
+}
+
+.btn_position{
+    margin: 8px 8px 8px;
 }
 
