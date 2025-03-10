@@ -1,7 +1,6 @@
 import styles from './InputSelectStyled.module.css'
 
-// import PropTypes from 'prop-types'
-
+// eslint-disable-next-line react/prop-types
 const InputSelectStyled = ({defaultValue="", onSetValue=null, onLabel="", options=[] } ) => {
 
     
@@ -26,6 +25,5 @@ const InputSelectStyled = ({defaultValue="", onSetValue=null, onLabel="", option
     )
 }
 
-// InputSelectStyled.propTypes = {}
 
 export default InputSelectStyled
