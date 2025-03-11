@@ -14,7 +14,7 @@ import TextArea from '../../components/inputs/textArea/TextArea';
 import TextInput from '../../components/inputs/textInput/TextInput';
 import MessageModal from '../../components/modals/messageModal/MessageModal';
 import ItemModal from '../../components/modals/itemModal/ItemModal';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { addItem, deleteItem, updatePrice, subtractStock } from "../../redux/ItemSlice";
 import { addItems, removeItem, clearItems, updateItemQuantity } from '../../redux/ItemsListSlice';
@@ -39,6 +39,9 @@ const RegisterCash = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalItemOpen, setModalItemOpen] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0.00);
+    const [totalSubAmount, setTotalSubAmount] = useState(0.00);
+    const [totalAdjustment, setTotalAdjustment] = useState(0.00);
+    const [totalFake, setTotalFake] = useState(0);
     const [inputDNI, setInputDNI] = useState("")
     const [discount, setDiscount] = useState(0)
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
@@ -48,7 +51,7 @@ const RegisterCash = () => {
     const [inputQuantity, setInputQuantity] = useState(0);
     const [inputItemName, setInputItemName] = useState("")
     const [isFetchClient, setIsFetchClient] = useState(false);
-    const [totalAdjustment, setTotalAdjustment] = useState(0);
+    
 
     //Variables Redux
     const client = useSelector((state) => state.client);
@@ -66,7 +69,7 @@ const RegisterCash = () => {
             const response = request.data
             dispatch(addItem(response.item))
             setInputItemName(`${response.item.name} ${response.item.brand}`)
-           
+        
         } catch (error) {
             setMessage("Artículo NO encontrado")
             setModalOpenMessage(true)
@@ -125,7 +128,7 @@ const RegisterCash = () => {
     }
 
     const handleTotalAmount = (total) => {
-        setTotalAmount(total);
+        setTotalFake(total);
     }
 
     // const handleTotalAdjustment = (adjustment) => {
@@ -181,6 +184,9 @@ const RegisterCash = () => {
     const handleAddItem = (newItem) => {
 
         dispatch(addItems(newItem)); // add a new item or change quantity if already exist
+        dispatch(deleteItem()); //delete item of redux
+        setInputCode("");
+        setInputItemName("");
         // setMessage("Item agregado a la factura")
         // MessageResponse();
         // CloseModals();
@@ -195,24 +201,19 @@ const RegisterCash = () => {
     }
 
     const handleUpdateQuantity = (code, quantity) => {
-        dispatch(updateItemQuantity({ code, quantity })); // update item quantity
+        dispatch(updateItemQuantity({ code, quantity })); // update item quantity by code
     };
 
     const handleRemoveItem = (code) => {
-        dispatch(removeItem(code)); // Elimina el item por código
+        dispatch(removeItem(code)); // Delete item by code
     };
 
     const handleClearItems = () => {
-        dispatch(clearItems()); // Borra todo el contenido del array
+        dispatch(clearItems()); // delete all content of the table (array)
+        dispatch(deleteItem()); //delete item of redux
+        setInputCode("");
+        setInputItemName("");
     };
-
-    const handleShowPrice = () => {
-
-    }
-
-    const handleEditPrice = () => {
-
-    }
 
     const handleBill = () => {
 
@@ -222,6 +223,28 @@ const RegisterCash = () => {
         dispatch(subtractStock({ quantity: Number(quantity) })); // Dispatch the action to subtract stock
         
     }
+
+    //calculate amounts
+    const calculateTotalAmount = () => {
+        const total = itemsList.reduce((acc, item) => acc + item.amount, 0);
+        setTotalAmount(total);
+    };
+
+    const calculateTotalSubAmount = () => {
+        const total = itemsList.reduce((acc, item) => acc + item.subAmount, 0);
+        setTotalSubAmount(total);
+    };
+
+    const calculateTotalAdjustment = () => {
+        const total = itemsList.reduce((acc, item) => acc + item.amountAdjustment, 0);
+        setTotalAdjustment(total);
+    };
+
+    useEffect(() => {
+        calculateTotalAmount();
+        calculateTotalSubAmount();
+        calculateTotalAdjustment();
+      }, [itemsList]);
 
     return (
         <div className={Style.mainContainer}>
@@ -262,13 +285,13 @@ const RegisterCash = () => {
                         </div>
                     </div>
                     <div className={Style.column2}>
-                        <MidTotal />
+                        <MidTotal subTotal={totalSubAmount} adjustment={totalAdjustment} total={totalAmount} />
                         <div className={Style.BtnLarge}>
                             <BtnVioletLarge onClick={handleBill} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>
                         </div>
                         <div className={Style.BtnsShort}>
                             <BtnCommon title={"Cliente "} colorViolet={true}><FontAwesomeIcon icon={faUserPlus} /></BtnCommon>
-                            <BtnCommon title={"Cancelar "} colorRed={true}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
+                            <BtnCommon title={"Cancelar "} colorRed={true} onClick={handleClearItems}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
                         </div>
                     </div>
 

@@ -58,7 +58,7 @@ export const itemSlice = createSlice({
                 state.stockQuantity - quantity
             }
         },
-        deleteClient:(state)=>{
+        deleteItem:(state)=>{
             state._id = null;
             state.code = null;
             state.name = null;
