@@ -14,7 +14,7 @@ import TextArea from '../../components/inputs/textArea/TextArea';
 import TextInput from '../../components/inputs/textInput/TextInput';
 import MessageModal from '../../components/modals/messageModal/MessageModal';
 import ItemModal from '../../components/modals/itemModal/ItemModal';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { addItem, deleteItem, updatePrice, subtractStock } from "../../redux/ItemSlice";
 import { addItems, removeItem, clearItems, updateItemQuantity } from '../../redux/ItemsListSlice';
@@ -39,8 +39,11 @@ const RegisterCash = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalItemOpen, setModalItemOpen] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0.00);
+    const [totalSubAmount, setTotalSubAmount] = useState(0.00);
+    const [totalAdjustment, setTotalAdjustment] = useState(0.00);
+    const [totalFake, setTotalFake] = useState(0);
     const [inputDNI, setInputDNI] = useState("")
-    const [discount, setDiscount] = useState(0)
+    const [description, setDescription] = useState("");
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
     //colocar el open modal
     const [message, setMessage] = useState("");
@@ -48,7 +51,14 @@ const RegisterCash = () => {
     const [inputQuantity, setInputQuantity] = useState(0);
     const [inputItemName, setInputItemName] = useState("")
     const [isFetchClient, setIsFetchClient] = useState(false);
-    const [totalAdjustment, setTotalAdjustment] = useState(0);
+    //date
+    const [day, setDay] = useState('');
+    const [month, setMonth] = useState('');
+    const [year, setYear] = useState('');
+    const [days, setDays] = useState([]);
+    const [months, setMonths] = useState([]);
+    const [years, setYears] = useState([])
+    
 
     //Variables Redux
     const client = useSelector((state) => state.client);
@@ -66,7 +76,7 @@ const RegisterCash = () => {
             const response = request.data
             dispatch(addItem(response.item))
             setInputItemName(`${response.item.name} ${response.item.brand}`)
-           
+        
         } catch (error) {
             setMessage("Artículo NO encontrado")
             setModalOpenMessage(true)
@@ -125,7 +135,7 @@ const RegisterCash = () => {
     }
 
     const handleTotalAmount = (total) => {
-        setTotalAmount(total);
+        setTotalFake(total);
     }
 
     // const handleTotalAdjustment = (adjustment) => {
@@ -181,6 +191,9 @@ const RegisterCash = () => {
     const handleAddItem = (newItem) => {
 
         dispatch(addItems(newItem)); // add a new item or change quantity if already exist
+        dispatch(deleteItem()); //delete item of redux
+        setInputCode("");
+        setInputItemName("");
         // setMessage("Item agregado a la factura")
         // MessageResponse();
         // CloseModals();
@@ -195,24 +208,19 @@ const RegisterCash = () => {
     }
 
     const handleUpdateQuantity = (code, quantity) => {
-        dispatch(updateItemQuantity({ code, quantity })); // update item quantity
+        dispatch(updateItemQuantity({ code, quantity })); // update item quantity by code
     };
 
     const handleRemoveItem = (code) => {
-        dispatch(removeItem(code)); // Elimina el item por código
+        dispatch(removeItem(code)); // Delete item by code
     };
 
     const handleClearItems = () => {
-        dispatch(clearItems()); // Borra todo el contenido del array
+        dispatch(clearItems()); // delete all content of the table (array)
+        dispatch(deleteItem()); //delete item of redux
+        setInputCode("");
+        setInputItemName("");
     };
-
-    const handleShowPrice = () => {
-
-    }
-
-    const handleEditPrice = () => {
-
-    }
 
     const handleBill = () => {
 
@@ -222,6 +230,124 @@ const RegisterCash = () => {
         dispatch(subtractStock({ quantity: Number(quantity) })); // Dispatch the action to subtract stock
         
     }
+
+    //calculate amounts
+    const calculateTotalAmount = () => {
+        const total = itemsList.reduce((acc, item) => acc + item.amount, 0);
+        setTotalAmount(total);
+    };
+
+    const calculateTotalSubAmount = () => {
+        const total = itemsList.reduce((acc, item) => acc + item.subAmount, 0);
+        setTotalSubAmount(total);
+    };
+
+    const calculateTotalAdjustment = () => {
+        const total = itemsList.reduce((acc, item) => acc + item.amountAdjustment, 0);
+        setTotalAdjustment(total);
+    };
+
+    useEffect(() => {
+        calculateTotalAmount();
+        calculateTotalSubAmount();
+        calculateTotalAdjustment();
+    }, [itemsList]);
+
+    //######### date functions ############
+
+    const calculateDays = (month, year) => {
+    const date = new Date(year, month, 0);
+    const numberOfDays = date.getDate();
+    const currentDate = new Date();
+    const daysArray = [];
+    for (let i = 1; i <= numberOfDays; i++) {
+        if (year === currentDate.getFullYear() && month === currentDate.getMonth() + 1) {
+            if (i <= currentDate.getDate()) {
+                daysArray.push(i);
+            }
+        } else {
+            daysArray.push(i);
+        }
+        }
+        setDays(daysArray);
+    };
+
+    const calculateMonths = (year) => {
+        const currentDate = new Date();
+        const monthsArray = [];
+        for (let i = 1; i <= 12; i++) {
+        if (year === currentDate.getFullYear()) {
+            if (i <= currentDate.getMonth() + 1) {
+            monthsArray.push(i);
+            }
+        } else {
+            monthsArray.push(i);
+        }
+        }
+        setMonths(monthsArray);
+    };
+
+    const calculateYears = () => {
+        const currentDate = new Date();
+        const yearsArray = [];
+        for (let i = 2023; i <= currentDate.getFullYear(); i++) {
+            yearsArray.push(i);
+        }
+        setYears(yearsArray);
+    };
+
+    const handleDayChange = (e) => {
+        setDay(e.target.value);
+    };
+
+    const handleMonthChange = (e) => {
+        setMonth(e.target.value);
+        calculateDays(e.target.value, year);
+    };
+
+    const handleYearChange = (e) => {
+        setYear(e.target.value);
+        calculateMonths(e.target.value);
+        calculateDays(month, e.target.value);
+    };
+
+    const generateDate = (day, month, year, useCurrentTime = false) => {
+        let date;
+        if (useCurrentTime) {
+            const currentDate = new Date();
+            date = new Date(year, month - 1, day, currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+        } else {
+            date = new Date(year, month - 1, day);
+        }
+        const utcHours = date.getUTCHours();
+        const utcMinutes = date.getUTCMinutes();
+        const utcSeconds = date.getUTCSeconds();
+        const utcMilliseconds = date.getUTCMilliseconds();
+        const timezoneOffset = -3 * 60 * 60 * 1000; // UTC-3 para Argentina
+        const argentinaDate = new Date(date.getTime() + timezoneOffset);
+        return argentinaDate;
+    };
+    //example generate day
+    let fecha = generateDate(day, month, year);
+
+    fecha = fecha.toLocaleString('es-AR', { timeZone: 'America/Buenos_Aires' })
+
+    useEffect(() => {
+        const currentDate = new Date();
+        setDay(currentDate.getDate());
+        setMonth(currentDate.getMonth() + 1); // getMonth devuelve un valor entre 0 y 11
+        setYear(currentDate.getFullYear());
+        
+        calculateDays(currentDate.getMonth() + 1, currentDate.getFullYear());
+        calculateMonths(currentDate.getFullYear());
+        calculateYears();
+    }, []);
+
+    //######### validations
+
+    // Verify items data for enable addItems button
+    //const isDataItem =  item.length > 0;
+
 
     return (
         <div className={Style.mainContainer}>
@@ -247,13 +373,49 @@ const RegisterCash = () => {
                             <TableQuotation rows={itemsList} totals={handleTotalAmount} size={true} modalRemoveItem={handleRemoveItem} modalUpdateItem={handleUpdateQuantity} isEdit={false} />
                         </div>
                         <div className={Style.row3}>
-                            <div>
+                            {/*<div>
                                 <InputDate side={false} titleLabel={"Fecha:"} ></InputDate>
-
                             </div>
                             <div className={Style.area1}>
                                 <TextArea titleLabel={"Observaciones:"} nameLabel={"observaciones"} placeholderText={"* Opcional: Detalles varios"} sideLabel={true} />
+                            </div>*/}
+                            <div className={Style.inputDate_group}>
+                                <label className={Style.label}>
+                                    Día:
+                                </label>
+                                <select className={Style.styledSelect} value={day} onChange={handleDayChange}>
+                                    {days.map((day) => (
+                                        <option key={day} value={day}>
+                                            {day}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
+                            <div className={Style.inputDate_group}>
+                                <label className={Style.label}>
+                                    Mes:
+                                </label>
+                                <select className={Style.styledSelect} value={month} onChange={handleMonthChange}>
+                                    {months.map((month) => (
+                                        <option key={month} value={month}>
+                                            {month}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className={Style.inputDate_group} >
+                                <label className={Style.label}>
+                                    Año:
+                                </label>
+                                <select className={Style.styledSelect} value={year} onChange={handleYearChange}>
+                                    {years.map((year) => (
+                                        <option key={year} value={year}>
+                                            {year}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setDescription(e.target.value)} value={description} />
 
                         </div>
                         <div className={Style.row4}>
@@ -262,13 +424,13 @@ const RegisterCash = () => {
                         </div>
                     </div>
                     <div className={Style.column2}>
-                        <MidTotal />
+                        <MidTotal subTotal={totalSubAmount} adjustment={totalAdjustment} total={totalAmount} />
                         <div className={Style.BtnLarge}>
                             <BtnVioletLarge onClick={handleBill} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>
                         </div>
                         <div className={Style.BtnsShort}>
                             <BtnCommon title={"Cliente "} colorViolet={true}><FontAwesomeIcon icon={faUserPlus} /></BtnCommon>
-                            <BtnCommon title={"Cancelar "} colorRed={true}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
+                            <BtnCommon title={"Cancelar "} colorRed={true} onClick={handleClearItems}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
                         </div>
                     </div>
 
