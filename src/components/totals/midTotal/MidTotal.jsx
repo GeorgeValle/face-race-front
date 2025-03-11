@@ -3,7 +3,7 @@ import Style from './MidTotal.module.css'
 
 
 
-const MidTotal = ({subTotal=0, recargo=0, total=0}) => {
+const MidTotal = ({subTotal=0, adjustment=0, total=0}) => {
 
     // Function for format numbers
     const formatNumber = (number) => {
@@ -16,7 +16,7 @@ const MidTotal = ({subTotal=0, recargo=0, total=0}) => {
                 <h4 >Subtotal:</h4> <h4>$ {formatNumber(subTotal)}</h4>
             </div>
             <div className={Style.descuento}>
-                <h4>Descuento/Recargo:</h4><h4>$ {formatNumber(recargo)}</h4>
+                <h4>Descuento/Recargo:</h4><h4>$ {formatNumber(adjustment)}</h4>
             </div>
             <div className={Style.totals}>
                 <h2>TOTAL:</h2><h2>$ {formatNumber(total)}</h2>

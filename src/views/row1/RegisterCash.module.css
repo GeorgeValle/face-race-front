@@ -62,7 +62,7 @@
 
 .row3, .row4{
     min-width: 874px;
-    min-height: 119px;
+    min-height: 98px;
     flex-shrink: 0;
     border-radius: 15px;
     background: rgba(230, 139, 81, 0.69);
@@ -85,4 +85,56 @@
     min-height: 62px;
     align-items: center;
     margin-bottom: 10px;
+}
+
+.inputDate_group {
+    box-sizing: content-box;
+    max-width: fit-content;
+    display: flex;
+    flex-direction: column;
+    height: 63px;
+    text-align: center;
+    border-radius: 15px;
+    background: rgba(230, 139, 81, 0.69);
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 1px;
+    padding-bottom: 7px;
+    margin: 7px 9px;
+    border: #000 1px solid;
+    box-shadow: 6px 7px 1px 0px rgba(0, 0, 0, 0.25);
+}
+
+.inputDate_group:hover .label, .input:focus {
+    color: #ccc;
+}
+
+.styledSelect {
+    display:flex;
+    width: 100%; /* Adjust width as needed */
+    padding: 10px; /* Add padding */
+    
+    
+    border: 1px solid #ccc; /* Border style */
+    border: 1px solid #05060f;
+    border-radius: 4px; /* Rounded corners */
+    background-color: #f9f9f9; 
+    font-size: 16px; 
+    
+}
+
+.label {
+    display: block;
+    margin-bottom: .1px;
+    color: #05060f99;
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+    color: #FFF;
+    text-shadow: 2px 2px 2px  rgba(0, 0, 0, 0.65);
+    -webkit-text-stroke-width: thin;
+    -webkit-text-stroke-color: #000000;
+    font-family: "Lato", sans-serif;
+    font-size: 19px;
+    font-style:normal;
+    font-weight: 700;
+    line-height:normal;
 }
