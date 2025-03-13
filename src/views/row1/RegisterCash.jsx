@@ -6,12 +6,10 @@ import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputSt
 import MidTotal from '../../components/totals/midTotal/MidTotal';
 import Style from './RegisterCash.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faUserPlus, faWallet, faXmark, faPencil, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faUserPlus, faWallet, faXmark, faPencil, faMagnifyingGlass, faBroomBall } from "@fortawesome/free-solid-svg-icons";
 import { TableQuotation } from '../../components/tables/tableQuotation/TableQuotation';
 import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge';
-import InputDate from '../../components/inputs/inputDate/InputDate';
-import TextArea from '../../components/inputs/textArea/TextArea';
-import TextInput from '../../components/inputs/textInput/TextInput';
+import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
 import MessageModal from '../../components/modals/messageModal/MessageModal';
 import ItemModal from '../../components/modals/itemModal/ItemModal';
 import { useState, useEffect } from 'react'
@@ -20,7 +18,7 @@ import { addItem, deleteItem, updatePrice, subtractStock } from "../../redux/Ite
 import { addItems, removeItem, clearItems, updateItemQuantity } from '../../redux/ItemsListSlice';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useDispatch, useSelector } from "react-redux";
-import { addClient } from "../../redux/ClientSlice";
+import { addClient, deleteClient } from "../../redux/ClientSlice";
 import config from "../../config/Envs"
 import axios from "axios";
 // const item1 =[
@@ -50,7 +48,9 @@ const RegisterCash = () => {
     const [inputCode, setInputCode] = useState("");
     const [inputQuantity, setInputQuantity] = useState(0);
     const [inputItemName, setInputItemName] = useState("")
+    const [inputNameClient, setInputNameClient] = useState("")
     const [isFetchClient, setIsFetchClient] = useState(false);
+    //const [isDataItem, setIsDataItem] = useState(false);
     //date
     const [day, setDay] = useState('');
     const [month, setMonth] = useState('');
@@ -87,11 +87,12 @@ const RegisterCash = () => {
     }
 
     const fetchClient = async () => {
-
         try {
             const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
             const response = request.data
             dispatch(addClient(response.data))
+            setInputNameClient(`${response.data.name} ${response.data.surname}`)
+            
             if (response.data) {
                 setIsFetchClient(true);
 
@@ -100,7 +101,6 @@ const RegisterCash = () => {
             setMessage("Cliente NO encontrado")
             MessageResponse(message);
         }
-
     }
 
     const handleEditStockItem = async (code, quantity) => {
@@ -110,13 +110,24 @@ const RegisterCash = () => {
             });
 
         } catch (error) {
-            //delete later
-            console.error('Error al actualizar los datos:', error);
+            
             setMessage('Error al actualizar el Stock')
             MessageResponse();
         }
     };
 
+    // function for clean items of redux and input
+    const cleanItem = () =>{
+    dispatch(deleteItem()); //delete item of redux
+        setInputCode("");
+        setInputItemName("");
+    }
+
+    const cleanClient = () =>{
+        dispatch(deleteClient()); //delete item of redux
+        setInputDNI("");
+        setInputNameClient("");
+    }
     //onKeyDown handles 
 
     const handleOnKeyItem = async (event) => {
@@ -126,10 +137,10 @@ const RegisterCash = () => {
         }
     }
 
-    const handleOnKeyClient = (event) => {
-        if (event.key === "Enter") {
+    const handleOnKeyClient = async (event) => {
+        if (event.key === "Enter" || event.key === "Intro") {
             
-            fetchClient();
+            await fetchClient();
             
         }
     }
@@ -146,6 +157,10 @@ const RegisterCash = () => {
     //inputs handles
     const handleInputItemName = (e) => {
         setInputItemName(e.target.value)
+    }
+
+    const handleInputNameClient = (e) =>{
+        setInputNameClient(e.target.value)
     }
 
     const handleInputDNI = (e) => {
@@ -191,9 +206,7 @@ const RegisterCash = () => {
     const handleAddItem = (newItem) => {
 
         dispatch(addItems(newItem)); // add a new item or change quantity if already exist
-        dispatch(deleteItem()); //delete item of redux
-        setInputCode("");
-        setInputItemName("");
+        cleanItem();
         // setMessage("Item agregado a la factura")
         // MessageResponse();
         // CloseModals();
@@ -344,11 +357,10 @@ const RegisterCash = () => {
     }, []);
 
     //######### validations
-
-    // Verify items data for enable addItems button
-    //const isDataItem =  item.length > 0;
-
-
+// Verify Item data  for enable plus button
+const isDataItem = item.name != null;
+    
+const isDataListItem = itemsList.length > 0 && client.name != null;
     return (
         <div className={Style.mainContainer}>
             <Container>
@@ -361,7 +373,7 @@ const RegisterCash = () => {
                             <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
                             <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />
                             <div className={Style.btnLayout}>
-                                <MiniBtn onClick={handleOpenItemModal} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>
+                                {isDataItem ? (<MiniBtn onClick={handleOpenItemModal} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>) : (<MiniBtn onClick={handleOpenItemModal} bgDisable={true} disabled={true} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>)}
                                 {/* <MiniBtn onClick={handleShowPrice} isWhite={true}> $<FontAwesomeIcon icon={faMagnifyingGlass} />  </MiniBtn>
                                 <MiniBtn onClick={handleEditPrice} isWhite={true}> $<FontAwesomeIcon icon={faPencil} />  </MiniBtn> */}
                                 {/* <BtnCommon title={"Agregar"} colorViolet={true}> <FontAwesomeIcon icon={faPlus} /> </BtnCommon> */}
@@ -373,60 +385,40 @@ const RegisterCash = () => {
                             <TableQuotation rows={itemsList} totals={handleTotalAmount} size={true} modalRemoveItem={handleRemoveItem} modalUpdateItem={handleUpdateQuantity} isEdit={false} />
                         </div>
                         <div className={Style.row3}>
-                            {/*<div>
-                                <InputDate side={false} titleLabel={"Fecha:"} ></InputDate>
-                            </div>
-                            <div className={Style.area1}>
-                                <TextArea titleLabel={"Observaciones:"} nameLabel={"observaciones"} placeholderText={"* Opcional: Detalles varios"} sideLabel={true} />
-                            </div>*/}
-                            <div className={Style.inputDate_group}>
-                                <label className={Style.label}>
-                                    Día:
-                                </label>
-                                <select className={Style.styledSelect} value={day} onChange={handleDayChange}>
-                                    {days.map((day) => (
-                                        <option key={day} value={day}>
-                                            {day}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className={Style.inputDate_group}>
-                                <label className={Style.label}>
-                                    Mes:
-                                </label>
-                                <select className={Style.styledSelect} value={month} onChange={handleMonthChange}>
-                                    {months.map((month) => (
-                                        <option key={month} value={month}>
-                                            {month}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className={Style.inputDate_group} >
-                                <label className={Style.label}>
-                                    Año:
-                                </label>
-                                <select className={Style.styledSelect} value={year} onChange={handleYearChange}>
-                                    {years.map((year) => (
-                                        <option key={year} value={year}>
-                                            {year}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setDescription(e.target.value)} value={description} />
-
+                            <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
+                            <TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} />
+                            <MiniBtn onClick={cleanClient} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
+                            
                         </div>
                         <div className={Style.row4}>
-                            <TextInput typeInput={"text"} isLabel={true} titleLabel={"Cliente:"} nameLabel={"cliente"} placeholderText={"Ej: Juan Gomez"} sideLabel={true} data={null} />
-                            <TextInput typeInput={"number"} isLabel={true} titleLabel={"DNI / CUIT:"} nameLabel={"dni"} placeholderText={"Ej: 40112233"} sideLabel={true} data={null} />
+                            <InputSelectDateStyled onLabel={"Día"} onChange={handleDayChange} defaultValue={day}>
+                                {days.map((day) => (
+                                    <option key={day} value={day}>
+                                        {day}
+                                    </option>
+                                ))}
+                            </InputSelectDateStyled>
+                            <InputSelectDateStyled defaultValue={month} onChange={handleMonthChange} onLabel={"Mes"}>
+                                {months.map((month) => (
+                                    <option key={month} value={month}>
+                                        {month}
+                                    </option>
+                                ))}
+                            </InputSelectDateStyled>
+                            <InputSelectDateStyled defaultValue={year} onChange={handleYearChange} onLabel={"Año"}>
+                                {years.map((year) => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
+                            </InputSelectDateStyled>
+                            <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setDescription(e.target.value)} value={description} />
                         </div>
                     </div>
                     <div className={Style.column2}>
                         <MidTotal subTotal={totalSubAmount} adjustment={totalAdjustment} total={totalAmount} />
                         <div className={Style.BtnLarge}>
-                            <BtnVioletLarge onClick={handleBill} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>
+                            {isDataListItem ? (<BtnVioletLarge onClick={handleBill} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>):(<BtnVioletLarge onClick={handleBill} bgDisable={true} disabled={true} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>)}
                         </div>
                         <div className={Style.BtnsShort}>
                             <BtnCommon title={"Cliente "} colorViolet={true}><FontAwesomeIcon icon={faUserPlus} /></BtnCommon>

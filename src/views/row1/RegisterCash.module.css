@@ -62,7 +62,7 @@
 
 .row3, .row4{
     min-width: 874px;
-    min-height: 98px;
+    min-height: 89px;
     flex-shrink: 0;
     border-radius: 15px;
     background: rgba(230, 139, 81, 0.69);
