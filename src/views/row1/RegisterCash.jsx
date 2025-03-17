@@ -4,33 +4,24 @@ import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon';
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled';
 import MidTotal from '../../components/totals/midTotal/MidTotal';
+import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge';
+import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
 import Style from './RegisterCash.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faUserPlus, faWallet, faXmark, faPencil, faMagnifyingGlass, faBroomBall } from "@fortawesome/free-solid-svg-icons";
 import { TableQuotation } from '../../components/tables/tableQuotation/TableQuotation';
-import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge';
-import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
 import MessageModal from '../../components/modals/messageModal/MessageModal';
 import ItemModal from '../../components/modals/itemModal/ItemModal';
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { addItem, deleteItem, updatePrice, subtractStock } from "../../redux/ItemSlice";
 import { addItems, removeItem, clearItems, updateItemQuantity } from '../../redux/ItemsListSlice';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useDispatch, useSelector } from "react-redux";
 import { addClient, deleteClient } from "../../redux/ClientSlice";
+import { NavLink } from "react-router-dom";
 import config from "../../config/Envs"
 import axios from "axios";
-// const item1 =[
-//     {code:323434,item:"Zapatillas Casual para motocicletas",quantity:2,price:"12,00",amount:54.45},
-//     {code:323434,item:"Camperas para motocicletas",quantity:2,price:12000.00,amount:12000.00},
-//     {code:1,item:"",quantity:0,price:0.00,amount:0.00},
-//     {code:2,item:"",quantity:0,price:0.00,amount:0.00},
-//     {code:3,item:"",quantity:0,price:0.00,amount:0.00}
 
-// ]
-
-//const item1 = [{ code: 323434, name: "Zapatillas Casual para motocicletas", quantity: 2, price: "120250", amount: 240500.00 }, { code: 323435, name: "Camperas para motocicletas", quantity: 2, price: 190000.00, amount: 380000.00 }]
 
 const RegisterCash = () => {
 
@@ -198,9 +189,9 @@ const RegisterCash = () => {
     }
 
     // Function for format numbers
-    const formatNumber = (number) => {
-        return number.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    };
+    // const formatNumber = (number) => {
+    //     return number.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    // };
 
     // redux handles
     const handleAddItem = (newItem) => {
@@ -361,6 +352,7 @@ const RegisterCash = () => {
 const isDataItem = item.name != null;
     
 const isDataListItem = itemsList.length > 0 && client.name != null;
+
     return (
         <div className={Style.mainContainer}>
             <Container>
@@ -418,7 +410,9 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
                     <div className={Style.column2}>
                         <MidTotal subTotal={totalSubAmount} adjustment={totalAdjustment} total={totalAmount} />
                         <div className={Style.BtnLarge}>
+                        <NavLink to='/payment' >
                             {isDataListItem ? (<BtnVioletLarge onClick={handleBill} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>):(<BtnVioletLarge onClick={handleBill} bgDisable={true} disabled={true} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>)}
+                        </NavLink >
                         </div>
                         <div className={Style.BtnsShort}>
                             <BtnCommon title={"Cliente "} colorViolet={true}><FontAwesomeIcon icon={faUserPlus} /></BtnCommon>
