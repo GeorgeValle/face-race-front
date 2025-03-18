@@ -120,33 +120,37 @@ const Client = () => {
         //setIsLIstClient(false)
         setIsClient(true)
         setModalOpenNewModal(false);
+        
         setMessage(message);
         setModalOpenMessage(true);
+        
         setTimeout(() => {
             setModalOpenMessage(false);
-                    }, 3500);
+                    }, 4000);
                     
         
 }
 
 const handleDialogDelete = () =>{
-    setMessageModal("¿Seguro quieres Borrar al Proveedor?");
+    setMessageModal("¿Seguro quieres Borrar al Cliente?");
     setMessageButton("Borrar");
     setModalOpenDialog(true);
 }
 
 const handleDeleteClient = async () => {
-
+    setModalOpenDialog(false);
     try{
-        await axios.delete(`${config.API_BASE}client/dni/${client.dni}`)
+        const request = await axios.delete(`${config.API_BASE}client/dni/${client.dni}`)
         dispatch(deleteClient())
-        setMessage("Cliente Eliminado")
+
+        setMessage(request.data.message)
+    
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
                             }, 3500);
     }catch(error){
-        console.log(error);
+        
         setMessage("Cliente NO encontrado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
