@@ -61,7 +61,7 @@ const Supplier = () => {
             try{
                 const request = await axios.get((`${config.API_BASE}supplier/cuit/${inputCUIT}`))
                 const response = request.data
-                dispatch(addSupplier(response.supplier))
+                dispatch(addSupplier(response.data))
             }catch(error){
                 setMessage("Proveedor NO encontrado")
                 setModalOpenMessage(true)
@@ -147,6 +147,7 @@ const handleDeleteSupplier = async () => {
         await axios.delete(`${config.API_BASE}supplier/cuit/${supplier.cuit}`)
         dispatch(deleteSupplier())
         setMessage("Proveedor Borrado")
+       
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);

@@ -54,9 +54,8 @@ const onSubmitCreate = async () =>{
     try {
         //setLoading(true);
         //setError("")
-        dispatch(changeClient(formData))
-        const request = await axios.post(`${config.API_BASE}client/register`, 
-            formData
+        
+        const request = await axios.post(`${config.API_BASE}client/register`,formData
             /*{
             email:email,
             name:name,
@@ -70,11 +69,11 @@ const onSubmitCreate = async () =>{
             postalCode:postalCode,
             cel:cel
             } */)
-            
-            const response =  request.data;
+            console.log(request.data);
+            // const response =  request.data;
             //setLoading(false);
-            
-            onSubmit(response.Message);
+            dispatch(changeClient(formData))
+            onSubmit(request.data.message);
 } catch (err) {
     //setError(err);
     onSubmit(`Error al crear cliente`);
