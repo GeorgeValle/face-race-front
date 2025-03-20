@@ -11,9 +11,10 @@ import InputSelectStyled from '../../components/inputs/inputSelectStyled/InputSe
 import Style from './WareHouse.module.css'
 import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faMagnifyingGlass, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
+import {faMagnifyingGlass, faPlus, faTruck/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
 import TextViewItem from '../../components/textViews/textViewItem/TextViewItem'
 import {TableCategoryItems} from '../../components/tables/tableCategoryItems/TableCategoryItems'
+import { TableReorderPoint } from '../../components/tables/tableReorderPoint/TableReorderPoint'
 import NewItemModal from '../../components/modals/newItemModal/NewItemModal'
 import { createPortal } from 'react-dom'
 import EditItemModal from '../../components/modals/editItemModal/EditItemModal'
@@ -24,6 +25,7 @@ import { addItem,/* changeClient,*/ deleteItem  } from "../../redux/ItemSlice";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import config from "../../config/Envs"
+import { handleError } from '../../config/ErrorHandling'
 //import TextViewItem from '../../components/textViews/textViewItem/TextViewItem'
 
 
@@ -43,14 +45,45 @@ const Warehouse = () => {
     const [inputList, setInputList] = useState("");
     const [isListItems, setIsListItems] = useState(false);
     const [isItem, setIsItem ] = useState(false);
+    const [isReorderPointList, setIsReorderPointList]= useState(false);
     const [categoryList, setCategoryList] = useState([]);
+    const [reorderPointList, setReorderPointList] = useState([]);
     const item = useSelector((state)=> state.item);
     
     
     const dispatch = useDispatch();
 
     
-    
+    const handleErrors = (error) =>{
+
+        if(error === 'ECONNREFUSED' ){
+            setMessage("Error de conexión con el servidor")
+        }
+        if(error.status=== 500){
+            setMessage("Error interno del servidor")
+        }
+        if(error.status === 404){
+            setMessage("No se encontró el recurso solicitado")
+            }
+            if(error.status === 401){
+                setMessage("No tienes permisos para realizar esta acción")
+                }
+                if(error.status === 422){
+                    setMessage("Error de validación")
+                    }
+                    if(error.status === 403){
+                        setMessage("No tienes permisos para realizar esta acción")
+                        }
+                        if(error.status === 400){
+                            setMessage("Error de validación")
+                            }
+                            if(error.status === 409){
+                                setMessage("El recurso ya existe")
+                                }
+                                error
+
+
+    }
     
 
     
@@ -59,6 +92,7 @@ const Warehouse = () => {
         const fetchItem = async() => {
             
             setIsListItems(false)
+            setIsReorderPointList(false)
             setIsItem(true)
             
             try{
@@ -81,13 +115,39 @@ const Warehouse = () => {
         const fetchListItems = async(category) => {
             
             setIsItem(false)
+            setIsReorderPointList(false)
             setIsListItems(true)
             try{
                 const request = await axios.get((`${config.API_BASE}item/category/${category}`))
                 const response = request.data
                 setCategoryList(response)
             }catch(error){
-                setMessage("Artículo NO encontrado")
+                setMessage(handleError(error)||"Artículo NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);
+            }
+        }
+
+        const fetchReorderPointList = async() =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}item/reorder/`))
+                const response = request.data
+                
+                if(response.length==0){
+                    setMessage("No hay items con punto de re ordenar")
+                    setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);
+                }else{
+                setReorderPointList(response)
+                setIsReorderPointList(true)
+                }
+            }catch(error){
+                setMessage(`${handleError(error)}`)
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -114,6 +174,7 @@ const Warehouse = () => {
     const handleSubmitEdit=()=>{
         
         setIsListItems(false)
+        setIsReorderPointList(false)
         setIsItem(true)
 
         setModalOpenEditItem(false);
@@ -159,6 +220,14 @@ const handleDeleteItem = async () => {
     }
     
 }
+
+const handleReorderPointList = () =>{
+    setIsItem(false)
+    setIsListItems(false)
+    setIsReorderPointList(true)
+    fetchReorderPointList();
+}
+
 //to du
 const categories =[{label:"Selecciona una opción",value:""},{label:"Indumentaria", value:'Indumentaria'}, {label:'Protección Personal',value:'Protección Personal'}, {label:'Equipaje', value:'Equipaje'}, {label:'Lingas y Trabas', value:'Lingas y Trabas'}, {label:'Luces', value:"Luces"}, {label:'Cobertores', value:'Cobertores'},{label:'Redes y sujetadores', value:'Redes y sujetadores'},{label:'Parlantes',value:'Parlantes'},{label:'Parabrisas',value:'Parabrisas'},{label:'Herramientas',value:'Herramientas'},{label:'Emblemas',value:'Emblemas'},{label:'Tableros y Velocimetros',value:'Tableros y Velocimetros'},{label:'Pisadores', value:'Pisadores'},{label:'Escapes',value:'Escapes'},{label:'Frenos',value:'Frenos'},{label:'Repuestos',value:'Repuestos'},{label:'Servicios',value:'Servicios'},{label:'Otros',value:'Otros'}];
 return (
@@ -189,6 +258,9 @@ return (
                                         <MiniBtn  onClick={fetchListItems} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
                                         <InputSelectStyled defaultValue={inputList} onSetValue={handleFetchCategory} onLabel={"Categoría"} options={categories} />
                                     </div>
+                                    <div className={Style.article}>
+                                        <MiniBtn onClick={handleReorderPointList}><FontAwesomeIcon icon={faTruck} /></MiniBtn>
+                                    </div>
                                 </article> 
                                 
                             </div>
@@ -204,15 +276,18 @@ return (
                             
                             {/* <TextViewClient TheClient={client1} /> */}
                             {/* onEdit={()=>setModalOpenEditClient(true)} */}
-                            {
-                           isItem&&<TextViewItem TheItem={item} onEdit={()=>setModalOpenEditItem(true)} onDelete={handleDeleteItem} />
                             
-                            }
                             {
-
-                             isListItems&&(<TableCategoryItems rows={categoryList} />)
+                                isItem&&<TextViewItem TheItem={item} onEdit={()=>setModalOpenEditItem(true)} onDelete={handleDeleteItem} />
                             }
                             
+                            {
+                                isListItems&&(<TableCategoryItems rows={categoryList} />)
+                            }
+                            
+                            {
+                                isReorderPointList&&(<TableReorderPoint rows={reorderPointList} />)
+                            }
                         
                     </div>
                     <div className={Style.item3}>
