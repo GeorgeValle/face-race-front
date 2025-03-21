@@ -9,7 +9,7 @@ import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons"
 const TextViewItem = ({ TheItem = null, onEdit = null, onDelete = null }) => {
     return (
         <div className={Style.item}>
-            <div className={Style.row_title}><MiniBtn onClick={onEdit} isWhite={true}><FontAwesomeIcon icon={faPencil} /></MiniBtn><MiniBtn onClick={onDelete} isRed={true}><FontAwesomeIcon icon={faTrash} /></MiniBtn></div>
+            <div className={Style.row_title}><MiniBtn onClick={ onEdit} isWhite={true}><FontAwesomeIcon icon={faPencil} /></MiniBtn><MiniBtn onClick={() => onDelete(TheItem.code)} isRed={true}><FontAwesomeIcon icon={faTrash} /></MiniBtn></div>
             <table className={`${Style.table} ${Style.content}`}>
                 <thead >
                     <tr>

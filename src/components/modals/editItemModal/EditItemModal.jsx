@@ -28,16 +28,16 @@ const EditItemModal = ({ onSubmit, onCancel, onClose }) => {
     //     }; 
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
     const [message, setMessage] = useState('');
-    const [code, setCode] = useState("");
-const [name, setName]= useState("");
-const [stockQuantity, setStockQuantity] = useState("");
-const [price, setPrice] =useState("");
-const [category, setCategory] = useState("");
-const [brand, setBrand] = useState("");
-const [model,setModel]= useState("");
-const [origin, setOrigin]= useState("");
-const [warehouseLocation, setWarehouseLocation] = useState("");
-const [description, setDescription] = useState("");
+const [code, setCode] = useState(item.code);
+const [name, setName]= useState(item.name);
+const [stockQuantity, setStockQuantity] = useState(item.stockQuantity);
+const [price, setPrice] =useState(item.price);
+const [category, setCategory] = useState(item.category);
+const [brand, setBrand] = useState(item.brand);
+const [model,setModel]= useState(item.model);
+const [origin, setOrigin]= useState(item.origin);
+const [warehouseLocation, setWarehouseLocation] = useState(item.warehouseLocation);
+const [description, setDescription] = useState(item.description);
 
 
 
