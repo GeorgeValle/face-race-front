@@ -17,6 +17,7 @@ import {TableCategoryItems} from '../../components/tables/tableCategoryItems/Tab
 import { TableReorderPoint } from '../../components/tables/tableReorderPoint/TableReorderPoint'
 import NewItemModal from '../../components/modals/newItemModal/NewItemModal'
 import { createPortal } from 'react-dom'
+import Dialog from '../../components/modals/dialog/Dialog'
 import EditItemModal from '../../components/modals/editItemModal/EditItemModal'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 // import {useFetchGet} from '../../hooks/UseFetchGet'
@@ -37,7 +38,10 @@ const Warehouse = () => {
     const [modalOpenNewItem, setModalOpenNewModal] = useState(false);
     const [modalOpenEditItem, setModalOpenEditItem] = useState(false);
     const [message, setMessage] = useState("");
+    const [messageModal, setMessageModal] = useState("")
+    const [messageDialog, setMessageDialog] = useState("");
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
+    const [modalOpenDialog, setModalOpenDialog] = useState(false)
     //const [cliente, setCliente] = useState([]);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
@@ -54,36 +58,36 @@ const Warehouse = () => {
     const dispatch = useDispatch();
 
     
-    const handleErrors = (error) =>{
+    // const handleErrors = (error) =>{
 
-        if(error === 'ECONNREFUSED' ){
-            setMessage("Error de conexión con el servidor")
-        }
-        if(error.status=== 500){
-            setMessage("Error interno del servidor")
-        }
-        if(error.status === 404){
-            setMessage("No se encontró el recurso solicitado")
-            }
-            if(error.status === 401){
-                setMessage("No tienes permisos para realizar esta acción")
-                }
-                if(error.status === 422){
-                    setMessage("Error de validación")
-                    }
-                    if(error.status === 403){
-                        setMessage("No tienes permisos para realizar esta acción")
-                        }
-                        if(error.status === 400){
-                            setMessage("Error de validación")
-                            }
-                            if(error.status === 409){
-                                setMessage("El recurso ya existe")
-                                }
-                                error
+    //     if(error === 'ECONNREFUSED' ){
+    //         setMessage("Error de conexión con el servidor")
+    //     }
+    //     if(error.status=== 500){
+    //         setMessage("Error interno del servidor")
+    //     }
+    //     if(error.status === 404){
+    //         setMessage("No se encontró el recurso solicitado")
+    //         }
+    //         if(error.status === 401){
+    //             setMessage("No tienes permisos para realizar esta acción")
+    //             }
+    //             if(error.status === 422){
+    //                 setMessage("Error de validación")
+    //                 }
+    //                 if(error.status === 403){
+    //                     setMessage("No tienes permisos para realizar esta acción")
+    //                     }
+    //                     if(error.status === 400){
+    //                         setMessage("Error de validación")
+    //                         }
+    //                         if(error.status === 409){
+    //                             setMessage("El recurso ya existe")
+    //                             }
+    //                             error
 
 
-    }
+    // }
     
 
     
@@ -160,6 +164,7 @@ const Warehouse = () => {
         setModalOpenNewModal(false);
         setModalOpenEditItem(false);
         setModalOpenMessage(false);
+        setModalOpenDialog(false);
     }
 
 
@@ -186,6 +191,14 @@ const Warehouse = () => {
                             }, 3500);
     }
 
+    const handleEditItem = async(code) =>{
+        setInputCode(code)
+        await fetchItem()
+        setModalOpenEditItem(true);
+    }
+
+    
+
     const handleSubmitNewItem= (message)=>{
         setIsListItems(false)
         setIsItem(true)
@@ -200,12 +213,20 @@ const Warehouse = () => {
         
 }
 
+const handleDialogDelete = async(code) =>{
+    setInputCode(code)
+    
+    setMessageModal("¿Seguro quieres deshabilitar al Item?");
+    setMessageDialog("Deshabilitar");
+    setModalOpenDialog(true);
+}
+
 const handleDeleteItem = async () => {
 
     try{
         await axios.delete(`${config.API_BASE}item/code/${item.code}`)
         dispatch(deleteItem())
-        setMessage("Artículo Eliminado")
+        setMessage("Artículo Deshabilitado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
@@ -237,6 +258,7 @@ return (
                 {modalOpenEditItem&&createPortal(<EditItemModal onSubmit={handleSubmitEdit} onCancel={handleClose} onClose={handleClose}  />,document.body)}
                 {modalOpenNewItem&&createPortal(<NewItemModal onSubmit={handleSubmitNewItem} onCancel={handleClose} onClose={handleClose}  />,document.body)}
                 {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
+                {modalOpenDialog&&(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeleteItem} onClose={handleClose}/>)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>     
@@ -278,15 +300,15 @@ return (
                             {/* onEdit={()=>setModalOpenEditClient(true)} */}
                             
                             {
-                                isItem&&<TextViewItem TheItem={item} onEdit={()=>setModalOpenEditItem(true)} onDelete={handleDeleteItem} />
+                                isItem&&<TextViewItem TheItem={item} onEdit={()=>setModalOpenEditItem(true)} onDelete={handleDialogDelete} />
                             }
                             
                             {
-                                isListItems&&(<TableCategoryItems rows={categoryList} />)
+                                isListItems&&(<TableCategoryItems rows={categoryList} onEdit={handleEditItem} onDelete={handleDialogDelete} />)
                             }
                             
                             {
-                                isReorderPointList&&(<TableReorderPoint rows={reorderPointList} />)
+                                isReorderPointList&&(<TableReorderPoint rows={reorderPointList} onEdit={handleEditItem} onDelete={handleDialogDelete} />)
                             }
                         
                     </div>
