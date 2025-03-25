@@ -222,17 +222,21 @@ const handleDialogDelete = async(code) =>{
 }
 
 const handleDeleteItem = async () => {
-
+    setModalOpenDialog(false);
+    setIsListItems(false)
+    setIsReorderPointList(false)
     try{
-        await axios.delete(`${config.API_BASE}item/code/${item.code}`)
+        await axios.delete(`${config.API_BASE}item/code/${inputCode}`)
         dispatch(deleteItem())
+        setInputCode("")
         setMessage("Artículo Deshabilitado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
                             }, 3500);
     }catch(error){
-        console.log(error);
+        
+        setInputCode("")
         setMessage("Artículo NO encontrado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
