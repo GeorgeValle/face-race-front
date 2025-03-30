@@ -43,12 +43,12 @@ const RegisterCash = () => {
     const [isFetchClient, setIsFetchClient] = useState(false);
     //const [isDataItem, setIsDataItem] = useState(false);
     //date
-    const [day, setDay] = useState('');
-    const [month, setMonth] = useState('');
-    const [year, setYear] = useState('');
-    const [days, setDays] = useState([]);
-    const [months, setMonths] = useState([]);
-    const [years, setYears] = useState([])
+    // const [day, setDay] = useState('');
+    // const [month, setMonth] = useState('');
+    // const [year, setYear] = useState('');
+    // const [days, setDays] = useState([]);
+    // const [months, setMonths] = useState([]);
+    // const [years, setYears] = useState([])
     
 
     //Variables Redux
@@ -257,95 +257,7 @@ const RegisterCash = () => {
         calculateTotalAdjustment();
     }, [itemsList]);
 
-    //######### date functions ############
-
-    const calculateDays = (month, year) => {
-    const date = new Date(year, month, 0);
-    const numberOfDays = date.getDate();
-    const currentDate = new Date();
-    const daysArray = [];
-    for (let i = 1; i <= numberOfDays; i++) {
-        if (year === currentDate.getFullYear() && month === currentDate.getMonth() + 1) {
-            if (i <= currentDate.getDate()) {
-                daysArray.push(i);
-            }
-        } else {
-            daysArray.push(i);
-        }
-        }
-        setDays(daysArray);
-    };
-
-    const calculateMonths = (year) => {
-        const currentDate = new Date();
-        const monthsArray = [];
-        for (let i = 1; i <= 12; i++) {
-        if (year === currentDate.getFullYear()) {
-            if (i <= currentDate.getMonth() + 1) {
-            monthsArray.push(i);
-            }
-        } else {
-            monthsArray.push(i);
-        }
-        }
-        setMonths(monthsArray);
-    };
-
-    const calculateYears = () => {
-        const currentDate = new Date();
-        const yearsArray = [];
-        for (let i = 2023; i <= currentDate.getFullYear(); i++) {
-            yearsArray.push(i);
-        }
-        setYears(yearsArray);
-    };
-
-    const handleDayChange = (e) => {
-        setDay(e.target.value);
-    };
-
-    const handleMonthChange = (e) => {
-        setMonth(e.target.value);
-        calculateDays(e.target.value, year);
-    };
-
-    const handleYearChange = (e) => {
-        setYear(e.target.value);
-        calculateMonths(e.target.value);
-        calculateDays(month, e.target.value);
-    };
-
-    const generateDate = (day, month, year, useCurrentTime = false) => {
-        let date;
-        if (useCurrentTime) {
-            const currentDate = new Date();
-            date = new Date(year, month - 1, day, currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
-        } else {
-            date = new Date(year, month - 1, day);
-        }
-        const utcHours = date.getUTCHours();
-        const utcMinutes = date.getUTCMinutes();
-        const utcSeconds = date.getUTCSeconds();
-        const utcMilliseconds = date.getUTCMilliseconds();
-        const timezoneOffset = -3 * 60 * 60 * 1000; // UTC-3 para Argentina
-        const argentinaDate = new Date(date.getTime() + timezoneOffset);
-        return argentinaDate;
-    };
-    //example generate day
-    let fecha = generateDate(day, month, year);
-
-    fecha = fecha.toLocaleString('es-AR', { timeZone: 'America/Buenos_Aires' })
-
-    useEffect(() => {
-        const currentDate = new Date();
-        setDay(currentDate.getDate());
-        setMonth(currentDate.getMonth() + 1); // getMonth devuelve un valor entre 0 y 11
-        setYear(currentDate.getFullYear());
-        
-        calculateDays(currentDate.getMonth() + 1, currentDate.getFullYear());
-        calculateMonths(currentDate.getFullYear());
-        calculateYears();
-    }, []);
+    
 
     //######### validations
 // Verify Item data  for enable plus button
@@ -382,30 +294,7 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
                             <MiniBtn onClick={cleanClient} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                             
                         </div>
-                        <div className={Style.row4}>
-                            <InputSelectDateStyled onLabel={"Día"} onChange={handleDayChange} defaultValue={day}>
-                                {days.map((day) => (
-                                    <option key={day} value={day}>
-                                        {day}
-                                    </option>
-                                ))}
-                            </InputSelectDateStyled>
-                            <InputSelectDateStyled defaultValue={month} onChange={handleMonthChange} onLabel={"Mes"}>
-                                {months.map((month) => (
-                                    <option key={month} value={month}>
-                                        {month}
-                                    </option>
-                                ))}
-                            </InputSelectDateStyled>
-                            <InputSelectDateStyled defaultValue={year} onChange={handleYearChange} onLabel={"Año"}>
-                                {years.map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))}
-                            </InputSelectDateStyled>
-                            <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setDescription(e.target.value)} value={description} />
-                        </div>
+                        
                     </div>
                     <div className={Style.column2}>
                         <MidTotal subTotal={totalSubAmount} adjustment={totalAdjustment} total={totalAmount} />
