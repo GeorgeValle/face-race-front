@@ -25,9 +25,30 @@ import axios from "axios";
 const Payment = () =>{
 
     const [isPayment, setIsPayment] = useState(false);
-    const [day, setDay] = useState(0);
-    const [month, setMonth] = useState(0);
-    const [year, setYear] = useState(0);
+    
+    const [day, setDay] = useState("");
+    const [month, setMonth] = useState("");
+    const [year, setYear] = useState("");
+
+    const [days, setDays] = useState([]);
+    const [months, setMonths] = useState([]);
+    const [years, setYears] = useState([]);
+
+    const [payDays, setPayDays] = useState([]);
+    const [payMonths, setPayMonths] = useState([]);
+    const [payYears, setPayYears] = useState([]);
+
+    const [payDay, setPayDay]= useState("");
+    const [payMonth, setPayMonth]= useState("");
+    const [payYear, setPayYear]= useState("");
+
+    // const [expirationDay, setExpirationDate] = useState(0);
+    // const [expirationMonth, setExpirationMonth] = useState(0);
+    // const [expirationYear, setExpirationYear] = useState(0);
+
+    const [description, setDescription] = useState("");
+
+
 
 
     const vuelto = "0.00"
@@ -48,17 +69,184 @@ const handleClearItems = ()=>{
     dispatch(deleteClient())
 }
 
-const handleDayChange = () =>{
+// const handleDayChange = () =>{
 
-}
+// }
 
-const handleMonthChange = () =>{
+// const handleMonthChange = () =>{
 
-}
+// }
 
-const handleYearChange = () =>{
+// const handleYearChange = () =>{
 
-}
+// }
+
+
+//######### date functions ############
+
+const calculateDays = (month, year) => {
+    const date = new Date(year, month, 0);
+    const numberOfDays = date.getDate();
+    const currentDate = new Date();
+    const daysArray = [];
+    for (let i = 1; i <= numberOfDays; i++) {
+        if (year === currentDate.getFullYear() && month === currentDate.getMonth() + 1) {
+            if (i <= currentDate.getDate()) {
+                daysArray.push(i);
+            }
+        } else {
+            daysArray.push(i);
+        }
+        }
+        setDays(daysArray);
+    };
+
+    const calculateMonths = (year) => {
+        const currentDate = new Date();
+        const monthsArray = [];
+        for (let i = 1; i <= 12; i++) {
+        if (year === currentDate.getFullYear()) {
+            if (i <= currentDate.getMonth() + 1) {
+            monthsArray.push(i);
+            }
+        } else {
+            monthsArray.push(i);
+        }
+        }
+        setMonths(monthsArray);
+    };
+
+    const calculateYears = () => {
+        const currentDate = new Date();
+        const yearsArray = [];
+        for (let i = 2024; i <= currentDate.getFullYear(); i++) {
+            yearsArray.push(i);
+        }
+        setYears(yearsArray);
+    };
+
+    const calculatePayDays = (month, year) => {
+        const date = new Date(year, month, 0);
+        const numberOfDays = date.getDate();
+        const currentDate = new Date();
+        const daysArray = [];
+        for (let i = 1; i <= numberOfDays; i++) {
+            if (year === currentDate.getFullYear() && month === currentDate.getMonth() + 1) {
+                if (i >= currentDate.getDate()) {
+                    daysArray.push(i);
+                }
+            } else {
+                daysArray.push(i);
+            }
+        }
+        setPayDays(daysArray);
+    };
+
+    const calculatePayMonths = (year) => {
+        const currentDate = new Date();
+        const monthsArray = [];
+        for (let i = 1; i <= 12; i++) {
+            if (year === currentDate.getFullYear()) {
+                if (i >= currentDate.getMonth() + 1) {
+                    monthsArray.push(i);
+                }
+            } else {
+                monthsArray.push(i);
+            }
+        }
+        setPayMonths(monthsArray);
+    };
+
+    const calculatePayYears = () => {
+        const currentDate = new Date();
+        const yearsArray = [];
+        for (let i = currentDate.getFullYear(); i <= 2030; i++) {
+            yearsArray.push(i);
+        }
+        setPayYears(yearsArray);
+    };
+
+    // handles date
+    const handleDayChange = (e) => {
+        setDay(e.target.value);
+    };
+
+    const handleMonthChange = (e) => {
+        setMonth(e.target.value);
+        calculateDays(e.target.value, year);
+    };
+
+    const handleYearChange = (e) => {
+        setYear(e.target.value);
+        calculateMonths(e.target.value);
+        calculateDays(month, e.target.value);
+    };
+
+    const handlePayYearChange = (e) => {
+        setPayYear(e.target.value);
+        calculatePayMonths(e.target.value);
+        calculatePayDays(payMonth, e.target.value);
+    };
+
+    const handlePayMonthChange = (e) => {
+        setPayMonth(e.target.value);
+        calculatePayDays(e.target.value, payYear);
+    };
+
+    const handlePayDayChange = (e) => {
+        setPayDay(e.target.value);
+    };
+
+
+
+    const generateDate = (day, month, year, useCurrentTime = false) => {
+        let date;
+        if (useCurrentTime) {
+            const currentDate = new Date();
+            date = new Date(year, month - 1, day, currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+        } else {
+            date = new Date(year, month - 1, day);
+        }
+        const utcHours = date.getUTCHours();
+        const utcMinutes = date.getUTCMinutes();
+        const utcSeconds = date.getUTCSeconds();
+        const utcMilliseconds = date.getUTCMilliseconds();
+        const timezoneOffset = -3 * 60 * 60 * 1000; // UTC-3 para Argentina
+        const argentinaDate = new Date(date.getTime() + timezoneOffset);
+        return argentinaDate;
+    };
+    //example generate day
+    let fecha = generateDate(day, month, year);
+
+    fecha = fecha.toLocaleString('es-AR', { timeZone: 'America/Buenos_Aires' })
+
+    // restring values date in selects
+    useEffect(() => {
+        //assign date today
+        const today = new Date();
+        const currentDay = today.getDate();
+        const currentMonth = today.getMonth() + 1; // Los meses van de 0 a 11
+        const currentYear = today.getFullYear();
+
+        setPayDay(currentDay.toString());
+        setPayMonth(currentMonth.toString());
+        setPayYear(currentYear.toString());
+
+        setDay(currentDay.toString())
+        setMonth(currentMonth.toString())
+        setYear(currentYear.toString())
+        
+
+        calculateDays(currentMonth, currentYear);
+        calculateMonths(currentYear);
+        calculateYears();
+
+        calculatePayDays(currentMonth, currentYear)
+        calculatePayMonths(currentYear);
+        calculatePayYears();
+    }, []);
+
+
     return(
         <div className={Style.mainContainer}>
             <Container>
@@ -96,34 +284,58 @@ const handleYearChange = () =>{
                                 </div>
                             <div className={Style.selectGroup}>
                                 <div>
-                                    <InputSelectDateStyled onLabel={"Día"} onChange={handleDayChange} defaultValue={day}>
-                                    {/* {days.map((day) => (
-                                        <option key={day} value={day}>
-                                            {day}
+                                    <InputSelectDateStyled onLabel={"Día"} onChange={handlePayDayChange} defaultValue={payDay}>
+                                    {payDays.map((Day) => (
+                                        <option key={Day} value={Day}>
+                                            {Day}
                                         </option>
-                                    ))} */}
+                                    ))}
                                     </InputSelectDateStyled>
                                 </div>
                                 <div>
-                                    <InputSelectDateStyled defaultValue={month} onChange={handleMonthChange} onLabel={"Mes"}>
-                                        {/* {months.map((month) => (
+                                    <InputSelectDateStyled defaultValue={payMonth} onChange={handlePayMonthChange} onLabel={"Mes"}>
+                                        {payMonths.map((month) => (
                                             <option key={month} value={month}>
                                                 {month}
                                             </option>
-                                        ))} */}
+                                        ))}
                                         
                                     </InputSelectDateStyled>
                                 </div>
                                 <div>
-                                    <InputSelectDateStyled defaultValue={year} onChange={handleYearChange} onLabel={"Año"}>
-                                        {/* {years.map((year) => (
+                                    <InputSelectDateStyled defaultValue={payYear} onChange={handlePayYearChange} onLabel={"Año"}>
+                                        {payYears.map((year) => (
                                             <option key={year} value={year}>
                                                 {year}
                                             </option>
-                                        ))} */}
+                                        ))}
                                     </InputSelectDateStyled>
                                 </div>                                    
                             </div>
+                        </div>
+                        <div className={Style.row6}>
+                            <InputSelectDateStyled onLabel={"Día"} onChange={handleDayChange} defaultValue={day}>
+                                {days.map((day) => (
+                                    <option key={day} value={day}>
+                                        {day}
+                                    </option>
+                                ))}
+                            </InputSelectDateStyled>
+                            <InputSelectDateStyled defaultValue={month} onChange={handleMonthChange} onLabel={"Mes"}>
+                                {months.map((month) => (
+                                    <option key={month} value={month}>
+                                        {month}
+                                    </option>
+                                ))}
+                            </InputSelectDateStyled>
+                            <InputSelectDateStyled defaultValue={year} onChange={handleYearChange} onLabel={"Año"}>
+                                {years.map((year) => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
+                            </InputSelectDateStyled>
+                            <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setDescription(e.target.value)} value={description} />
                         </div>
                     </div>
                     <div className={Style.column2}>
