@@ -65,13 +65,13 @@
     justify-self: center;
 }
 
-.row1,.row2, .row3, .row4, .row5{
+.row1,.row2, .row3, .row4, .row5, .row6{
     display:flex;
     justify-content: left;
     justify-self: center;
     align-items: center;
     min-width: 500px;
-    max-width: 600px;
+    max-width: 700px;
     min-height: 89px;
     flex-shrink: 0;
     border-radius: 15px;
@@ -110,6 +110,12 @@
     min-width:  750px;
     align-items: center;
     margin-bottom: 10px;
+}
+
+.row6{
+    min-height: 80px;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
 .selectGroup{
