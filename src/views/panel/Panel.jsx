@@ -4,7 +4,7 @@ import BtnVioletPanel from '../../components/btns/btnVioletPanel/BtnVioletPanel'
 import Style from './Panel.module.css'
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {/*faXmark, */faCalculator, faAddressBook, faCashRegister, faCalendarDay, faTableList, faTruckField, faWarehouse, faTruckRampBox, faCalendarPlus, faMotorcycle} from "@fortawesome/free-solid-svg-icons";
+import {/*faXmark, */faCalculator, faAddressBook, faCashRegister, faCalendarDay, /*faTableList,*/ faTruckField, faWarehouse, faTruckRampBox, faCalendarPlus, faMotorcycle} from "@fortawesome/free-solid-svg-icons";
 
 const Panel = () =>{
 
@@ -26,7 +26,7 @@ const Panel = () =>{
                         </BtnVioletPanel>
                     </div>
                     <div className={Style.item3}>
-                        <BtnVioletPanel title={"Cobrar"} path={"/register_cash"} isDisabled={true} rightColor={true}>
+                        <BtnVioletPanel title={"Cobrar"} path={"/register_cash"}  rightColor={true}>
                             <FontAwesomeIcon icon={faCashRegister} size="lg" />
                         </BtnVioletPanel>
                     </div>
@@ -37,9 +37,9 @@ const Panel = () =>{
                         
                     </div>
                     <div className={Style.item5}>
-                        <BtnVioletPanel title={"Pedidos"} isDisabled={true} leftColor={true}>
+                        {/* <BtnVioletPanel title={"Pedidos"} isDisabled={true} leftColor={true}>
                             <FontAwesomeIcon icon={faTableList} size="lg" />
-                        </BtnVioletPanel>
+                        </BtnVioletPanel> */}
                     </div>
                     <div className={Style.item6}>
                         <BtnVioletPanel title={"Proveedores"} path={"/supplier"}  topColor={true}>
