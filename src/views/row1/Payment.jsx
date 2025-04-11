@@ -26,6 +26,11 @@ const Payment = () =>{
 
     const [isPayment, setIsPayment] = useState(false);
     
+    const [payment, setPayment] = useState([]);
+    const [paid, setPaid] = useState(false);
+    const [saleDate, setSaleDate] = useState("");
+    const [saleTime, setSaleTime] = useState("");
+
     const [day, setDay] = useState("");
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
@@ -246,6 +251,42 @@ const calculateDays = (month, year) => {
         calculatePayYears();
     }, []);
 
+const handleNewSale = async ()=>{
+    try{
+        await axios.post(`${config.API_BASE}item/register`, {
+            payment:payment,
+            itemList:itemsList,
+            description:description,
+            saleDate: saleDate,
+            saleTime: saleTime,
+            paid:paid,
+            client:client,
+
+
+        })
+        //const response =  request.data;
+        //setLoading(false);
+        onSubmit(message);
+    } catch (err) {
+        //setError(err);
+        onSubmit(`Error al crear Item`);
+    }
+}
+const handleDateSubmit = () => {
+    const dateSubmit = `${day}/${month + 1}/${year}`;
+    setSaleDate(dateSubmit);
+};
+
+const getActualHour = () => {
+    const dateNow = new Date();
+    const hour = dateNow.getHours();
+    const minutes = dateNow.getMinutes();
+    const seconds = dateNow.getSeconds();
+  
+    const hourString = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  
+    setSaleTime(hourString)
+  }
 
     return(
         <div className={Style.mainContainer}>
