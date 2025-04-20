@@ -26,6 +26,11 @@ const Payment = () =>{
 
     const [isPayment, setIsPayment] = useState(false);
     
+    const [payment, setPayment] = useState([]);
+    const [paid, setPaid] = useState(false);
+    const [saleDate, setSaleDate] = useState(Date);
+    const [saleTime, setSaleTime] = useState("");
+
     const [day, setDay] = useState("");
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
@@ -47,6 +52,8 @@ const Payment = () =>{
     // const [expirationYear, setExpirationYear] = useState(0);
 
     const [description, setDescription] = useState("");
+
+    const [oneMessage, setOneMessage] = useState("");
 
 
 
@@ -199,26 +206,41 @@ const calculateDays = (month, year) => {
 
 
 
-    const generateDate = (day, month, year, useCurrentTime = false) => {
+    const handleSaveDate = (day, month, year) => {
         let date;
-        if (useCurrentTime) {
+
+        //assign date today
+        const today = new Date();
+        const currentDay = today.getDate();
+        const currentMonth = today.getMonth() + 1; // months of 0 to 11
+        const currentYear = today.getFullYear();
+
+
+        if (day === currentDay && month === currentMonth && year === currentYear) {
             const currentDate = new Date();
             date = new Date(year, month - 1, day, currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+            const currentIsoTime = currentDate.toISOString().split("T")[1];
+            setSaleTime(currentIsoTime)
         } else {
+            //create date whit value in 0
+            const zeroTimeISO = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0)).toISOString();
+            // update state whit hout in 0
+            setSaleTime(zeroTimeISO.split("T")[1]); //save only the hour part
             date = new Date(year, month - 1, day);
         }
-        const utcHours = date.getUTCHours();
-        const utcMinutes = date.getUTCMinutes();
-        const utcSeconds = date.getUTCSeconds();
-        const utcMilliseconds = date.getUTCMilliseconds();
-        const timezoneOffset = -3 * 60 * 60 * 1000; // UTC-3 para Argentina
-        const argentinaDate = new Date(date.getTime() + timezoneOffset);
-        return argentinaDate;
+        // const utcHours = date.getUTCHours();
+        // const utcMinutes = date.getUTCMinutes();
+        // const utcSeconds = date.getUTCSeconds();
+        // const utcMilliseconds = date.getUTCMilliseconds();
+        // const timezoneOffset = -3 * 60 * 60 * 1000; // UTC-3 para Argentina
+        // const argentinaDate = new Date(date.getTime() + timezoneOffset);
+        // return argentinaDate;
+        setSaleDate(date);
     };
     //example generate day
-    let fecha = generateDate(day, month, year);
+    // let fecha = generateDate(day, month, year);
 
-    fecha = fecha.toLocaleString('es-AR', { timeZone: 'America/Buenos_Aires' })
+    // fecha = fecha.toLocaleString('es-AR', { timeZone: 'America/Buenos_Aires' })
 
     // restring values date in selects
     useEffect(() => {
@@ -246,6 +268,46 @@ const calculateDays = (month, year) => {
         calculatePayYears();
     }, []);
 
+const handleNewSale = async ()=>{
+    try{
+
+        handleSaveDate(day, month, year);
+
+
+        await axios.post(`${config.API_BASE}item/register`, {
+            payment:payment,
+            itemList:items,
+            description:description,
+            saleDate: saleDate,
+            saleTime: saleTime,
+            paid:paid,
+            client:client,
+
+
+        })
+        //const response =  request.data;
+        //setLoading(false);
+        setOneMessage("Venta Exitosa");
+    } catch (err) {
+        //setError(err);
+        setOneMessage(`Error al realizar la venta`);
+    }
+}
+const handleSavePayDate = () => {
+    const formattedDate = new Date(`${payYear}-${payMonth.padStart(2, "0")}-${payDay.padStart(2, "0")}T00:00:00.000Z`);
+    setSaleDate(formattedDate);
+};
+
+const getActualHour = () => {
+    const dateNow = new Date();
+    const hour = dateNow.getHours();
+    const minutes = dateNow.getMinutes();
+    const seconds = dateNow.getSeconds();
+  
+    const hourString = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  
+    setSaleTime(hourString)
+  }
 
     return(
         <div className={Style.mainContainer}>
