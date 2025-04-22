@@ -9,6 +9,7 @@ import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import MiniDescription from '../../components/totals/miniDescription/MiniDescription';
 import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge';
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
+import InputSelectStyled from '../../components/inputs/inputSelectStyled/InputSelectStyled';
 import Style from './Payment.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faUserPlus, faWallet, faXmark, faPencil, faMagnifyingGlass, faBroomBall, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
@@ -54,6 +55,20 @@ const Payment = () =>{
     const [description, setDescription] = useState("");
 
     const [oneMessage, setOneMessage] = useState("");
+
+    const [inputCash, setInputCash] = useState("")
+    const [inputCredit, setInputCredit] = useState("")
+    const [inputOperationCredit, setInputOperationCredit] = useState("")
+    const [installments, setInstallments] = useState(1)
+    const [inputDebit, setInputDebit] = useState()
+    const [inputOperationDebit, setInputOperationDebit] = useState("")
+    const [inputCurrentAccount, setInputCurrentAccount] = useState("")
+    const [inputCheck, setInputCheck] = useState("")
+    const [inputNumberCheck, setInputNumberCheck] = useState("")
+
+    
+
+    
 
 
 
@@ -295,7 +310,7 @@ const handleNewSale = async ()=>{
 }
 const handleSavePayDate = () => {
     const formattedDate = new Date(`${payYear}-${payMonth.padStart(2, "0")}-${payDay.padStart(2, "0")}T00:00:00.000Z`);
-    setSaleDate(formattedDate);
+    return formattedDate;
 };
 
 const getActualHour = () => {
@@ -309,6 +324,42 @@ const getActualHour = () => {
     setSaleTime(hourString)
   }
 
+  const handleCashPayment = () =>{
+    
+    setPayment([...{cash:{amount:inputCash}}])
+    setPaid(true)
+
+  }
+
+  const handleDebitPayment =()=>{
+    
+    setPayment([...{debit:{amount:inputDebit,operation:inputOperationDebit}}])
+    setPaid(true)
+
+
+  }
+
+  const handleCreditPayment= () =>{
+    
+   setPayment([...{credit:{amount:inputCredit,operation:inputOperationCredit,installments:installments}}])
+   setPaid(true)
+  }
+
+  const handleCurrentAccountPayment=()=>{
+    
+    setPayment([...{currentAccount:{amount:inputCurrentAccount}}])
+    setPaid(false)
+  }
+
+  const handleCheckPayment=()=>{
+    
+    setPayment([...{check:{amount:inputCheck,numberCheck:inputNumberCheck,payDay:handleSavePayDate()}}])
+  }
+
+  const handleInstalment = (num)=>{
+    setInstallments(num)
+  }
+  const quantityCredit = [{label:"1",value:1},{label:"3",value:3},{label:"6",value:6},{label:"9",value:9},{label:"12",value:12}]
     return(
         <div className={Style.mainContainer}>
             <Container>
@@ -317,32 +368,39 @@ const getActualHour = () => {
                     <div className={Style.column1}>
                         <div className={Style.row1}>
                             
-                            <BtnCommon title={"Efectivo"} nameInput={"cash"} colorViolet={true}  ></BtnCommon>
-                            <TextInput typeInput={"number"} placeholderText={"Dinero recibido"}></TextInput>
+                            <BtnCommon title={"Efectivo"} nameInput={"cash"} onClick={handleCashPayment} colorViolet={true}  ></BtnCommon>
+                            <TextInput typeInput={"number"} value={inputCash} onChange={(e)=>setInputCash(e.target.value)} placeholderText={"Dinero recibido"}></TextInput>
                         </div>
                         <div className={Style.row2}>
                             <BtnCommon title={"Crédito"} nameInput={"credit"} colorViolet={true}  ></BtnCommon>
                             <div>
-                                <TextInput typeInput={"number"} placeholderText={"Número operación"}></TextInput>
-                                <TextInput typeInput={"number"} placeholderText={"Cantidad de cuotas"}></TextInput>
-                                
+                                <TextInput typeInput={"number"} value={inputOperationCredit} onChange={(e)=>setInputOperationCredit(e.target.value)} placeholderText={"Operación"}></TextInput>
+                                <TextInput typeInput={"number"} value={inputCredit} onChange={(e)=>setInputCredit(e.target.value)} placeholderText={"Importe"}></TextInput>
+                                <div className={Style.selectGroup}>
+                                    <div>
+                                        <InputSelectStyled onLabel={"Cuotas"} onSetValue={ handleInstalment} defaultValue={installments} options={quantityCredit}>
+                                        
+                                        </InputSelectStyled>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className={Style.row3}>
                         
-                            <BtnCommon title={"C. Corriente"} nameInput={"cash"} colorViolet={true}  ></BtnCommon>
-                            <TextInput typeInput={"number"} placeholderText={"Dinero recibido"}></TextInput>
+                            <BtnCommon title={"C. Corriente"} nameInput={"currentAccount"} colorViolet={true}  ></BtnCommon>
+                            <TextInput typeInput={"number"} value={inputCurrentAccount} onChange={(e)=>setInputCurrentAccount(e.target.value)} placeholderText={"Importe"}></TextInput>
                         </div>
                         <div className={Style.row4}>
                             <BtnCommon title={"Débito"} nameInput={"debit"} colorViolet={true}  ></BtnCommon>
-                            <TextInput typeInput={"number"} placeholderText={"Número Operación"}></TextInput>
+                            <TextInput typeInput={"number"} placeholderText={"Operación"}></TextInput>
+                            <TextInput typeInput={"number"} value={inputDebit} placeholderText={"Importe"} onChange={(e)=>setInputDebit(e.target.value)}></TextInput>
                         </div>
                         <div className={Style.row5}>
                             <BtnCommon title={"Cheque"} nameInput={"check"} colorViolet={true}  ></BtnCommon>
                             
                                 <div>
-                                <TextInput typeInput={"number"} nameInput={"checkNumber"} placeholderText={"Número Cheque"}></TextInput>
-                                <TextInput typeInput={"number"}  nameInput={"checkAmount"} placeholderText={"Importe"}></TextInput>
+                                <TextInput typeInput={"number"} nameInput={"checkNumber"} value={inputNumberCheck} onChange={(e)=>setInputNumberCheck(e.target.value)} placeholderText={"Número Cheque"}></TextInput>
+                                <TextInput typeInput={"number"}  nameInput={"checkAmount"} value={inputCheck} onChange={(e)=>setInputCheck(e.target.value)} placeholderText={"Importe"}></TextInput>
                                 </div>
                             <div className={Style.selectGroup}>
                                 <div>
