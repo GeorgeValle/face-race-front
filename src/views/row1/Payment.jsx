@@ -66,6 +66,10 @@ const Payment = () =>{
     const [inputCheck, setInputCheck] = useState("")
     const [inputNumberCheck, setInputNumberCheck] = useState("")
 
+    const[totalAmountItems,setTotalAmountItems] = useState(0.00)
+    const [totalAmountReceived, setTotalAmountReceived] = useState(0.00)
+    const [change, setChange]= useState(0.00);
+
     
 
     
@@ -326,14 +330,14 @@ const getActualHour = () => {
 
   const handleCashPayment = () =>{
     
-    setPayment([...{cash:{amount:inputCash}}])
+    setPayment(prevState=>[...prevState,{type:"cash",amount:inputCash}])
     setPaid(true)
 
   }
 
   const handleDebitPayment =()=>{
     
-    setPayment([...{debit:{amount:inputDebit,operation:inputOperationDebit}}])
+    setPayment(prevState=>[...prevState,{type:"debit",amount:inputDebit,operation:inputOperationDebit}])
     setPaid(true)
 
 
@@ -341,24 +345,69 @@ const getActualHour = () => {
 
   const handleCreditPayment= () =>{
     
-   setPayment([...{credit:{amount:inputCredit,operation:inputOperationCredit,installments:installments}}])
+   setPayment(prevState=>[...prevState,{type:"credit",amount:inputCredit,operation:inputOperationCredit,installments:installments}])
    setPaid(true)
   }
 
   const handleCurrentAccountPayment=()=>{
     
-    setPayment([...{currentAccount:{amount:inputCurrentAccount}}])
+    setPayment(prevState=>[...prevState,{type:"current account",amount:inputCurrentAccount}])
     setPaid(false)
   }
 
   const handleCheckPayment=()=>{
     
-    setPayment([...{check:{amount:inputCheck,numberCheck:inputNumberCheck,payDay:handleSavePayDate()}}])
+    setPayment(prevState=>[...prevState,{type:"check",amount:inputCheck,numberCheck:inputNumberCheck,payDay:handleSavePayDate()}])
+    setPaid(false)
   }
 
   const handleInstalment = (num)=>{
     setInstallments(num)
   }
+
+  const formatNumberWithDots = (number) => {
+    return number.toLocaleString('es-AR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  const calculateTotalAmountItems = () => {
+    const total = items.reduce((acc, item) => acc + item.amount, 0);
+    setTotalAmountItems(total);
+};
+
+//const totalAmount = () =>{
+//  const total = payment.reduce((accumulator, currentValue) => {
+ //   return accumulator + currentValue.amount;
+ // }, 0);
+//}
+
+const calculateTotalAmountReceived = () =>{
+    const total = payment.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.amount;
+    }, 0);
+    setTotalAmountReceived(total)
+  }
+
+  const calculateChange = () =>{
+    if(totalAmountItems<totalAmountReceived){
+        setChange((totalAmountReceived-totalAmountItems))
+    }
+  }
+
+
+  const received = formatNumberWithDots(totalAmountReceived);
+  const finalTotal = formatNumberWithDots(totalAmountItems);
+  const finalChange = formatNumberWithDots(change);
+ 
+  useEffect(() => {
+    
+    calculateTotalAmountReceived();
+    calculateTotalAmountItems();
+    calculateChange();
+}, [payment]);
+
   const quantityCredit = [{label:"1",value:1},{label:"3",value:3},{label:"6",value:6},{label:"9",value:9},{label:"12",value:12}]
     return(
         <div className={Style.mainContainer}>
@@ -460,9 +509,9 @@ const getActualHour = () => {
                     </div>
                     <div className={Style.column2}>
                         
-                        <MiniTotal > 125.000 </MiniTotal>
-                        <MiniDescription description={"Recibido"} isGreen={true} > {cobrado} </MiniDescription>
-                        <MiniDescription description={"Vuelto"} isGreen={false} isWhite={true}> {vuelto} </MiniDescription>
+                        <MiniTotal > {finalTotal} </MiniTotal>
+                        <MiniDescription description={"Recibido"} isGreen={true} > {received} </MiniDescription>
+                        <MiniDescription description={"Vuelto"} isGreen={false} isWhite={true}> {finalChange} </MiniDescription>
                         <div className={Style.BtnLarge}>
                             {isPayment ?
                                 (<BtnVioletLarge onClick={handlePay} > Confirmar Cobro <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
