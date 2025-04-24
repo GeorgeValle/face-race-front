@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addClient, deleteClient } from "../../redux/ClientSlice";
 import config from "../../config/Envs"
 import axios from "axios";
+import { isNumber } from 'chart.js/helpers';
 
 
 
@@ -66,20 +67,10 @@ const Payment = () =>{
     const [inputCheck, setInputCheck] = useState("")
     const [inputNumberCheck, setInputNumberCheck] = useState("")
 
-    const[totalAmountItems,setTotalAmountItems] = useState(0.00)
-    const [totalAmountReceived, setTotalAmountReceived] = useState(0.00)
-    const [change, setChange]= useState(0.00);
+    const[totalAmountItems,setTotalAmountItems] = useState()
+    const [totalAmountReceived, setTotalAmountReceived] = useState()
+    const [change, setChange]= useState();
 
-    
-
-    
-
-
-
-
-    const vuelto = "0.00"
-
-const cobrado = "1.00"
 
 const dispatch = useDispatch()
 const items = useSelector((state) => state.itemsList)
@@ -366,10 +357,14 @@ const getActualHour = () => {
   }
 
   const formatNumberWithDots = (number) => {
-    return number.toLocaleString('es-AR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+    if(!isNaN(number)){
+        return number.toLocaleString('es-AR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        });
+    }else{
+        return 0
+    }
   };
 
   const calculateTotalAmountItems = () => {
@@ -383,23 +378,25 @@ const getActualHour = () => {
  // }, 0);
 //}
 
-const calculateTotalAmountReceived = () =>{
-    const total = payment.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.amount;
-    }, 0);
+// 
+
+const calculateTotalAmountReceived = () => {
+    const total= payment.reduce((acumulador, pago) => parseFloat(acumulador) + parseFloat(pago.amount), 0);
+    
     setTotalAmountReceived(total)
-  }
+};
 
   const calculateChange = () =>{
+    
     if(totalAmountItems<totalAmountReceived){
-        setChange((totalAmountReceived-totalAmountItems))
+        setChange((parseFloat(totalAmountReceived-totalAmountItems)))
     }
   }
 
-
-  const received = formatNumberWithDots(totalAmountReceived);
-  const finalTotal = formatNumberWithDots(totalAmountItems);
-  const finalChange = formatNumberWithDots(change);
+  const finalTotal = formatNumberWithDots(totalAmountItems)
+  const received = formatNumberWithDots(totalAmountReceived)
+  
+  const finalChange = formatNumberWithDots(change)
  
   useEffect(() => {
     
@@ -421,7 +418,7 @@ const calculateTotalAmountReceived = () =>{
                             <TextInput typeInput={"number"} value={inputCash} onChange={(e)=>setInputCash(e.target.value)} placeholderText={"Dinero recibido"}></TextInput>
                         </div>
                         <div className={Style.row2}>
-                            <BtnCommon title={"Crédito"} nameInput={"credit"} colorViolet={true}  ></BtnCommon>
+                            <BtnCommon title={"Crédito"} nameInput={"credit"} colorViolet={true} onClick={handleCreditPayment}  ></BtnCommon>
                             <div>
                                 <TextInput typeInput={"number"} value={inputOperationCredit} onChange={(e)=>setInputOperationCredit(e.target.value)} placeholderText={"Operación"}></TextInput>
                                 <TextInput typeInput={"number"} value={inputCredit} onChange={(e)=>setInputCredit(e.target.value)} placeholderText={"Importe"}></TextInput>
@@ -436,16 +433,16 @@ const calculateTotalAmountReceived = () =>{
                         </div>
                         <div className={Style.row3}>
                         
-                            <BtnCommon title={"C. Corriente"} nameInput={"currentAccount"} colorViolet={true}  ></BtnCommon>
+                            <BtnCommon title={"C. Corriente"} nameInput={"currentAccount"} colorViolet={true} onClick={handleCurrentAccountPayment}  ></BtnCommon>
                             <TextInput typeInput={"number"} value={inputCurrentAccount} onChange={(e)=>setInputCurrentAccount(e.target.value)} placeholderText={"Importe"}></TextInput>
                         </div>
                         <div className={Style.row4}>
-                            <BtnCommon title={"Débito"} nameInput={"debit"} colorViolet={true}  ></BtnCommon>
+                            <BtnCommon title={"Débito"} nameInput={"debit"} colorViolet={true} onClick={handleDebitPayment} ></BtnCommon>
                             <TextInput typeInput={"number"} placeholderText={"Operación"}></TextInput>
                             <TextInput typeInput={"number"} value={inputDebit} placeholderText={"Importe"} onChange={(e)=>setInputDebit(e.target.value)}></TextInput>
                         </div>
                         <div className={Style.row5}>
-                            <BtnCommon title={"Cheque"} nameInput={"check"} colorViolet={true}  ></BtnCommon>
+                            <BtnCommon title={"Cheque"} nameInput={"check"} colorViolet={true} onClick={handleCheckPayment}  ></BtnCommon>
                             
                                 <div>
                                 <TextInput typeInput={"number"} nameInput={"checkNumber"} value={inputNumberCheck} onChange={(e)=>setInputNumberCheck(e.target.value)} placeholderText={"Número Cheque"}></TextInput>
