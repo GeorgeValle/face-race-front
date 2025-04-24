@@ -284,7 +284,7 @@ const handleNewSale = async ()=>{
         handleSaveDate(day, month, year);
 
 
-        await axios.post(`${config.API_BASE}item/register`, {
+        await axios.post(`${config.API_BASE}sale/register`, {
             payment:payment,
             itemList:items,
             description:description,
@@ -323,6 +323,7 @@ const getActualHour = () => {
     
     setPayment(prevState=>[...prevState,{type:"cash",amount:inputCash}])
     setPaid(true)
+    setIsPayment(true)
 
   }
 
@@ -330,6 +331,7 @@ const getActualHour = () => {
     
     setPayment(prevState=>[...prevState,{type:"debit",amount:inputDebit,operation:inputOperationDebit}])
     setPaid(true)
+    setIsPayment(true)
 
 
   }
@@ -338,18 +340,21 @@ const getActualHour = () => {
     
    setPayment(prevState=>[...prevState,{type:"credit",amount:inputCredit,operation:inputOperationCredit,installments:installments}])
    setPaid(true)
+   setIsPayment(true)
   }
 
   const handleCurrentAccountPayment=()=>{
     
     setPayment(prevState=>[...prevState,{type:"current account",amount:inputCurrentAccount}])
     setPaid(false)
+    setIsPayment(true)
   }
 
   const handleCheckPayment=()=>{
     
     setPayment(prevState=>[...prevState,{type:"check",amount:inputCheck,numberCheck:inputNumberCheck,payDay:handleSavePayDate()}])
     setPaid(false)
+    setIsPayment(true)
   }
 
   const handleInstalment = (num)=>{
@@ -389,7 +394,7 @@ const calculateTotalAmountReceived = () => {
   const calculateChange = () =>{
     
     if(totalAmountItems<totalAmountReceived){
-        setChange((parseFloat(totalAmountReceived-totalAmountItems)))
+        setChange(parseFloat(totalAmountReceived) - parseFloat(totalAmountItems))
     }
   }
 
@@ -511,8 +516,8 @@ const calculateTotalAmountReceived = () => {
                         <MiniDescription description={"Vuelto"} isGreen={false} isWhite={true}> {finalChange} </MiniDescription>
                         <div className={Style.BtnLarge}>
                             {isPayment ?
-                                (<BtnVioletLarge onClick={handlePay} > Confirmar Cobro <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
-                                :(<BtnVioletLarge onClick={handlePay} bgDisable={true} disabled={true} >Confirmar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
+                                (<BtnVioletLarge onClick={handleNewSale} > Confirmar Cobro <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
+                                :(<BtnVioletLarge  bgDisable={true} disabled={true} >Confirmar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
                             }
                         </div>
                         <div className={Style.Cancel}>
