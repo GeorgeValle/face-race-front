@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addClient, deleteClient } from "../../redux/ClientSlice";
 import config from "../../config/Envs"
 import axios from "axios";
+import { isNumber } from 'chart.js/helpers';
 
 
 
@@ -66,16 +67,10 @@ const Payment = () =>{
     const [inputCheck, setInputCheck] = useState("")
     const [inputNumberCheck, setInputNumberCheck] = useState("")
 
-    
+    const[totalAmountItems,setTotalAmountItems] = useState()
+    const [totalAmountReceived, setTotalAmountReceived] = useState()
+    const [change, setChange]= useState();
 
-    
-
-
-
-
-    const vuelto = "0.00"
-
-const cobrado = "1.00"
 
 const dispatch = useDispatch()
 const items = useSelector((state) => state.itemsList)
@@ -326,14 +321,14 @@ const getActualHour = () => {
 
   const handleCashPayment = () =>{
     
-    setPayment([...{cash:{amount:inputCash}}])
+    setPayment(prevState=>[...prevState,{type:"cash",amount:inputCash}])
     setPaid(true)
 
   }
 
   const handleDebitPayment =()=>{
     
-    setPayment([...{debit:{amount:inputDebit,operation:inputOperationDebit}}])
+    setPayment(prevState=>[...prevState,{type:"debit",amount:inputDebit,operation:inputOperationDebit}])
     setPaid(true)
 
 
@@ -341,24 +336,75 @@ const getActualHour = () => {
 
   const handleCreditPayment= () =>{
     
-   setPayment([...{credit:{amount:inputCredit,operation:inputOperationCredit,installments:installments}}])
+   setPayment(prevState=>[...prevState,{type:"credit",amount:inputCredit,operation:inputOperationCredit,installments:installments}])
    setPaid(true)
   }
 
   const handleCurrentAccountPayment=()=>{
     
-    setPayment([...{currentAccount:{amount:inputCurrentAccount}}])
+    setPayment(prevState=>[...prevState,{type:"current account",amount:inputCurrentAccount}])
     setPaid(false)
   }
 
   const handleCheckPayment=()=>{
     
-    setPayment([...{check:{amount:inputCheck,numberCheck:inputNumberCheck,payDay:handleSavePayDate()}}])
+    setPayment(prevState=>[...prevState,{type:"check",amount:inputCheck,numberCheck:inputNumberCheck,payDay:handleSavePayDate()}])
+    setPaid(false)
   }
 
   const handleInstalment = (num)=>{
     setInstallments(num)
   }
+
+  const formatNumberWithDots = (number) => {
+    if(!isNaN(number)){
+        return number.toLocaleString('es-AR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        });
+    }else{
+        return 0
+    }
+  };
+
+  const calculateTotalAmountItems = () => {
+    const total = items.reduce((acc, item) => acc + item.amount, 0);
+    setTotalAmountItems(total);
+};
+
+//const totalAmount = () =>{
+//  const total = payment.reduce((accumulator, currentValue) => {
+ //   return accumulator + currentValue.amount;
+ // }, 0);
+//}
+
+// 
+
+const calculateTotalAmountReceived = () => {
+    const total= payment.reduce((acumulador, pago) => parseFloat(acumulador) + parseFloat(pago.amount), 0);
+    
+    setTotalAmountReceived(total)
+};
+
+  const calculateChange = () =>{
+    
+    if(totalAmountItems<totalAmountReceived){
+        setChange((parseFloat(totalAmountReceived-totalAmountItems)))
+    }
+  }
+
+  const finalTotal = formatNumberWithDots(totalAmountItems)
+  const received = formatNumberWithDots(totalAmountReceived)
+  
+  const finalChange = formatNumberWithDots(change)
+ 
+  useEffect(() => {
+    
+    calculateTotalAmountReceived();
+    calculateTotalAmountItems();
+    calculateChange();
+}, [payment]);
+
   const quantityCredit = [{label:"1",value:1},{label:"3",value:3},{label:"6",value:6},{label:"9",value:9},{label:"12",value:12}]
     return(
         <div className={Style.mainContainer}>
@@ -372,7 +418,7 @@ const getActualHour = () => {
                             <TextInput typeInput={"number"} value={inputCash} onChange={(e)=>setInputCash(e.target.value)} placeholderText={"Dinero recibido"}></TextInput>
                         </div>
                         <div className={Style.row2}>
-                            <BtnCommon title={"Crédito"} nameInput={"credit"} colorViolet={true}  ></BtnCommon>
+                            <BtnCommon title={"Crédito"} nameInput={"credit"} colorViolet={true} onClick={handleCreditPayment}  ></BtnCommon>
                             <div>
                                 <TextInput typeInput={"number"} value={inputOperationCredit} onChange={(e)=>setInputOperationCredit(e.target.value)} placeholderText={"Operación"}></TextInput>
                                 <TextInput typeInput={"number"} value={inputCredit} onChange={(e)=>setInputCredit(e.target.value)} placeholderText={"Importe"}></TextInput>
@@ -387,16 +433,16 @@ const getActualHour = () => {
                         </div>
                         <div className={Style.row3}>
                         
-                            <BtnCommon title={"C. Corriente"} nameInput={"currentAccount"} colorViolet={true}  ></BtnCommon>
+                            <BtnCommon title={"C. Corriente"} nameInput={"currentAccount"} colorViolet={true} onClick={handleCurrentAccountPayment}  ></BtnCommon>
                             <TextInput typeInput={"number"} value={inputCurrentAccount} onChange={(e)=>setInputCurrentAccount(e.target.value)} placeholderText={"Importe"}></TextInput>
                         </div>
                         <div className={Style.row4}>
-                            <BtnCommon title={"Débito"} nameInput={"debit"} colorViolet={true}  ></BtnCommon>
+                            <BtnCommon title={"Débito"} nameInput={"debit"} colorViolet={true} onClick={handleDebitPayment} ></BtnCommon>
                             <TextInput typeInput={"number"} placeholderText={"Operación"}></TextInput>
                             <TextInput typeInput={"number"} value={inputDebit} placeholderText={"Importe"} onChange={(e)=>setInputDebit(e.target.value)}></TextInput>
                         </div>
                         <div className={Style.row5}>
-                            <BtnCommon title={"Cheque"} nameInput={"check"} colorViolet={true}  ></BtnCommon>
+                            <BtnCommon title={"Cheque"} nameInput={"check"} colorViolet={true} onClick={handleCheckPayment}  ></BtnCommon>
                             
                                 <div>
                                 <TextInput typeInput={"number"} nameInput={"checkNumber"} value={inputNumberCheck} onChange={(e)=>setInputNumberCheck(e.target.value)} placeholderText={"Número Cheque"}></TextInput>
@@ -460,9 +506,9 @@ const getActualHour = () => {
                     </div>
                     <div className={Style.column2}>
                         
-                        <MiniTotal > 125.000 </MiniTotal>
-                        <MiniDescription description={"Recibido"} isGreen={true} > {cobrado} </MiniDescription>
-                        <MiniDescription description={"Vuelto"} isGreen={false} isWhite={true}> {vuelto} </MiniDescription>
+                        <MiniTotal > {finalTotal} </MiniTotal>
+                        <MiniDescription description={"Recibido"} isGreen={true} > {received} </MiniDescription>
+                        <MiniDescription description={"Vuelto"} isGreen={false} isWhite={true}> {finalChange} </MiniDescription>
                         <div className={Style.BtnLarge}>
                             {isPayment ?
                                 (<BtnVioletLarge onClick={handlePay} > Confirmar Cobro <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
