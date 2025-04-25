@@ -21,6 +21,10 @@ import { addClient, deleteClient } from "../../redux/ClientSlice";
 import config from "../../config/Envs"
 import axios from "axios";
 import { isNumber } from 'chart.js/helpers';
+import MessageModal from '../../components/modals/messageModal/MessageModal';
+import Dialog from '../../components/modals/dialog/Dialog';
+import Confirm from '../../components/modals/confirm/Confirm';
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -56,6 +60,13 @@ const Payment = () =>{
     const [description, setDescription] = useState("");
 
     const [oneMessage, setOneMessage] = useState("");
+    const [message, setMessage] = useState("");
+    
+    const [modalOpenConfirm, setModalOpenConfirm] = useState(false);
+    const [messageConfirm, setMessageConfirm] = useState("");
+    const [modalOpenMessage, setModalOpenMessage] = useState(false);
+    const [modalOpenDialog, setModalOpenDialog] = useState(false)
+    const [messageModal, setMessageModal] = useState("")
 
     const [inputCash, setInputCash] = useState("")
     const [inputCredit, setInputCredit] = useState("")
@@ -70,14 +81,45 @@ const Payment = () =>{
     const[totalAmountItems,setTotalAmountItems] = useState()
     const [totalAmountReceived, setTotalAmountReceived] = useState()
     const [change, setChange]= useState();
+    
 
+// initial navigate
+const navigate = useNavigate();
 
 const dispatch = useDispatch()
 const items = useSelector((state) => state.itemsList)
 const client = useSelector((state)=> state.client)
 
 //handles
-const handlePay = () =>{
+
+const handleClose = ()=>{
+
+    setMessageModal("");
+    setMessageConfirm("");
+    setModalOpenDialog(false);
+    setModalOpenMessage(false);
+    setMessage("")
+    setModalOpenConfirm(false)
+
+}
+
+const handleConfirmFinished = async(theMessage) =>{
+    
+    
+    setMessageModal(theMessage);
+    setMessageConfirm("Finalizar");
+    setModalOpenConfirm(true);
+}
+
+const handleFinished =()=>{
+    handleClose();
+    handleClearItems();
+    setPayment([]);
+    setChange();
+    setTotalAmountReceived();
+
+    navigate('/register_cash')
+
 
 }
 
@@ -284,7 +326,7 @@ const handleNewSale = async ()=>{
         handleSaveDate(day, month, year);
 
 
-        await axios.post(`${config.API_BASE}item/register`, {
+        const request = await axios.post(`${config.API_BASE}sale/register`, {
             payment:payment,
             itemList:items,
             description:description,
@@ -295,12 +337,15 @@ const handleNewSale = async ()=>{
 
 
         })
-        //const response =  request.data;
+        const response =  request.data;
         //setLoading(false);
-        setOneMessage("Venta Exitosa");
+        
+        handleConfirmFinished(response.message)
+        
     } catch (err) {
         //setError(err);
-        setOneMessage(`Error al realizar la venta`);
+        setMessage(err||`Error al realizar la venta`);
+        setModalOpenMessage(true)
     }
 }
 const handleSavePayDate = () => {
@@ -323,6 +368,7 @@ const getActualHour = () => {
     
     setPayment(prevState=>[...prevState,{type:"cash",amount:inputCash}])
     setPaid(true)
+    setIsPayment(true)
 
   }
 
@@ -330,6 +376,7 @@ const getActualHour = () => {
     
     setPayment(prevState=>[...prevState,{type:"debit",amount:inputDebit,operation:inputOperationDebit}])
     setPaid(true)
+    setIsPayment(true)
 
 
   }
@@ -338,18 +385,21 @@ const getActualHour = () => {
     
    setPayment(prevState=>[...prevState,{type:"credit",amount:inputCredit,operation:inputOperationCredit,installments:installments}])
    setPaid(true)
+   setIsPayment(true)
   }
 
   const handleCurrentAccountPayment=()=>{
     
     setPayment(prevState=>[...prevState,{type:"current account",amount:inputCurrentAccount}])
     setPaid(false)
+    setIsPayment(true)
   }
 
   const handleCheckPayment=()=>{
     
     setPayment(prevState=>[...prevState,{type:"check",amount:inputCheck,numberCheck:inputNumberCheck,payDay:handleSavePayDate()}])
     setPaid(false)
+    setIsPayment(true)
   }
 
   const handleInstalment = (num)=>{
@@ -389,7 +439,7 @@ const calculateTotalAmountReceived = () => {
   const calculateChange = () =>{
     
     if(totalAmountItems<totalAmountReceived){
-        setChange((parseFloat(totalAmountReceived-totalAmountItems)))
+        setChange(parseFloat(totalAmountReceived) - parseFloat(totalAmountItems))
     }
   }
 
@@ -403,13 +453,16 @@ const calculateTotalAmountReceived = () => {
     calculateTotalAmountReceived();
     calculateTotalAmountItems();
     calculateChange();
-}, [payment]);
+}, [payment, change]);
 
   const quantityCredit = [{label:"1",value:1},{label:"3",value:3},{label:"6",value:6},{label:"9",value:9},{label:"12",value:12}]
     return(
         <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"Cobro"} btnBack={true} />
+                {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
+                {modalOpenDialog&&(<Dialog messageModal={messageModal} messageConfirm={messageConfirm} onSubmit={handleFinished} onClose={handleClose}/>)}
+                {modalOpenConfirm&&(<Confirm messageModal={messageModal} messageConfirm={messageConfirm} onSubmit={handleFinished} />)}
                 <article className={Style.content}>
                     <div className={Style.column1}>
                         <div className={Style.row1}>
@@ -511,12 +564,12 @@ const calculateTotalAmountReceived = () => {
                         <MiniDescription description={"Vuelto"} isGreen={false} isWhite={true}> {finalChange} </MiniDescription>
                         <div className={Style.BtnLarge}>
                             {isPayment ?
-                                (<BtnVioletLarge onClick={handlePay} > Confirmar Cobro <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
-                                :(<BtnVioletLarge onClick={handlePay} bgDisable={true} disabled={true} >Confirmar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
+                                (<BtnVioletLarge onClick={handleNewSale} > Confirmar Cobro <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
+                                :(<BtnVioletLarge  bgDisable={true} disabled={true} >Confirmar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
                             }
                         </div>
                         <div className={Style.Cancel}>
-                            <BtnCommon title={"Cancelar "} colorRed={true} onClick={handleClearItems}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
+                            <BtnCommon title={"Cancelar "} colorRed={true} onClick={handleFinished}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
                         </div>
                         <div className={Style.BtnsShort}>
                         </div>
