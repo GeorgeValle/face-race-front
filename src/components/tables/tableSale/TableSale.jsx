@@ -3,13 +3,13 @@ import Style from './TableSale.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
-import EditQuantityItemModal from '../../modals/editQuantityItemModal/EditQuantityItemModal';
+//import EditQuantityItemModal from '../../modals/editQuantityItemModal/EditQuantityItemModal';
 import Dialog from '../../modals/dialog/Dialog';
 
 
 // deleteRow, editRow
 
-export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySale=null, modalUpdateSale=null, isEdit=true}) => {
+export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySale=null, modalUpdateSale=null, isEdit=false}) => {
     const itemsPerPage = 6; // Número de items por página
     const [currentPage, setCurrentPage] = useState(0); // Página actual
     //const [isModalQuantity, setIsModalQuantity] = useState(false);
@@ -47,7 +47,7 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
     
     
     // Crear un array de items a mostrar, rellenando con objetos vacíos si es necesario
-    const currentItems = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ code: '', item: '', quantity: '', price: 0 })];
+    const currentSales = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ saleDate: '', saleNumber: '', name:"" , type: '', total: 0 })];
 
     // useEffect(() => {
     //     const currentItems = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ code: '', item: '', quantity: '', price: 0 })];
@@ -87,11 +87,17 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
         .join(' ')
     }
 
+    const getConcatenatedFullName = (selectedSale)=>{
+        let fullName
+        if(!selectedSale||!selectedSale.client||selectedSale.client.name) return "";
+        fullName=`${selectedSale.client.name} ${selectedSale.client.surname}`
+        return fullName
+
+    }
 
 
-    const totalAmount = sumTotalAmount(); // Total de todos los amounts
 
-    totals(totalAmount);
+    
 
     // Function for format price numbers
     const formatNumber = (number) => {
@@ -104,6 +110,14 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
         return selectedSale.itemList.reduce((total, concurrent)=> total + concurrent.amount, 0)
     }
 
+    const calculateAllSalesAmount = () =>{
+        return rows
+        .flatMap(item=> item.itemList)
+        .reduce((total, current)=> total + current.amount, 0);
+    }
+
+    totals(calculateAllSalesAmount())
+
     return (<div className={Style.table_wrapper}>
         {isDialog&&<Dialog onSubmit={handleDeleteRow} messageModal={"Seguro quiere eliminar este Árticulo"} messageConfirm={"Eliminar"} onClose={handleClose} ></Dialog>}
         {/*isModalQuantity&&<EditQuantityItemModal onSubmit={modalUpdateItem} initQuantity={defaultQuantity} code={defaultCode}  onClose={handleClose} ></EditQuantityItemModal> */}
@@ -111,26 +125,22 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
             <thead>
                 <tr>
                     <th>Editar</th>
-                    <th>Número</th>
                     <th >Fecha</th>
-                    <th className={Style.expand}>Cliente.</th>
+                    <th>Número</th>                    
+                    <th className={Style.expand}>Cliente</th>
                     <th >Método</th>
                     <th>Importe</th>
                 </tr>
             </thead>
             <tbody>
                 {
-                    currentItems.map((row, idx) => {
+                    rows.map((row, idx) => {
                         //  const statusText = row.status.chartAt(0).toUpperCase() + row.status.slice(1);
                         //const amount = calculateAmount(row.quantity, row.price); // Calcular el amount para cada item
 
-                        //const calculateTotalAmount = () =>{
-                       //     return rows
-                    //   .flatMap(item=> item.itemList)
-                      //      .reduce((total, current)=> total + current.amount, 0);
-                        //}
-
+                        //let name = `${row.client.name}`
                         
+                        console.log(row)
                         return (
                             <tr key={idx}>
                                 <td>
@@ -139,15 +149,15 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
                                         {isEdit&&<FontAwesomeIcon icon={faPencil} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />}
                                     </span>
                                 </td>
-                                <td>{row.numberSale|| '-'}</td>
                                 <td >{row.saleDate || '-'}</td>
-                                <td className={Style.expand} >{row.client.name+" "+ row.client.surname}</td>
+                                <td>{row.numberSale|| '-'}</td>
+                                <td className={Style.expand} >{/*getConcatenatedFullName(row)*/`${row.client.name} ${row.client.surname}`|| '-'}</td>
                                 <td>
-                                    {getConcatenatedTypes()}
+                                    {getConcatenatedTypes(row)||'-'}
                                     {/* $ {formatNumber(row.price)}*/}
                                     {/* <span className={` ${Style.label} ${Style.label_`${row.status}`}`}>{statusText}</span> */}
                                 </td>
-                                <td>$ {formatNumber(calculateTotalAmount(row))}</td>
+                                <td>$ {formatNumber(calculateTotalAmount(row))||  '-'}</td>
                             </tr>
                         );
 

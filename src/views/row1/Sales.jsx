@@ -11,6 +11,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faMagnifyingGlass, faPlus, faTruck/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
 import Dialog from '../../components/modals/dialog/Dialog'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
+import { TableSale } from '../../components/tables/tableSale/TableSale'
 
 const Sales = () => {
     const [date, setDate] = useState(new Date());
@@ -35,6 +36,7 @@ const Sales = () => {
     const [inputDNI, setInputDNI] = useState("");
     const [inputCode, setInputCode] = useState("");
     const [inputItemName, setInputItemName] = useState("");
+    const [totalPrint, setTotalPrint] = useState(0);
 
 
 
@@ -194,11 +196,15 @@ const Sales = () => {
             
         }
     
+        const handleTotalPrint = (total) =>{
+            setTotalPrint(total)
+        }
 
         const payment = [{label:"Efectivo",value:"cash"},{label:"Credito",value:"credit"},{label:"Debito",value:"debit"},{label:"Cuenta Corriente",value:"currentAccount"},{label:"Cheque",value:"check"}]
 
 const reportType = [{label:"Selecciona una opción",value:""},{label:"Venta Mensual",value:"monthly"},{label:"Venta Anual", value:"annual"},{label:"Metodo de Pago", value:"method"},{label:"Ventas por Clientes", value:"client"},{label:"Ventas por Producto",value:"item"} ]
 
+const rows = [{numberSale:2343,saleDate:"02/05/2024",itemList:[{amount:200200}], payment:[{type:"Cash"}], client:{name:"Victor", surname:"Azimov"},}]
 return (
 
 <div className={Style.mainContainer}>
@@ -277,7 +283,9 @@ return (
                         <div className={Style.item2}>
                             <article className={Style.center}>
                                 <div className={Style.article}>
-                                
+                                {isByClient||isAnnual||isMonthly&&(
+                                    <TableSale rows={rows} totals={handleTotalPrint} />
+                                )}
                                 </div>
                             </article>
                         </div>
