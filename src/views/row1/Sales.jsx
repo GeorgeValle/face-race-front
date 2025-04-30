@@ -12,6 +12,9 @@ import {faMagnifyingGlass, faPlus, faTruck/*, faPencil*/} from "@fortawesome/fre
 import Dialog from '../../components/modals/dialog/Dialog'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 import { TableSale } from '../../components/tables/tableSale/TableSale'
+import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
+import axios from 'axios'
+import config from '../../config/Envs'
 
 const Sales = () => {
     const [date, setDate] = useState(new Date());
@@ -39,10 +42,28 @@ const Sales = () => {
     const [totalPrint, setTotalPrint] = useState(0);
 
 
+    const fetchMonthly = async() =>{
+        //params: { month: selectedMonth + 1, year: selectedYear }
+                    try {
+                        const response =
+                            await axios.get(`${config.API_BASE}/sale/month/${selectedMonth + 1}/year/${selectedYear}`)
+                        setDate(response.data.data);
+                        console.log(response.data.data)
+                        
+                    } catch (error) {
+                        setMessage("sin info")
+                        
+                    }
+    }
 
 
 
-
+    const handleBlurMonthly = () =>{
+        if(!selectedYear&&!selectedYear==""){
+            fetchMonthly();
+        //setTheStatus(selectedOption)
+        }
+    }
     const handleClose=()=>{
         // setModalOpenNewModal(false);
         // setModalOpenEditItem(false);
@@ -221,7 +242,7 @@ return (
                                             <InputSelectStyled defaultValue={inputReportType} onSetValue={handleFetchReportType} onLabel={"Tipo de Reporte"} options={reportType} />
                                             {isMonthly&&(
                                                 <article className={Style.separate}>
-                                                    <InputSelectDateStyled onLabel={"Mes"} onChange={handleMonthChange} defaultValue={selectedMonth}>
+                                                    <InputSelectDateStyled onLabel={"Mes"} onChange={handleMonthChange} defaultValue={selectedMonth}> onBlur={handleBlurMonthly}
                                                             {Array.from({ length: 12 }, (_, i) => (
                                                                 <option key={i} value={i}>
                                                                     {new Date(0, i).toLocaleString('es', { month: 'long' })}
@@ -282,9 +303,12 @@ return (
                         </div>
                         <div className={Style.item2}>
                             <article className={Style.center}>
-                                <div className={Style.article}>
-                                {isByClient||isAnnual||isMonthly&&(
-                                    <TableSale rows={rows} totals={handleTotalPrint} />
+                                <div className={Style.vertical_article}>
+                                {(isByClient||isAnnual||isMonthly)&&(
+                                    <>
+                                    <TableSale rows={rows} totals={handleTotalPrint} />,
+                                    <MiniTotal>{totalPrint}</MiniTotal>
+                                    </>
                                 )}
                                 </div>
                             </article>

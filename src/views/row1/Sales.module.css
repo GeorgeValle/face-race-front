@@ -13,6 +13,7 @@
 
 .item2 {
     grid-area: item2;
+    
 }
 
 .item3 {
@@ -47,6 +48,14 @@
     justify-content: flex-start;
     align-content: flex-start;
     margin-right: 9px;
+}
+
+.vertical_article{
+    display: flex;
+    flex-direction: column;
+    /*justify-items: center;*/
+    align-items: center;
+    margin-top: 2px;
 }
 
 .inputDate_group {

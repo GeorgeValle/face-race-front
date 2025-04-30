@@ -43,11 +43,11 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
     // Calcular el índice de inicio y fin de los items a mostrar
     const startIndex = currentPage * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    //const currentItems = rows.slice(startIndex, endIndex); // Items a mostrar en la página actual
+    const currentSales = rows.slice(startIndex, endIndex); // Items a mostrar en la página actual
     
     
     // Crear un array de items a mostrar, rellenando con objetos vacíos si es necesario
-    const currentSales = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ saleDate: '', saleNumber: '', name:"" , type: '', total: 0 })];
+    //const currentSales = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ saleDate: '', saleNumber: '', name:"" , type: '', total: 0 })];
 
     // useEffect(() => {
     //     const currentItems = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ code: '', item: '', quantity: '', price: 0 })];
@@ -134,7 +134,7 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
             </thead>
             <tbody>
                 {
-                    rows.map((row, idx) => {
+                    currentSales.map((row, idx) => {
                         //  const statusText = row.status.chartAt(0).toUpperCase() + row.status.slice(1);
                         //const amount = calculateAmount(row.quantity, row.price); // Calcular el amount para cada item
 
