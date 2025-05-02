@@ -1,7 +1,7 @@
 import styles from './InputSelectDateStyled.module.css'
 
 // eslint-disable-next-line react/prop-types
-const InputSelectDateStyled = ({defaultValue="", onChange=null, onLabel="", children } ) => {
+const InputSelectDateStyled = ({defaultValue="",onBlur=null , onChange=null, onLabel="", children } ) => {
 
     
 
@@ -14,7 +14,7 @@ const InputSelectDateStyled = ({defaultValue="", onChange=null, onLabel="", chil
             <label className={styles.label}>
                     {onLabel}
             </label>
-                <select className={styles.styledSelect} value={defaultValue} onChange={onChange}>
+                <select className={styles.styledSelect} value={defaultValue} onChange={onChange} onBlur={onBlur}>
                     {children}
                 </select>
             </div>

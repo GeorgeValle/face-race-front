@@ -18,6 +18,7 @@ import config from '../../config/Envs'
 
 const Sales = () => {
     const [date, setDate] = useState(new Date());
+    const [sales, setSales] = useState([])
     const [message, setMessage] = useState("");
     const [messageModal, setMessageModal] = useState("")
     const [messageDialog, setMessageDialog] = useState("");
@@ -32,8 +33,8 @@ const Sales = () => {
     const [isByClient, setIsByClient] = useState(false);
     const [isByItem, setIsByItem] = useState(false);
     const [weeks,setWeeks] = useState([])
-    const [selectedMonth, setSelectedMonth] = useState(date.getMonth());
-    const [selectedYear, setSelectedYear] = useState(date.getFullYear());
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const [inputMethod, setInputMethod] = useState("");
     const [inputNameClient, setInputNameClient] = useState("");
     const [inputDNI, setInputDNI] = useState("");
@@ -46,8 +47,8 @@ const Sales = () => {
         //params: { month: selectedMonth + 1, year: selectedYear }
                     try {
                         const response =
-                            await axios.get(`${config.API_BASE}/sale/month/${selectedMonth + 1}/year/${selectedYear}`)
-                        setDate(response.data.data);
+                            await axios.get(`${config.API_BASE}sale/month/${selectedMonth + 1}/year/${selectedYear}`)
+                            setSales(response.data.data);
                         console.log(response.data.data)
                         
                     } catch (error) {
@@ -75,12 +76,15 @@ const Sales = () => {
         
     }
 
-    const handleMonthChange = () =>{
+    const handleMonthChange = (e) =>{
+        setSelectedMonth(parseInt(e.target.value))
+        fetchMonthly();
+        console.log(e.target.value)
 
     }
 
-    const handleYearChangeMonthly = ()  =>{
-
+    const handleYearChangeMonthly = (e)  =>{
+        setSelectedYear(parseInt(e.target.value))
     }
 
     const handleAnnualChange = () =>{
@@ -139,6 +143,8 @@ const Sales = () => {
         setWeeks(weeksData);
     };
     generateWeeks();
+    
+
 }, [selectedMonth, selectedYear]);
 
 
@@ -225,7 +231,7 @@ const Sales = () => {
 
 const reportType = [{label:"Selecciona una opción",value:""},{label:"Venta Mensual",value:"monthly"},{label:"Venta Anual", value:"annual"},{label:"Metodo de Pago", value:"method"},{label:"Ventas por Clientes", value:"client"},{label:"Ventas por Producto",value:"item"} ]
 
-const rows = [{numberSale:2343,saleDate:"02/05/2024",itemList:[{amount:200200}], payment:[{type:"Cash"}], client:{name:"Victor", surname:"Azimov"},}]
+//const rows = [{numberSale:2343,saleDate:"02/05/2024",itemList:[{amount:200200}], payment:[{type:"Cash"}], client:{name:"Victor", surname:"Azimov"},}]
 return (
 
 <div className={Style.mainContainer}>
@@ -242,7 +248,7 @@ return (
                                             <InputSelectStyled defaultValue={inputReportType} onSetValue={handleFetchReportType} onLabel={"Tipo de Reporte"} options={reportType} />
                                             {isMonthly&&(
                                                 <article className={Style.separate}>
-                                                    <InputSelectDateStyled onLabel={"Mes"} onChange={handleMonthChange} defaultValue={selectedMonth}> onBlur={handleBlurMonthly}
+                                                    <InputSelectDateStyled onLabel={"Mes"} onChange={handleMonthChange} defaultValue={selectedMonth} onBlur={handleBlurMonthly}> 
                                                             {Array.from({ length: 12 }, (_, i) => (
                                                                 <option key={i} value={i}>
                                                                     {new Date(0, i).toLocaleString('es', { month: 'long' })}
@@ -251,8 +257,8 @@ return (
                                                     </InputSelectDateStyled>
                                                     <InputSelectDateStyled onLabel={"Año"} onChange={handleYearChangeMonthly} defaultValue={selectedYear}>
                                                         {Array.from({ length: 10 }, (_, i) => (
-                                                            <option key={i} value={date.getFullYear() - 5 + i}>
-                                                                {date.getFullYear() - 5 + i}
+                                                            <option key={i} value={new Date().getFullYear() - 5 + i}>
+                                                                {new Date().getFullYear() - 5 + i}
                                                             </option>
                                                         ))}
                                                     </InputSelectDateStyled>
@@ -306,7 +312,7 @@ return (
                                 <div className={Style.vertical_article}>
                                 {(isByClient||isAnnual||isMonthly)&&(
                                     <>
-                                    <TableSale rows={rows} totals={handleTotalPrint} />,
+                                    <TableSale rows={sales} totals={handleTotalPrint} />,
                                     <MiniTotal>{totalPrint}</MiniTotal>
                                     </>
                                 )}
