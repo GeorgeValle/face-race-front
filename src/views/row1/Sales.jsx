@@ -43,28 +43,17 @@ const Sales = () => {
     const [totalPrint, setTotalPrint] = useState(0);
 
 
-    const fetchMonthly = async() =>{
-        //params: { month: selectedMonth + 1, year: selectedYear }
-                    try {
-                        const response =
-                            await axios.get(`${config.API_BASE}sale/month/${selectedMonth + 1}/year/${selectedYear}`)
-                            setSales(response.data.data);
-                        console.log(response.data.data)
-                        
-                    } catch (error) {
-                        setMessage("sin info")
-                        
-                    }
-    }
+    
 
 
 
-    const handleBlurMonthly = () =>{
-        if(!selectedYear&&!selectedYear==""){
-            fetchMonthly();
+    //const handleBlurMonthly = () =>{
+        //if(!selectedYear&&!selectedYear==""){
+            
         //setTheStatus(selectedOption)
-        }
-    }
+        //}
+   // }
+
     const handleClose=()=>{
         // setModalOpenNewModal(false);
         // setModalOpenEditItem(false);
@@ -78,8 +67,7 @@ const Sales = () => {
 
     const handleMonthChange = (e) =>{
         setSelectedMonth(parseInt(e.target.value))
-        fetchMonthly();
-        console.log(e.target.value)
+        
 
     }
 
@@ -116,6 +104,20 @@ const Sales = () => {
 
     useEffect(() => {
 
+        const fetchMonthly = async() =>{
+            //params: { month: selectedMonth + 1, year: selectedYear }
+                        try {
+                            const response =
+                                await axios.get(`${config.API_BASE}sale/month/${selectedMonth + 1}/year/${selectedYear}`)
+                                setSales(response.data.data);
+                            console.log(response.data.data)
+                            
+                        } catch (error) {
+                            setMessage("sin info")
+                            
+                        }
+        }
+
     const generateWeeks = () => {
         const startOfMonth = new Date(selectedYear, selectedMonth, 1);
         const endOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
@@ -143,6 +145,7 @@ const Sales = () => {
         setWeeks(weeksData);
     };
     generateWeeks();
+    fetchMonthly();
     
 
 }, [selectedMonth, selectedYear]);
@@ -248,7 +251,7 @@ return (
                                             <InputSelectStyled defaultValue={inputReportType} onSetValue={handleFetchReportType} onLabel={"Tipo de Reporte"} options={reportType} />
                                             {isMonthly&&(
                                                 <article className={Style.separate}>
-                                                    <InputSelectDateStyled onLabel={"Mes"} onChange={handleMonthChange} defaultValue={selectedMonth} onBlur={handleBlurMonthly}> 
+                                                    <InputSelectDateStyled onLabel={"Mes"} onChange={handleMonthChange} defaultValue={selectedMonth} > 
                                                             {Array.from({ length: 12 }, (_, i) => (
                                                                 <option key={i} value={i}>
                                                                     {new Date(0, i).toLocaleString('es', { month: 'long' })}
