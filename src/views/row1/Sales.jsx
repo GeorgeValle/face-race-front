@@ -6,13 +6,14 @@ import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputSt
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
 import InputSelectStyled from '../../components/inputs/inputSelectStyled/InputSelectStyled'
 import Style from './Sales.module.css'
-import { useState, useEffect} from 'react'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faMagnifyingGlass, faPlus, faTruck/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
+import { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass, faPlus, faTruck/*, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
 import Dialog from '../../components/modals/dialog/Dialog'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 import { TableSale } from '../../components/tables/tableSale/TableSale'
 import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
+import SalesCharts from '../../components/graphics/salesChart/SalesChart'
 import axios from 'axios'
 import config from '../../config/Envs'
 
@@ -27,12 +28,12 @@ const Sales = () => {
     const [inputNumber, setInputNumber] = useState(Number);
     const [inputName, setInputName] = useState("");
     const [inputReportType, setInputReportType] = useState("");
-    const [isMonthly,setIsMonthly] = useState(false);
+    const [isMonthly, setIsMonthly] = useState(false);
     const [isAnnual, setIsAnnual] = useState(false);
-    const [isMethod, setIsMethod]= useState(false);
+    const [isMethod, setIsMethod] = useState(false);
     const [isByClient, setIsByClient] = useState(false);
     const [isByItem, setIsByItem] = useState(false);
-    const [weeks,setWeeks] = useState([])
+    const [weeks, setWeeks] = useState([])
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const [inputMethod, setInputMethod] = useState("");
@@ -41,115 +42,147 @@ const Sales = () => {
     const [inputCode, setInputCode] = useState("");
     const [inputItemName, setInputItemName] = useState("");
     const [totalPrint, setTotalPrint] = useState(0);
-
-
-    const fetchMonthly = async() =>{
-        //params: { month: selectedMonth + 1, year: selectedYear }
-                    try {
-                        const response =
-                            await axios.get(`${config.API_BASE}sale/month/${selectedMonth + 1}/year/${selectedYear}`)
-                            setSales(response.data.data);
-                        console.log(response.data.data)
-                        
-                    } catch (error) {
-                        setMessage("sin info")
-                        
-                    }
-    }
+    const [monthlyTotalsByName, setMonthlyTotalsByName]= useState([]);
 
 
 
-    const handleBlurMonthly = () =>{
-        if(!selectedYear&&!selectedYear==""){
-            fetchMonthly();
-        //setTheStatus(selectedOption)
-        }
-    }
-    const handleClose=()=>{
+
+
+
+    //const handleBlurMonthly = () =>{
+    //if(!selectedYear&&!selectedYear==""){
+
+    //setTheStatus(selectedOption)
+    //}
+    // }
+
+    const handleClose = () => {
         // setModalOpenNewModal(false);
         // setModalOpenEditItem(false);
         setModalOpenMessage(false);
         setModalOpenDialog(false);
     }
 
-    const handleDeleteSale = () =>{
-        
+    const handleDeleteSale = () => {
+
     }
 
-    const handleMonthChange = (e) =>{
+    const handleMonthChange = (e) => {
         setSelectedMonth(parseInt(e.target.value))
-        fetchMonthly();
-        console.log(e.target.value)
+
 
     }
 
-    const handleYearChangeMonthly = (e)  =>{
+    const handleYearChangeMonthly = (e) => {
         setSelectedYear(parseInt(e.target.value))
     }
 
-    const handleAnnualChange = () =>{
-
+    const handleAnnualChange = (e) => {
+        setSelectedYear(parseInt(e.target.value))
     }
-    const handleInputNameClient = () =>{
-
-    }
-
-    const handleInputDNI = () =>{
+    const handleInputNameClient = () => {
 
     }
 
-    const handleInputItemName = () =>{
+    const handleInputDNI = () => {
 
     }
 
-    const handleInputCode = () =>{
+    const handleInputItemName = () => {
 
     }
 
-    const  handleOnKeyItem = () =>{
-        
+    const handleInputCode = () => {
+
     }
 
+    const handleOnKeyItem = () => {
 
+    }
+
+// const fetchMonthlyTotalsByName = async ()=>{
+//     try {
+//         const response =
+//             await axios.get(`${config.API_BASE}sale/year/${selectedYear}`)
+//             setMonthlyTotalsByName(response.data.data);
+//         console.log(response.data.data)
+
+//     } catch (error) {
+//         setMessage("sin info")
+
+//     }
+// }
 
 
 
     useEffect(() => {
 
-    const generateWeeks = () => {
-        const startOfMonth = new Date(selectedYear, selectedMonth, 1);
-        const endOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
-        const weeksData = [];
-        let week = [];
+        const fetchMonthly = async () => {
+            //params: { month: selectedMonth + 1, year: selectedYear }
+            try {
+                const response =
+                    await axios.get(`${config.API_BASE}sale/month/${selectedMonth + 1}/year/${selectedYear}`)
+                setSales(response.data.data);
+                
 
-        for (let day = startOfMonth.getDate(); day <= endOfMonth.getDate(); day++) {
-            const currentDate = new Date(selectedYear, selectedMonth, day);
-            const dayOfWeek = currentDate.getDay();
+            } catch (error) {
+                setMessage("sin info")
 
-            // Not saturdays (6) and sundays (0)
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-                week.push(currentDate);
-            }
-
-            // if sunday (weekend) o last day of month, add week to the weeks
-            if (dayOfWeek === 0 || day === endOfMonth.getDate()) {
-                if (week.length > 0) {
-                    weeksData.push(week);
-                    week = [];
-                }
             }
         }
 
-        setWeeks(weeksData);
-    };
-    generateWeeks();
-    
+        const fetchMonthlyTotalsByName = async ()=>{
+            try {
+                const response =
+                    await axios.get(`${config.API_BASE}sale/year/${selectedYear}`)
+                    setMonthlyTotalsByName(response.data.data);
+                console.log(response.data.data)
+        
+            } catch (error) {
+                setMessage("sin info")
+        
+            }
+        }
 
-}, [selectedMonth, selectedYear]);
+        const generateWeeks = () => {
+            const startOfMonth = new Date(selectedYear, selectedMonth, 1);
+            const endOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
+            const weeksData = [];
+            let week = [];
+
+            for (let day = startOfMonth.getDate(); day <= endOfMonth.getDate(); day++) {
+                const currentDate = new Date(selectedYear, selectedMonth, day);
+                const dayOfWeek = currentDate.getDay();
+
+                // Not saturdays (6) and sundays (0)
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                    week.push(currentDate);
+                }
+
+                // if sunday (weekend) o last day of month, add week to the weeks
+                if (dayOfWeek === 0 || day === endOfMonth.getDate()) {
+                    if (week.length > 0) {
+                        weeksData.push(week);
+                        week = [];
+                    }
+                }
+            }
+
+            setWeeks(weeksData);
+        };
+        generateWeeks();
+        
+        isMonthly&&fetchMonthly();
+        isAnnual&&fetchMonthlyTotalsByName();
+
+        
 
 
-    const handleFetchReportType = (type) =>{
-        if(type!==""){
+    }, [selectedMonth, selectedYear]);
+
+
+    const handleFetchReportType = (type) => {
+        if (type !== "") {
             setInputReportType(type);
             // switch(Type){
             //     case "monthly":
@@ -203,127 +236,222 @@ const Sales = () => {
                 item: { isMonthly: false, isAnnual: false, isMethod: false, isByClient: false, isByItem: true },
             };
 
-            
-        
+
+
             const reportType = reportTypes[type] || { isMonthly: false, isAnnual: false, isMethod: false, isByClient: false, isByItem: false };
-        
+
             setIsMonthly(reportType.isMonthly);
             setIsAnnual(reportType.isAnnual);
             setIsMethod(reportType.isMethod);
             setIsByClient(reportType.isByClient);
             setIsByItem(reportType.isByItem);
-            }
         }
+    }
 
-        const handleMethodChange = (pay) =>{
-            setInputMethod(pay);
+    const handleMethodChange = (pay) => {
+        setInputMethod(pay);
+    }
+
+    const handleOnKeyClient = () => {
+
+    }
+
+    const handleTotalPrint = (total) => {
+        setTotalPrint(total)
+    }
+
+    const payment = [{ label: "Efectivo", value: "cash" }, { label: "Credito", value: "credit" }, { label: "Debito", value: "debit" }, { label: "Cuenta Corriente", value: "currentAccount" }, { label: "Cheque", value: "check" }]
+
+    const reportType = [{ label: "Selecciona una opción", value: "" }, { label: "Venta Mensual", value: "monthly" }, { label: "Venta Anual", value: "annual" }, { label: "Metodo de Pago", value: "method" }, { label: "Ventas por Clientes", value: "client" }, { label: "Ventas por Producto", value: "item" }]
+
+    // const rows =[{numberSale:2343,saleDate:"01/05/2024",itemList:[{amount:200200}], payment:[{type:"Cash"}], client:{id:345,name:"Victor", surname:"Azimov"}},
+    //             {numberSale:2236,saleDate:"01/05/2024",itemList:[{amount:300200}], payment:[{type:"Cash"}], client:{id:123,name:"Ramiro", surname:"Peña"}},
+    //             {numberSale:2320,saleDate:"02/05/2024",itemList:[{amount:100200}], payment:[{type:"Cash"}], client:{id:345,name:"Sergio", surname:"Rezimov"}},
+    //             {numberSale:2364,saleDate:"02/05/2024",itemList:[{amount:100500}], payment:[{type:"Cash"}], client:{id:342,name:"Miriam", surname:"Padula"}}
+    //         ]
+
+    const rows = [
+        {
+            saleNumber: '001',
+            saleDate: new Date('2024-06-10T14:20:00'),
+            client: { id: 'client1', name: 'Juan Perez' },
+            payment: [{ type: 'cash', amount: 150 }],
+            itemList: [
+                { price: 50, name: 'Producto A', origin: 'Local' },
+                { price: 100, name: 'Producto B', origin: 'Importado' }
+            ],
+            active: true,
+            paid: true,
+            description: 'Venta normal'
+        },
+        {
+            saleNumber: '002',
+            saleDate: new Date('2024-06-11T10:00:00'),
+            client: { id: 'client2', name: 'Maria Lopez' },
+            payment: [{ type: 'cash', amount: 200 }],
+            itemList: [{ price: 200, name: 'Producto C', origin: 'Local' }],
+            active: true,
+            paid: true,
+            description: 'Venta con descuento'
+        },
+        {
+            saleNumber: '003',
+            saleDate: new Date('2024-05-22T12:00:00'),
+            client: { id: 'client1', name: 'Juan Perez' },
+            payment: [{ type: 'cash', amount: 120 }],
+            itemList: [{ price: 120, name: 'Producto D', origin: 'Local' }],
+            active: true,
+            paid: true,
+            description: 'Venta anterior'
+        },
+        {
+            saleNumber: '004',
+            saleDate: new Date('2024-01-15T16:30:00'),
+            client: { id: 'client3', name: 'Carlos Ruiz' },
+            payment: [{ type: 'cash', amount: 300 }],
+            itemList: [{ price: 300, name: 'Producto E', origin: 'Importado' }],
+            active: true,
+            paid: true,
+            description: 'Venta de enero'
+        },
+        {
+            saleNumber: '005',
+            saleDate: new Date('2023-12-05T09:00:00'),
+            client: { id: 'client1', name: 'Juan Perez' },
+            payment: [{ type: 'cash', amount: 80 }],
+            itemList: [{ price: 80, name: 'Producto F', origin: 'Local' }],
+            active: true,
+            paid: true,
+            description: 'Venta del año pasado'
+        },
+        {
+            saleNumber: '006',
+            saleDate: new Date('2024-06-12T13:00:00'),
+            client: { id: 'client1', name: 'Juan Perez' },
+            payment: [{ type: 'cash', amount: 180 }],
+            itemList: [{ price: 180, name: 'Producto G', origin: 'Local' }],
+            active: true,
+            paid: true,
+            description: 'Venta reciente'
+        },
+        {
+            saleNumber: '007',
+            saleDate: new Date('2024-06-15T11:00:00'),
+            client: { id: 'client2', name: 'Maria Lopez' },
+            payment: [{ type: 'cash', amount: 90 }],
+            itemList: [{ price: 90, name: 'Producto H', origin: 'Importado' }],
+            active: false,
+            paid: false,
+            description: 'Venta cancelada'
         }
+    ];
 
-        const handleOnKeyClient = () =>{
-            
-        }
-    
-        const handleTotalPrint = (total) =>{
-            setTotalPrint(total)
-        }
 
-        const payment = [{label:"Efectivo",value:"cash"},{label:"Credito",value:"credit"},{label:"Debito",value:"debit"},{label:"Cuenta Corriente",value:"currentAccount"},{label:"Cheque",value:"check"}]
+    return (
 
-const reportType = [{label:"Selecciona una opción",value:""},{label:"Venta Mensual",value:"monthly"},{label:"Venta Anual", value:"annual"},{label:"Metodo de Pago", value:"method"},{label:"Ventas por Clientes", value:"client"},{label:"Ventas por Producto",value:"item"} ]
-
-//const rows = [{numberSale:2343,saleDate:"02/05/2024",itemList:[{amount:200200}], payment:[{type:"Cash"}], client:{name:"Victor", surname:"Azimov"},}]
-return (
-
-<div className={Style.mainContainer}>
-    <Container>
-        <MiniNavBar miniTitle={"Ventas"} btnBack={true}/>
-        {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
-        {modalOpenDialog&&(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeleteSale} onClose={handleClose}/>)}
-                    <article className={Style.content}>
-                        <div className={Style.item1}>
-                            <article className={Style.center}>     
-                                <div className={Style.article}>
-                                    <article className={Style.separate}>
-                                        <div className={Style.article}>
-                                            <InputSelectStyled defaultValue={inputReportType} onSetValue={handleFetchReportType} onLabel={"Tipo de Reporte"} options={reportType} />
-                                            {isMonthly&&(
+        <div className={Style.mainContainer}>
+            <Container>
+                <MiniNavBar miniTitle={"Ventas"} btnBack={true} />
+                {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
+                {modalOpenDialog && (<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeleteSale} onClose={handleClose} />)}
+                <article className={Style.content}>
+                    <div className={Style.item1}>
+                        <article className={Style.center}>
+                            <div className={Style.article}>
+                                <article className={Style.separate}>
+                                    <div className={Style.article}>
+                                        <InputSelectStyled defaultValue={inputReportType} onSetValue={handleFetchReportType} onLabel={"Tipo de Reporte"} options={reportType} />
+                                        {isMonthly && (
+                                            <article className={Style.separate}>
+                                                <InputSelectDateStyled onLabel={"Mes"} onChange={handleMonthChange} defaultValue={selectedMonth} >
+                                                    {Array.from({ length: 12 }, (_, i) => (
+                                                        <option key={i} value={i}>
+                                                            {new Date(0, i).toLocaleString('es', { month: 'long' })}
+                                                        </option>
+                                                    ))}
+                                                </InputSelectDateStyled>
+                                                <InputSelectDateStyled onLabel={"Año"} onChange={handleYearChangeMonthly} defaultValue={selectedYear}>
+                                                    {Array.from({ length: 10 }, (_, i) => (
+                                                        <option key={i} value={new Date().getFullYear() - 5 + i}>
+                                                            {new Date().getFullYear() - 5 + i}
+                                                        </option>
+                                                    ))}
+                                                </InputSelectDateStyled>
+                                            </article>
+                                        )}
+                                        {
+                                            isAnnual && (
                                                 <article className={Style.separate}>
-                                                    <InputSelectDateStyled onLabel={"Mes"} onChange={handleMonthChange} defaultValue={selectedMonth} onBlur={handleBlurMonthly}> 
-                                                            {Array.from({ length: 12 }, (_, i) => (
-                                                                <option key={i} value={i}>
-                                                                    {new Date(0, i).toLocaleString('es', { month: 'long' })}
-                                                                </option>
-                                                            ))}
-                                                    </InputSelectDateStyled>
-                                                    <InputSelectDateStyled onLabel={"Año"} onChange={handleYearChangeMonthly} defaultValue={selectedYear}>
+                                                    <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
                                                         {Array.from({ length: 10 }, (_, i) => (
-                                                            <option key={i} value={new Date().getFullYear() - 5 + i}>
-                                                                {new Date().getFullYear() - 5 + i}
+                                                            <option key={i} value={date.getFullYear() - 5 + i}>
+                                                                {date.getFullYear() - 5 + i}
                                                             </option>
                                                         ))}
                                                     </InputSelectDateStyled>
                                                 </article>
-                                            )}
-                                            {
-                                                isAnnual&&(
-                                                    <article className={Style.separate}>
-                                                    <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
-                                                    {Array.from({ length: 10 }, (_, i) => (
-                                                        <option key={i} value={date.getFullYear() - 5 + i}>
-                                                            {date.getFullYear() - 5 + i}
-                                                        </option>
-                                                    ))}
-                                                </InputSelectDateStyled>
+                                            )
+                                        }
+                                        {
+                                            isMethod && (
+                                                <article className={Style.separate}>
+                                                    <InputSelectStyled defaultValue={inputMethod} onSetValue={handleMethodChange} onLabel={"Tipos"} options={payment} />
                                                 </article>
-                                                )
-                                            }
-                                            {
-                                                isMethod&&(
-                                                    <article className={Style.separate}>
-                                                        <InputSelectStyled defaultValue={inputMethod} onSetValue={handleMethodChange} onLabel={"Tipos"} options={payment} />
-                                                    </article>
-                                                )
-                                            }
-                                            {
-                                                isByClient&&(
-                                                    <article className={Style.separate}>
-                                                        <TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} />
-                                                        <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
-                                                    </article>
-                                                )
-                                            }
-                                            {
-                                                isByItem&&(
-                                                    <article className={Style.separate}>
-                                                        <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
-                                                        <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />
-                                                    </article>
-                                                )
-                                            }
-                                            
+                                            )
+                                        }
+                                        {
+                                            isByClient && (
+                                                <article className={Style.separate}>
+                                                    <TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} />
+                                                    <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
+                                                </article>
+                                            )
+                                        }
+                                        {
+                                            isByItem && (
+                                                <article className={Style.separate}>
+                                                    <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
+                                                    <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />
+                                                </article>
+                                            )
+                                        }
 
-                                        </div>
-                                    </article>
-                                </div>
-                            </article>
-                        </div>
-                        <div className={Style.item2}>
-                            <article className={Style.center}>
-                                <div className={Style.vertical_article}>
-                                {(isByClient||isAnnual||isMonthly)&&(
+
+                                    </div>
+                                </article>
+                            </div>
+                        </article>
+                    </div>
+                    <div className={Style.item2}>
+                        <article className={Style.center}>
+                            <div className={Style.vertical_article}>
+                                {(isByClient || isMonthly) && (
                                     <>
-                                    <TableSale rows={sales} totals={handleTotalPrint} />,
-                                    <MiniTotal>{totalPrint}</MiniTotal>
+                                        <TableSale rows={sales} totals={handleTotalPrint} />,
+                                        <MiniTotal>{totalPrint}</MiniTotal>
                                     </>
                                 )}
-                                </div>
-                            </article>
-                        </div>
-                    </article>
-                            
-    </Container>
-</div>
-)
+                            </div>
+                        </article>
+                    </div>
+                    <div className={Style.item3}>
+                        <article className={Style.center}>
+                            <div className={Style.vertical_article}>
+                                {
+                                    (isByClient || isAnnual || isMonthly) && (
+                                        <>
+                                            <SalesCharts salesData={sales} selectedClientDni={'34785411'} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></SalesCharts>
+                                        </>
+                                    )
+                                }
+                            </div>
+                        </article>
+                    </div>
+                </article>
+
+            </Container>
+        </div>
+    )
 
 }
 
