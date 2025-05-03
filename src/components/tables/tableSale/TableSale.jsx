@@ -5,6 +5,7 @@ import { faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 //import EditQuantityItemModal from '../../modals/editQuantityItemModal/EditQuantityItemModal';
 import Dialog from '../../modals/dialog/Dialog';
+import {formatArgentineDate} from '../../../utils/datesUtils/formatArgentineDate'
 
 
 // deleteRow, editRow
@@ -149,8 +150,8 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
                                         {isEdit&&<FontAwesomeIcon icon={faPencil} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />}
                                     </span>
                                 </td>
-                                <td >{row.saleDate || '-'}</td>
-                                <td>{row.numberSale|| '-'}</td>
+                                <td >{formatArgentineDate(row.saleDate) || '-'}</td>
+                                <td>{row.saleNumber|| '-'}</td>
                                 <td className={Style.expand} >{/*getConcatenatedFullName(row)*/`${row.client.name} ${row.client.surname}`|| '-'}</td>
                                 <td>
                                     {getConcatenatedTypes(row)||'-'}
