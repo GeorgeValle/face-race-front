@@ -2,6 +2,7 @@ import Style from './NewItemModal.module.css'
 import MIniNavBar from '../../miniNavbar/MIniNavBar'
 import  TextInput from '../../inputs/textInput/TextInput'
 import TextArea from '../../inputs/textArea/TextArea'
+import InputSelectStyled from '../../inputs/inputSelectStyled/InputSelectStyled'
 import axios from 'axios'
 import { useState } from 'react'
 import config from '../../../config/Envs'
@@ -21,6 +22,8 @@ const [description, setDescription] = useState("");
 
 //const [error, setError] = useState(false);
 //const [loading, setLoading] = useState(false);
+
+const allCategory = [{label:'Seleccione una categoría',value:""},{label:'Indumentaria',value:'Indumentaria'}, {label:'Protección Personal', value:'Protección Personal'}, {label:'Equipaje',value:'Equipaje'}, {label:'Lingas y Trabas',value:'Lingas y Trabas'}, {label:'Luces',value:'Luces'}, {label:'Cobertores',value:'Cobertores'},{label:'Redes y sujetadores',value:'Redes y sujetadores'},{label:'Parlantes',value:'Parlantes'},{label:'Parabrisas', value:'Parabrisas'},{label:'Herramientas',value:'Herramientas'},{label:'Emblemas',value:'Emblemas'},{label:'Tableros y Velocimetros',value:'Tableros y Velocimetros'},{label:'Pisadores',Value:'Pisadores'},{label:'Escapes',value:'Escapes'},{label:'Frenos',value:'Frenos'},{label:'Repuestos',value:'Repuestos'},{label:'Servicios', value:'Servicios'},{label:'Mantenimiento',value:'Mantenimiento'},{label:'Otros',value:'Otros'}]
 
 const onSubmitCreate = async ( message) =>{
     try {
@@ -47,6 +50,13 @@ const onSubmitCreate = async ( message) =>{
 }
 }
 
+const handleCategory = ( category) =>{
+    
+    if(!category==""){
+    setCategory(category)
+    }
+}
+
 
     return (
     <div className={Style.modal_container}  onClick={(e)=>{
@@ -68,10 +78,10 @@ const onSubmitCreate = async ( message) =>{
                     <TextInput  typeInput={"number"} value={stockQuantity} nameInput={"stockQuantity"} isLabel={true} titleLabel={"Cantidad:"} nameLabel={"stockQuantity"} placeholderText={"Ej: 52"} sideLabel={true} onChange={(e)=>setStockQuantity(e.target.value)} />
                 </div>
                 <div className={Style.item4}>
-                    <TextInput  typeInput={"number"} value={price} nameInput={"price"} isLabel={true} titleLabel={"Precio:"} nameLabel={"price"} placeholderText={"Ej: 50.00"} sideLabel={true} onChange={(e)=>setPrice(e.target.value)} />
+                    <TextInput  typeInput={"number"} value={price} nameInput={"price"} sideLabel={true} isLabel={true} titleLabel={"Precio:"} nameLabel={"price"} placeholderText={"Ej: 50.00"} onChange={(e)=>setPrice(e.target.value)} />
                 </div>
                 <div className={Style.item5}>
-                    <TextInput  typeInput={"text"} value={category} nameInput={"category"} isLabel={true} titleLabel={"Categoría:"} nameLabel={"categoria"} placeholderText={"Ej: Indumentaria"} sideLabel={true} onChange={(e)=>setCategory(e.target.value)} />
+                    <InputSelectStyled  defaultValue={category} onLabel={" "} sideLabel={true} isLabel={true} isGroup={false} titleLabel={"Categoría:"} onSetValue={handleCategory} options={allCategory} />
                 </div>
                 <div className={Style.item6}>
                     <TextInput  typeInput={"text"} value={brand} nameInput={"brand"} isLabel={true} titleLabel={"Marca:"} nameLabel={"brand"} placeholderText={"Ej:Zx"} sideLabel={true} onChange={(e)=>setBrand(e.target.value)} />

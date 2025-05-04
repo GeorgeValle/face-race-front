@@ -19,9 +19,11 @@
 }
 
 
-.inputDate_group:hover .label, .input:focus {
+.inputDate_group:hover .label, .label_alternative:hover,  .input:focus {
     color: #ccc;
 }
+
+
 
 .styledSelect {
     display:flex;
@@ -29,12 +31,20 @@
     padding: 10px; /* Add padding */
     
     
-    border: 1px solid #ccc; /* Border style */
+    
     border: 1px solid #05060f;
     border-radius: 4px; /* Rounded corners */
     background-color: #f9f9f9; 
     font-size: 16px; 
     
+}
+
+.styleSelect{
+    display:flex;
+    width: 100%;
+    background-color: #f9f9f9; 
+    font-size: 16px; 
+    border: 1px solid #05060f; /* Border style */
 }
 
 .label {
@@ -51,4 +61,33 @@
     font-style:normal;
     font-weight: 700;
     line-height:normal;
+}
+
+.label_alternative {
+    display: flex;
+    margin-bottom: .3rem;
+    margin-left: 11px;
+    margin-right: 53px;
+    /* color: #05060f99; */
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+    color: #FFF;
+    text-shadow: 7px 6px 6px 0px rgba(0, 0, 0, 0.35);
+    -webkit-text-stroke-width: .3px;
+    -webkit-text-stroke-color: #000000;
+    font-family: "Open Sans", sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.side{
+    display: flex;
+    
+    justify-content:space-between;
+    align-items: center;
+    box-sizing: content-box;
+    padding-right: 30px;
+    height: 63px;
+    
 }
