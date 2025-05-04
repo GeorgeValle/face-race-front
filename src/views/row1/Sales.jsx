@@ -43,6 +43,7 @@ const Sales = () => {
     const [inputItemName, setInputItemName] = useState("");
     const [totalPrint, setTotalPrint] = useState(0);
     const [monthlyTotalsByName, setMonthlyTotalsByName]= useState([]);
+    const [clientSales, setClientSales] = useState([])
 
 
 
@@ -84,8 +85,8 @@ const Sales = () => {
 
     }
 
-    const handleInputDNI = () => {
-
+    const handleInputDNI = (e) => {
+        setInputDNI(e.target.value)
     }
 
     const handleInputItemName = () => {
@@ -144,6 +145,17 @@ const Sales = () => {
             }
         }
 
+        const fetchAnnualClientSalesByDNI = async ()=>{
+            try{
+                const response =
+                await axios.get(`${config.API_BASE}sale/client/${inputDNI}/${selectedYear}`)
+                setClientSales(response.data.data)
+                console.log(response.data.data)
+            }catch(error){
+                setMessage("Error al buscar las ventas")
+            }
+        }
+
         const generateWeeks = () => {
             const startOfMonth = new Date(selectedYear, selectedMonth, 1);
             const endOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
@@ -174,6 +186,7 @@ const Sales = () => {
         
         isMonthly&&fetchMonthly();
         isAnnual&&fetchMonthlyTotalsByName();
+        isByClient&&fetchAnnualClientSalesByDNI();
 
         
 
@@ -404,6 +417,15 @@ const Sales = () => {
                                                 <article className={Style.separate}>
                                                     <TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} />
                                                     <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
+                                                    
+                                                    <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
+                                                        {Array.from({ length: 10 }, (_, i) => (
+                                                            <option key={i} value={date.getFullYear() - 5 + i}>
+                                                                {date.getFullYear() - 5 + i}
+                                                            </option>
+                                                        ))}
+                                                    </InputSelectDateStyled>
+                                                
                                                 </article>
                                             )
                                         }
@@ -412,6 +434,13 @@ const Sales = () => {
                                                 <article className={Style.separate}>
                                                     <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
                                                     <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />
+                                                    <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
+                                                        {Array.from({ length: 10 }, (_, i) => (
+                                                            <option key={i} value={date.getFullYear() - 5 + i}>
+                                                                {date.getFullYear() - 5 + i}
+                                                            </option>
+                                                        ))}
+                                                    </InputSelectDateStyled>
                                                 </article>
                                             )
                                         }
@@ -425,12 +454,20 @@ const Sales = () => {
                     <div className={Style.item2}>
                         <article className={Style.center}>
                             <div className={Style.vertical_article}>
-                                {(isByClient || isMonthly) && (
+                                { isMonthly && (
                                     <>
                                         <TableSale rows={sales} totals={handleTotalPrint} />,
                                         <MiniTotal>{totalPrint}</MiniTotal>
                                     </>
                                 )}
+                                {
+                                    isByClient&&(
+                                        <>
+                                        <TableSale rows={clientSales} totals={handleTotalPrint} />,
+                                        <MiniTotal>{totalPrint}</MiniTotal>
+                                        </>
+                                    )
+                                }
                             </div>
                         </article>
                     </div>
@@ -440,7 +477,7 @@ const Sales = () => {
                                 {
                                     (isByClient || isAnnual || isMonthly) && (
                                         <>
-                                            <SalesCharts salesData={sales} selectedClientDni={'34785411'} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></SalesCharts>
+                                            <SalesCharts salesData={sales} clientSales={clientSales}  selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></SalesCharts>
                                         </>
                                     )
                                 }
