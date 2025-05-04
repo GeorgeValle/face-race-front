@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faUserPlus, faWallet, faXmark, faPencil, faMagnifyingGlass, faBroomBall } from "@fortawesome/free-solid-svg-icons";
 import { TableQuotation } from '../../components/tables/tableQuotation/TableQuotation';
 import MessageModal from '../../components/modals/messageModal/MessageModal';
+import NewClientModal from '../../components/modals/newClientModal/NewClientModal'
 import ItemModal from '../../components/modals/itemModal/ItemModal';
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
@@ -27,6 +28,7 @@ const RegisterCash = () => {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalItemOpen, setModalItemOpen] = useState(false);
+    const [modalClientOpen, setModalClientOpen] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0.00);
     const [totalSubAmount, setTotalSubAmount] = useState(0.00);
     const [totalAdjustment, setTotalAdjustment] = useState(0.00);
@@ -177,7 +179,15 @@ const RegisterCash = () => {
 
     const CloseModals = () => {
         setModalOpen(false);
+        setModalOpenMessage(false);
+        setModalClientOpen(false);
         // setModalItemOpen(false);
+    }
+
+    const handleSubmitNewClient= (message)=>{
+        setMessage(message)
+        setModalClientOpen(false)
+        MessageResponse()
     }
 
     // const CloseItemsModal = () =>{
@@ -269,8 +279,9 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
         <div className={Style.mainContainer}>
             <Container>
                 <MiniNavBar miniTitle={"Caja"} btnBack={true} />
-                {modalOpen && (<MessageModal onClose={CloseModals} messageModal={"Impreso"} />)}
+                {modalOpenMessage && createPortal(<MessageModal onClose={CloseModals} messageModal={message} />, document.body)}
                 {modalItemOpen && createPortal( <ItemModal size={false}  addItemList={handleAddItem}  onEditStock={handleEditStockItem} handleCancel={handleCancelItemModal}  />, document.body)}
+                {modalClientOpen && createPortal(<NewClientModal onSubmit={handleSubmitNewClient} onCancel={CloseModals} onClose={CloseModals} />, document.body)}
                 <article className={Style.content}>
                     <div className={Style.column1}>
                         <div className={Style.row1}>
@@ -304,7 +315,7 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
                         </NavLink >
                         </div>
                         <div className={Style.BtnsShort}>
-                            <BtnCommon title={"Cliente "} colorViolet={true}><FontAwesomeIcon icon={faUserPlus} /></BtnCommon>
+                            <BtnCommon title={"Cliente "} colorViolet={true} onClick={()=>setModalClientOpen(true)}><FontAwesomeIcon icon={faUserPlus}  /></BtnCommon>
                             <BtnCommon title={"Cancelar "} colorRed={true} onClick={handleClearItems}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
                         </div>
                     </div>
