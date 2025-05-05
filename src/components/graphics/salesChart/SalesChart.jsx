@@ -28,27 +28,29 @@ const MONTH_NAMES_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', '
 /**
  * Componente SalesCharts para mostrar gráficos de ventas.
  * Props:
- * - salesData: array de ventas (usado solo para reportType monthly y client)
+ * - salesData: array de ventas (usado para monthly y annual si no se pasa monthlyTotalsByName)
  * - monthlyTotalsByName: objeto con totales por mes { enero: number, febrero: number, ... } (usado para annual)
+ * - clientSales: array de ventas ya filtradas para un cliente específico y año específico (usado para gráfico cliente)
+ * - method: objeto con totales por mes según método de pago { enero: number, febrero: number, ... } (usado para gráfico method)
  * - selectedYear: año seleccionado (number|null)
  * - selectedMonth: mes seleccionado (1-12|null)
- * - selectedClientDni: DNI del cliente para filtro (string|null)
- * - reportType: 'monthly' | 'annual' | 'client'
+ * - reportType: 'monthly' | 'annual' | 'client' | 'method'
  */
 const SalesCharts = ({
     salesData = [],
     monthlyTotalsByName,
+    clientSales = [],
+    method,
     selectedYear,
     selectedMonth,
-    selectedClientDni,
     reportType
 }) => {
     const formatDate = (date) => date.toISOString().split('T')[0];
 
-    // Ventas filtradas (pagadas) para monthly y client
+    // Ventas pagadas para cálculos (monthly y client)
     const validSales = useMemo(() => salesData.filter(sale => sale.paid), [salesData]);
 
-    // Datos para gráfico anual: SOLO usar monthlyTotalsByName, SIN cálculo con salesData
+    // Gráfico anual usando monthlyTotalsByName
     const yearlySalesData = useMemo(() => {
         if (reportType !== 'annual') return { labels: [], datasets: [] };
         if (!monthlyTotalsByName || typeof monthlyTotalsByName !== 'object') return { labels: [], datasets: [] };
@@ -102,35 +104,28 @@ const SalesCharts = ({
         };
     }, [reportType, selectedYear, selectedMonth, validSales]);
 
-    // Gráfico por cliente calculado via salesData
+    // Gráfico por cliente usando clientSales
     const clientSalesData = useMemo(() => {
         if (reportType !== 'client') return { labels: [], datasets: [] };
-        if (!selectedClientDni) return { labels: [], datasets: [] };
+        if (!clientSales || clientSales.length === 0) return { labels: [], datasets: [] };
 
-        const clientSales = validSales.filter(sale => {
-            const saleDate = new Date(sale.saleDate);
-            const matchesClient = sale.client?.dni === selectedClientDni;
-            const matchesYear = selectedYear ? saleDate.getFullYear() === Number(selectedYear) : true;
-            const matchesMonth = selectedMonth ? saleDate.getMonth() + 1 === Number(selectedMonth) : true;
-            return matchesClient && matchesYear && matchesMonth;
-        });
+        const cliente = clientSales[0]?.client;
+        const clientName = cliente ? `${cliente.name} ${cliente.surname}` : 'Cliente';
 
-        const salesMap = new Map();
+        const salesByMonth = Array(12).fill(0);
         clientSales.forEach(sale => {
-            const dateStr = formatDate(new Date(sale.saleDate));
+            const saleDate = new Date(sale.saleDate);
+            const month = saleDate.getMonth();
             const totalPayment = sale.payment.reduce((sum, p) => sum + Number(p.amount), 0);
-            salesMap.set(dateStr, (salesMap.get(dateStr) || 0) + totalPayment);
+            salesByMonth[month] += totalPayment;
         });
-
-        const labels = Array.from(salesMap.keys()).sort();
-        const dataValues = labels.map(label => salesMap.get(label));
 
         return {
-            labels,
+            labels: MONTH_NAMES_ES,
             datasets: [
                 {
-                    label: `Ventas cliente DNI: ${selectedClientDni}`,
-                    data: dataValues,
+                    label: `Ventas cliente: ${clientName}`,
+                    data: salesByMonth,
                     fill: false,
                     borderColor: 'rgba(255,99,132,1)',
                     backgroundColor: 'rgba(255,99,132,0.5)',
@@ -138,7 +133,27 @@ const SalesCharts = ({
                 }
             ]
         };
-    }, [reportType, selectedClientDni, selectedYear, selectedMonth, validSales]);
+    }, [reportType, clientSales]);
+
+    // Gráfico method usando prop method
+    const methodSalesData = useMemo(() => {
+        if (reportType !== 'method') return { labels: [], datasets: [] };
+        if (!method || typeof method !== 'object') return { labels: [], datasets: [] };
+
+        const labels = MONTH_NAMES_ES;
+        const dataValues = labels.map(mes => Number(method[mes]) || 0);
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: `Ventas por método de pago ${selectedYear || ''}`,
+                    data: dataValues,
+                    backgroundColor: 'rgba(153, 102, 255, 0.6)'
+                }
+            ]
+        };
+    }, [reportType, method, selectedYear]);
 
     const options = {
         responsive: true,
@@ -151,7 +166,7 @@ const SalesCharts = ({
     };
 
     return (
-        <div style={{ maxWidth: 1200, height: '650px', margin: '0 auto', padding: '1rem' }}>
+        <div style={{ maxWidth: 1100, height: '600px', margin: '0 auto', padding: '1rem' }}>
             <h2>Resumen de Ventas</h2>
 
             {reportType === 'annual' && (
@@ -176,18 +191,25 @@ const SalesCharts = ({
 
             {reportType === 'client' && (
                 <section style={{ marginBottom: '2rem', height: '450px' }}>
-                    {selectedClientDni ? (
-                        <>
-                            <h3>Ventas del Cliente DNI: {selectedClientDni}</h3>
-                            <Line data={clientSalesData} options={options} />
-                        </>
+                    {clientSales && clientSales.length > 0 ? (
+                        <Line data={clientSalesData} options={options} />
                     ) : (
-                        <p>Por favor, seleccione un cliente (DNI) para visualizar el gráfico por cliente.</p>
+                        <p>Por favor, pase un array con las ventas del cliente para visualizar su gráfico.</p>
                     )}
                 </section>
             )}
 
-            {!['monthly', 'annual', 'client'].includes(reportType) && (
+            {reportType === 'method' && (
+                <section style={{ marginBottom: '2rem', height: '450px' }}>
+                    {method ? (
+                        <Bar data={methodSalesData} options={options} />
+                    ) : (
+                        <p>Por favor, pase un objeto con totales por método para visualizar el gráfico.</p>
+                    )}
+                </section>
+            )}
+
+            {!['monthly', 'annual', 'client', 'method'].includes(reportType) && (
                 <p>Por favor, seleccione un tipo de reporte válido para visualizar gráficos.</p>
             )}
         </div>
