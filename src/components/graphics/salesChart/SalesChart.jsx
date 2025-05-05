@@ -31,24 +31,26 @@ const MONTH_NAMES_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', '
  * - salesData: array de ventas (usado para monthly y annual si no se pasa monthlyTotalsByName)
  * - monthlyTotalsByName: objeto con totales por mes { enero: number, febrero: number, ... } (usado para annual)
  * - clientSales: array de ventas ya filtradas para un cliente específico y año específico (usado para gráfico cliente)
+ * - method: objeto con totales por mes según método de pago { enero: number, febrero: number, ... } (usado para gráfico method)
  * - selectedYear: año seleccionado (number|null)
  * - selectedMonth: mes seleccionado (1-12|null)
- * - reportType: 'monthly' | 'annual' | 'client'
+ * - reportType: 'monthly' | 'annual' | 'client' | 'method'
  */
 const SalesCharts = ({
     salesData = [],
     monthlyTotalsByName,
     clientSales = [],
+    method,
     selectedYear,
     selectedMonth,
     reportType
 }) => {
     const formatDate = (date) => date.toISOString().split('T')[0];
 
-    // Filtrar ventas pagadas para monthly y uso general cuando no se usa monthlyTotalsByName ni clientSales
+    // Ventas pagadas para cálculos (monthly y client)
     const validSales = useMemo(() => salesData.filter(sale => sale.paid), [salesData]);
 
-    // Datos para gráfico anual (solo usa monthlyTotalsByName)
+    // Gráfico anual usando monthlyTotalsByName
     const yearlySalesData = useMemo(() => {
         if (reportType !== 'annual') return { labels: [], datasets: [] };
         if (!monthlyTotalsByName || typeof monthlyTotalsByName !== 'object') return { labels: [], datasets: [] };
@@ -102,16 +104,14 @@ const SalesCharts = ({
         };
     }, [reportType, selectedYear, selectedMonth, validSales]);
 
-    // Gráfico por cliente: usa clientSales array filtrado por cliente y año
+    // Gráfico por cliente usando clientSales
     const clientSalesData = useMemo(() => {
         if (reportType !== 'client') return { labels: [], datasets: [] };
         if (!clientSales || clientSales.length === 0) return { labels: [], datasets: [] };
 
-        // Obtener cliente nombre y apellido del primer elemento (suponiendo todos iguales)
         const cliente = clientSales[0]?.client;
         const clientName = cliente ? `${cliente.name} ${cliente.surname}` : 'Cliente';
 
-        // Sumar pagos por mes
         const salesByMonth = Array(12).fill(0);
         clientSales.forEach(sale => {
             const saleDate = new Date(sale.saleDate);
@@ -134,6 +134,26 @@ const SalesCharts = ({
             ]
         };
     }, [reportType, clientSales]);
+
+    // Gráfico method usando prop method
+    const methodSalesData = useMemo(() => {
+        if (reportType !== 'method') return { labels: [], datasets: [] };
+        if (!method || typeof method !== 'object') return { labels: [], datasets: [] };
+
+        const labels = MONTH_NAMES_ES;
+        const dataValues = labels.map(mes => Number(method[mes]) || 0);
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: `Ventas por método de pago ${selectedYear || ''}`,
+                    data: dataValues,
+                    backgroundColor: 'rgba(153, 102, 255, 0.6)'
+                }
+            ]
+        };
+    }, [reportType, method, selectedYear]);
 
     const options = {
         responsive: true,
@@ -179,7 +199,17 @@ const SalesCharts = ({
                 </section>
             )}
 
-            {!['monthly', 'annual', 'client'].includes(reportType) && (
+            {reportType === 'method' && (
+                <section style={{ marginBottom: '2rem', height: '450px' }}>
+                    {method ? (
+                        <Bar data={methodSalesData} options={options} />
+                    ) : (
+                        <p>Por favor, pase un objeto con totales por método para visualizar el gráfico.</p>
+                    )}
+                </section>
+            )}
+
+            {!['monthly', 'annual', 'client', 'method'].includes(reportType) && (
                 <p>Por favor, seleccione un tipo de reporte válido para visualizar gráficos.</p>
             )}
         </div>

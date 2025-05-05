@@ -44,6 +44,7 @@ const Sales = () => {
     const [totalPrint, setTotalPrint] = useState(0);
     const [monthlyTotalsByName, setMonthlyTotalsByName]= useState([]);
     const [clientSales, setClientSales] = useState([])
+    const [methodSales, setMethodSales] = useState([])
 
 
 
@@ -145,12 +146,27 @@ const Sales = () => {
             }
         }
 
-        const fetchAnnualClientSalesByDNI = async ()=>{
+        const fetchAnnualClientSalesByDNI = async ()=>{ 
             try{
                 const response =
                 await axios.get(`${config.API_BASE}sale/client/${inputDNI}/${selectedYear}`)
                 setClientSales(response.data.data)
                 console.log(response.data.data)
+            }catch(error){
+                setMessage("Error al buscar las ventas")
+            }
+        }
+
+        const sumMonthlyAmounts = (monthlyData) => {
+            return Object.values(monthlyData).reduce((total, amount) => total + amount, 0);
+        };
+
+        const fetchTotalPaymentsByTypeAndMonth = async () =>{
+            try{
+                const response =
+                await axios.get(`${config.API_BASE}sale/payments/${inputMethod}/${selectedYear}`)
+                setMethodSales(response.data.data)
+                setTotalPrint(sumMonthlyAmounts(response.data.data))
             }catch(error){
                 setMessage("Error al buscar las ventas")
             }
@@ -187,6 +203,7 @@ const Sales = () => {
         isMonthly&&fetchMonthly();
         isAnnual&&fetchMonthlyTotalsByName();
         isByClient&&fetchAnnualClientSalesByDNI();
+        isMethod&&fetchTotalPaymentsByTypeAndMonth();
 
         
 
@@ -409,6 +426,13 @@ const Sales = () => {
                                             isMethod && (
                                                 <article className={Style.separate}>
                                                     <InputSelectStyled defaultValue={inputMethod} onSetValue={handleMethodChange} onLabel={"Tipos"} options={payment} />
+                                                    <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
+                                                        {Array.from({ length: 10 }, (_, i) => (
+                                                            <option key={i} value={date.getFullYear() - 5 + i}>
+                                                                {date.getFullYear() - 5 + i}
+                                                            </option>
+                                                        ))}
+                                                    </InputSelectDateStyled>
                                                 </article>
                                             )
                                         }
@@ -468,21 +492,29 @@ const Sales = () => {
                                         </>
                                     )
                                 }
-                            </div>
-                        </article>
-                    </div>
-                    <div className={Style.item3}>
-                        <article className={Style.center}>
-                            <div className={Style.vertical_article}>
                                 {
-                                    (isByClient || isAnnual || isMonthly) && (
-                                        <>
-                                            <SalesCharts salesData={sales} clientSales={clientSales}  selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></SalesCharts>
-                                        </>
+                                    isMethod&&(
+                                        <MiniTotal>{totalPrint}</MiniTotal>
                                     )
                                 }
                             </div>
                         </article>
+                    </div>
+                    <div className={Style.item3}>
+                        
+                        {
+                            (isByClient || isAnnual || isMonthly || isMethod) && (
+                                <>
+                                    <article className={Style.center}>
+                                        <div className={Style.vertical_article}>
+                                            <SalesCharts salesData={sales} clientSales={clientSales} method={methodSales} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></SalesCharts>
+                                        </div>
+                                    </article>
+                                </>
+                                
+                            )
+                        }
+                    
                     </div>
                 </article>
 
