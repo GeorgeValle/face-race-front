@@ -24,6 +24,8 @@ import MessageModal from '../../components/modals/messageModal/MessageModal';
 import Dialog from '../../components/modals/dialog/Dialog';
 import Confirm from '../../components/modals/confirm/Confirm';
 import { useNavigate } from "react-router-dom";
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import BillPDF from '../../components/pdf/billPDF/BillPDF';
 
 
 
@@ -563,7 +565,15 @@ const Payment = () => {
                         <MiniDescription description={"Vuelto"} isGreen={false} isWhite={true}> {finalChange} </MiniDescription>
                         <div className={Style.BtnLarge}>
                             {isPayment ?
-                                (<BtnVioletLarge onClick={handleNewSale} > Confirmar Cobro <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
+                                (
+                                    <PDFDownloadLink
+                                document={<BillPDF clientData={client} items={items} method={payment} />}
+                                fileName="Factura.pdf"
+                                style={{ textDecoration: 'none' }}
+                                >
+                                <BtnVioletLarge onClick={handleNewSale} > Confirmar Cobro <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>
+                                </PDFDownloadLink>
+                                )
                                 : (<BtnVioletLarge bgDisable={true} disabled={true} >Confirmar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
                             }
                         </div>

@@ -44,7 +44,8 @@ const Sales = () => {
     const [totalPrint, setTotalPrint] = useState(0);
     const [monthlyTotalsByName, setMonthlyTotalsByName]= useState([]);
     const [clientSales, setClientSales] = useState([])
-    const [methodSales, setMethodSales] = useState([])
+    const [methodSales, setMethodSales] = useState({})
+    const [itemSales, setItemSales] = useState({})
 
 
 
@@ -94,13 +95,12 @@ const Sales = () => {
 
     }
 
-    const handleInputCode = () => {
+    const handleInputCode = (e) => {
+        setInputCode(e.target.value)
 
     }
 
-    const handleOnKeyItem = () => {
-
-    }
+    
 
 // const fetchMonthlyTotalsByName = async ()=>{
 //     try {
@@ -115,62 +115,88 @@ const Sales = () => {
 //     }
 // }
 
+    const sumMonthlyAmounts = (monthlyData) => {
+        return Object.values(monthlyData).reduce((total, amount) => total + amount, 0);
+    };
+
+    const fetchMonthly = async () => {
+        //params: { month: selectedMonth + 1, year: selectedYear }
+        try {
+            const response =
+                await axios.get(`${config.API_BASE}sale/month/${selectedMonth + 1}/year/${selectedYear}`)
+            setSales(response.data.data);
+            
+        } catch (error) {
+            setMessage("sin info")
+
+        }
+    }
+
+    const fetchMonthlyTotalsByName = async ()=>{
+        try {
+            const response =
+                await axios.get(`${config.API_BASE}sale/year/${selectedYear}`)
+                setMonthlyTotalsByName(response.data.data);
+            console.log(response.data.data)
+    
+        } catch (error) {
+            setMessage("sin info")
+    
+        }
+    }
+
+    const fetchFindTotalProductAmountByCodeAndMonth = async () =>{
+        
+    try{   const response =
+                await axios.get(`${config.API_BASE}sale/item/${inputCode}/${selectedYear}`)
+                setItemSales(response.data.data);
+                console.log(response.data.data)
+                setTotalPrint(sumMonthlyAmounts(response.data.data))
+    }catch(error){
+        setMessage("sin info")
+    }
+    }
+
+    const fetchAnnualClientSalesByDNI = async ()=>{ 
+        try{
+            const response =
+            await axios.get(`${config.API_BASE}sale/client/${inputDNI}/${selectedYear}`)
+            setClientSales(response.data.data)
+            console.log(response.data.data)
+        }catch(error){
+            setMessage("Error al buscar las ventas")
+        }
+    }
+
+    
+
+    const fetchTotalPaymentsByTypeAndMonth = async () =>{
+        try{
+            const response =
+            await axios.get(`${config.API_BASE}sale/payments/${inputMethod}/${selectedYear}`)
+            setMethodSales(response.data.data)
+            setTotalPrint(sumMonthlyAmounts(response.data.data))
+        }catch(error){
+            setMessage("Error al buscar las ventas")
+        }
+    }
+
+    const fetchTotalPaymentsByTypeAndYear = async (pay) =>{
+        try{
+            const response =
+            await axios.get(`${config.API_BASE}sale/payments/${pay}/${selectedYear}`)
+            setMethodSales(response.data.data)
+            setTotalPrint(sumMonthlyAmounts(response.data.data))
+        }catch(error){
+            setMessage("Error al buscar las ventas")
+        }
+    }
+
 
 
     useEffect(() => {
 
-        const fetchMonthly = async () => {
-            //params: { month: selectedMonth + 1, year: selectedYear }
-            try {
-                const response =
-                    await axios.get(`${config.API_BASE}sale/month/${selectedMonth + 1}/year/${selectedYear}`)
-                setSales(response.data.data);
-                
-
-            } catch (error) {
-                setMessage("sin info")
-
-            }
-        }
-
-        const fetchMonthlyTotalsByName = async ()=>{
-            try {
-                const response =
-                    await axios.get(`${config.API_BASE}sale/year/${selectedYear}`)
-                    setMonthlyTotalsByName(response.data.data);
-                console.log(response.data.data)
-        
-            } catch (error) {
-                setMessage("sin info")
-        
-            }
-        }
-
-        const fetchAnnualClientSalesByDNI = async ()=>{ 
-            try{
-                const response =
-                await axios.get(`${config.API_BASE}sale/client/${inputDNI}/${selectedYear}`)
-                setClientSales(response.data.data)
-                console.log(response.data.data)
-            }catch(error){
-                setMessage("Error al buscar las ventas")
-            }
-        }
-
-        const sumMonthlyAmounts = (monthlyData) => {
-            return Object.values(monthlyData).reduce((total, amount) => total + amount, 0);
-        };
-
-        const fetchTotalPaymentsByTypeAndMonth = async () =>{
-            try{
-                const response =
-                await axios.get(`${config.API_BASE}sale/payments/${inputMethod}/${selectedYear}`)
-                setMethodSales(response.data.data)
-                setTotalPrint(sumMonthlyAmounts(response.data.data))
-            }catch(error){
-                setMessage("Error al buscar las ventas")
-            }
-        }
+       
 
         const generateWeeks = () => {
             const startOfMonth = new Date(selectedYear, selectedMonth, 1);
@@ -204,6 +230,7 @@ const Sales = () => {
         isAnnual&&fetchMonthlyTotalsByName();
         isByClient&&fetchAnnualClientSalesByDNI();
         isMethod&&fetchTotalPaymentsByTypeAndMonth();
+        isByItem&&fetchFindTotalProductAmountByCodeAndMonth();
 
         
 
@@ -278,11 +305,23 @@ const Sales = () => {
         }
     }
 
-    const handleMethodChange = (pay) => {
+    const handleMethodChange = async(pay) => {
         setInputMethod(pay);
+        await fetchTotalPaymentsByTypeAndYear(pay);
+
     }
 
-    const handleOnKeyClient = () => {
+    const handleOnKeyClient = async (e) => {
+        if (e.key === 'Enter' || e.key === 'Intro') {
+            await fetchAnnualClientSalesByDNI();
+
+        }
+    }
+
+    const handleOnKeyItem = async (e) =>{
+        if (e.key === 'Enter' || e.key === 'Intro') {
+            await fetchFindTotalProductAmountByCodeAndMonth();
+        }
 
     }
 
@@ -300,81 +339,7 @@ const Sales = () => {
     //             {numberSale:2364,saleDate:"02/05/2024",itemList:[{amount:100500}], payment:[{type:"Cash"}], client:{id:342,name:"Miriam", surname:"Padula"}}
     //         ]
 
-    const rows = [
-        {
-            saleNumber: '001',
-            saleDate: new Date('2024-06-10T14:20:00'),
-            client: { id: 'client1', name: 'Juan Perez' },
-            payment: [{ type: 'cash', amount: 150 }],
-            itemList: [
-                { price: 50, name: 'Producto A', origin: 'Local' },
-                { price: 100, name: 'Producto B', origin: 'Importado' }
-            ],
-            active: true,
-            paid: true,
-            description: 'Venta normal'
-        },
-        {
-            saleNumber: '002',
-            saleDate: new Date('2024-06-11T10:00:00'),
-            client: { id: 'client2', name: 'Maria Lopez' },
-            payment: [{ type: 'cash', amount: 200 }],
-            itemList: [{ price: 200, name: 'Producto C', origin: 'Local' }],
-            active: true,
-            paid: true,
-            description: 'Venta con descuento'
-        },
-        {
-            saleNumber: '003',
-            saleDate: new Date('2024-05-22T12:00:00'),
-            client: { id: 'client1', name: 'Juan Perez' },
-            payment: [{ type: 'cash', amount: 120 }],
-            itemList: [{ price: 120, name: 'Producto D', origin: 'Local' }],
-            active: true,
-            paid: true,
-            description: 'Venta anterior'
-        },
-        {
-            saleNumber: '004',
-            saleDate: new Date('2024-01-15T16:30:00'),
-            client: { id: 'client3', name: 'Carlos Ruiz' },
-            payment: [{ type: 'cash', amount: 300 }],
-            itemList: [{ price: 300, name: 'Producto E', origin: 'Importado' }],
-            active: true,
-            paid: true,
-            description: 'Venta de enero'
-        },
-        {
-            saleNumber: '005',
-            saleDate: new Date('2023-12-05T09:00:00'),
-            client: { id: 'client1', name: 'Juan Perez' },
-            payment: [{ type: 'cash', amount: 80 }],
-            itemList: [{ price: 80, name: 'Producto F', origin: 'Local' }],
-            active: true,
-            paid: true,
-            description: 'Venta del año pasado'
-        },
-        {
-            saleNumber: '006',
-            saleDate: new Date('2024-06-12T13:00:00'),
-            client: { id: 'client1', name: 'Juan Perez' },
-            payment: [{ type: 'cash', amount: 180 }],
-            itemList: [{ price: 180, name: 'Producto G', origin: 'Local' }],
-            active: true,
-            paid: true,
-            description: 'Venta reciente'
-        },
-        {
-            saleNumber: '007',
-            saleDate: new Date('2024-06-15T11:00:00'),
-            client: { id: 'client2', name: 'Maria Lopez' },
-            payment: [{ type: 'cash', amount: 90 }],
-            itemList: [{ price: 90, name: 'Producto H', origin: 'Importado' }],
-            active: false,
-            paid: false,
-            description: 'Venta cancelada'
-        }
-    ];
+    
 
 
     return (
@@ -497,19 +462,24 @@ const Sales = () => {
                                         <MiniTotal>{totalPrint}</MiniTotal>
                                     )
                                 }
+                                {
+                                    isByItem&&(
+                                        <MiniTotal>{totalPrint}</MiniTotal>
+                                    )
+                                }
                             </div>
                         </article>
                     </div>
                     <div className={Style.item3}>
                         
                         {
-                            (isByClient || isAnnual || isMonthly || isMethod) && (
+                            (isByClient || isAnnual || isMonthly || isMethod || isByItem) && (
                                 <>
-                                    <article className={Style.center}>
-                                        <div className={Style.vertical_article}>
-                                            <SalesCharts salesData={sales} clientSales={clientSales} method={methodSales} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></SalesCharts>
-                                        </div>
-                                    </article>
+                                    
+                                        
+                                            <SalesCharts salesData={sales} clientSales={clientSales} item={itemSales} method={methodSales} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></SalesCharts>
+                                        
+                                    
                                 </>
                                 
                             )
