@@ -100,9 +100,7 @@ const Sales = () => {
 
     }
 
-    const handleOnKeyItem = () => {
-
-    }
+    
 
 // const fetchMonthlyTotalsByName = async ()=>{
 //     try {
@@ -176,6 +174,17 @@ const Sales = () => {
         try{
             const response =
             await axios.get(`${config.API_BASE}sale/payments/${inputMethod}/${selectedYear}`)
+            setMethodSales(response.data.data)
+            setTotalPrint(sumMonthlyAmounts(response.data.data))
+        }catch(error){
+            setMessage("Error al buscar las ventas")
+        }
+    }
+
+    const fetchTotalPaymentsByTypeAndYear = async (pay) =>{
+        try{
+            const response =
+            await axios.get(`${config.API_BASE}sale/payments/${pay}/${selectedYear}`)
             setMethodSales(response.data.data)
             setTotalPrint(sumMonthlyAmounts(response.data.data))
         }catch(error){
@@ -296,11 +305,23 @@ const Sales = () => {
         }
     }
 
-    const handleMethodChange = (pay) => {
+    const handleMethodChange = async(pay) => {
         setInputMethod(pay);
+        await fetchTotalPaymentsByTypeAndYear(pay);
+
     }
 
-    const handleOnKeyClient = () => {
+    const handleOnKeyClient = async (e) => {
+        if (e.key === 'Enter' || e.key === 'Intro') {
+            await fetchAnnualClientSalesByDNI();
+
+        }
+    }
+
+    const handleOnKeyItem = async (e) =>{
+        if (e.key === 'Enter' || e.key === 'Intro') {
+            await fetchFindTotalProductAmountByCodeAndMonth();
+        }
 
     }
 

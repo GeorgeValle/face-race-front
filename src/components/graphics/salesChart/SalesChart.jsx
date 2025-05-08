@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -224,7 +224,7 @@ const SalesCharts = ({
                         <Bar data={yearlySalesData} options={options} />
                     ) : (
                         <p style={{ color: '#000' }}>
-                            Por favor, pase el objeto con los totales mensuales para visualizar el gráfico anual.
+                            Por favor, seleccione el año para visualizar el gráfico anual.
                         </p>
                     )}
                 </section>
@@ -248,7 +248,7 @@ const SalesCharts = ({
                         <Line data={clientSalesData} options={options} />
                     ) : (
                         <p style={{ color: '#000' }}>
-                            Por favor, pase un array con las ventas del cliente para visualizar su gráfico.
+                            Por favor, el DNI del cliente para visualizar su gráfico.
                         </p>
                     )}
                 </section>
@@ -260,7 +260,7 @@ const SalesCharts = ({
                         <Bar data={methodSalesData} options={options} />
                     ) : (
                         <p style={{ color: '#000' }}>
-                            Por favor, pase un objeto con totales por método para visualizar el gráfico.
+                            Por favor, seleccione un método con datos para visualizar el gráfico.
                         </p>
                     )}
                 </section>
@@ -272,7 +272,7 @@ const SalesCharts = ({
                         <Bar data={itemSalesData} options={options} />
                     ) : (
                         <p style={{ color: '#000' }}>
-                            Por favor, pase un objeto con totales por ítem para visualizar el gráfico.
+                            Por favor, ingrese un código de ítem para visualizar el gráfico.
                         </p>
                     )}
                 </section>
