@@ -1,4 +1,3 @@
-import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 
 // Estilos para el PDF
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'Helvetica',
         marginBottom: 3,
-        marginTop: 3,
+        marginTop: 5,
     },
     itemRow: {
         flexDirection: 'row',
@@ -98,8 +97,8 @@ const styles = StyleSheet.create({
         fontSize: 10,
     },
     paymentSection: {
-        marginTop: 6,
-        marginBottom: 1,
+        marginTop: 4,
+        marginBottom: 2,
         marginHorizontal: 10,
         borderBottom: '1px solid black',
         height: 20,
@@ -134,7 +133,7 @@ const BillPDF = ({ clientData, items, method }) => {
                     <View style={styles.clientInfo}>
                         <Text style={styles.headerText}>Nombre: {clientData.name}</Text>
                         <Text style={styles.headerText}>DNI: {clientData.dni}</Text>
-                        <Text style={styles.headerText}>Teléfono: {clientData.phone}</Text>
+                        <Text style={styles.headerText}>Teléfono: {clientData.cel}</Text>
                         <Text style={styles.headerText}>Email: {clientData.email}</Text>
                         <Text style={styles.headerText}>Fecha: {formattedDate}</Text>
                     </View>
