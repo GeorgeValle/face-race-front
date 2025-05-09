@@ -1,4 +1,4 @@
-import Style from './AppointmentModal.module.css'
+import Style from './SaleModal.module.css'
 // import MIniNavBar from '../../miniNavbar/MIniNavBar'
 import BtnClose from '../../btns/btnClose/BtnClose'
 import TextInputStyled from '../../inputs/inputTextStyled/TextInputStyled'
@@ -10,7 +10,7 @@ import TextViewShiftPDF from "../../textViews/textViewShiftPDF/TextViewShiftPDF"
 import {formatHourFromISO} from '../../../utils/datesUtils/formatHourFromIso'
 import {formatDateToSpanish} from '../../../utils/datesUtils/formatDateToSpanish'
 import {getConcatenatedTypes} from '../../../utils/paymentsUtils/getConcatenatedTypes'
-import TableSale from '../../tables/tableSale/TableSale'
+import {TableSale} from '../../tables/tableSale/TableSale'
 import MiniTotal from '../../totals/miniTotal/MiniTotal'
 
 
@@ -79,7 +79,7 @@ useEffect(() => {
                     <tbody>
                         <tr>
                             <th>Nombre:</th>
-                            <td>{`${TheSale.client.Name} ${TheSale.client.surname}`}</td>
+                            <td>{`${TheSale.client.name} ${TheSale.client.surname}`}</td>
                             <th>DNI:</th>
                             <td>{TheSale.client.dni}</td>
                         </tr>

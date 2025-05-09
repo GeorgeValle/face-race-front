@@ -12,8 +12,13 @@ import { faMagnifyingGlass, faPlus, faTruck/*, faPencil*/ } from "@fortawesome/f
 import Dialog from '../../components/modals/dialog/Dialog'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 import { TableSale } from '../../components/tables/tableSale/TableSale'
+import { createPortal } from 'react-dom'
 import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import SalesCharts from '../../components/graphics/salesChart/SalesChart'
+import { useDispatch, useSelector } from "react-redux";
+import { addItem,/* changeClient, deleteItem  */} from "../../redux/ItemSlice";
+import {addSale} from '../../redux/SaleSlice';
+import SaleModal from '../../components/modals/saleModal/SaleModal'
 import axios from 'axios'
 import config from '../../config/Envs'
 
@@ -46,8 +51,15 @@ const Sales = () => {
     const [clientSales, setClientSales] = useState([])
     const [methodSales, setMethodSales] = useState({})
     const [itemSales, setItemSales] = useState({})
+    const [modalOpenSale, setModalOpenSale] = useState(false)
 
 
+    
+    const item = useSelector((state)=> state.item);
+    const sale =useSelector((state)=> state.sale)
+    
+
+    const dispatch = useDispatch()
 
 
 
@@ -132,6 +144,39 @@ const Sales = () => {
         }
     }
 
+    const fetchSale = async(saleNumber) =>{
+        try{
+            const request = await axios.get((`${config.API_BASE}number/${saleNumber}`))
+            const response = request.data
+            dispatch(addSale(response.data))
+            
+        }catch(error){
+            setMessage("venta NO encontrado")
+            setModalOpenMessage(true)
+            setTimeout(() => {
+                setModalOpenMessage(false);
+                        }, 3500);
+        }
+    }
+
+    const fetchItem = async() => {
+        
+        try{
+            const request = await axios.get((`${config.API_BASE}item/code/${inputCode}`))
+            const response = request.data
+            dispatch(addItem(response.item))
+            setInputItemName(`${response.item.name} ${response.item.brand}`)
+        }catch(error){
+            setMessage("Artículo NO encontrado")
+            setModalOpenMessage(true)
+            setTimeout(() => {
+                setModalOpenMessage(false);
+                        }, 3500);
+        }
+        
+        
+    }
+
     const fetchMonthlyTotalsByName = async ()=>{
         try {
             const response =
@@ -150,7 +195,8 @@ const Sales = () => {
     try{   const response =
                 await axios.get(`${config.API_BASE}sale/item/${inputCode}/${selectedYear}`)
                 setItemSales(response.data.data);
-                console.log(response.data.data)
+                await fetchItem();
+                
                 setTotalPrint(sumMonthlyAmounts(response.data.data))
     }catch(error){
         setMessage("sin info")
@@ -196,7 +242,6 @@ const Sales = () => {
 
     useEffect(() => {
 
-       
 
         const generateWeeks = () => {
             const startOfMonth = new Date(selectedYear, selectedMonth, 1);
@@ -329,6 +374,12 @@ const Sales = () => {
         setTotalPrint(total)
     }
 
+    const handleFetchSale = (number) =>{
+        fetchSale(number)
+        setModalOpenSale(true)
+
+    }
+
     const payment = [{ label: "Efectivo", value: "cash" }, { label: "Credito", value: "credit" }, { label: "Debito", value: "debit" }, { label: "Cuenta Corriente", value: "currentAccount" }, { label: "Cheque", value: "check" }]
 
     const reportType = [{ label: "Selecciona una opción", value: "" }, { label: "Venta Mensual", value: "monthly" }, { label: "Venta Anual", value: "annual" }, { label: "Metodo de Pago", value: "method" }, { label: "Ventas por Clientes", value: "client" }, { label: "Ventas por Producto", value: "item" }]
@@ -349,6 +400,7 @@ const Sales = () => {
                 <MiniNavBar miniTitle={"Ventas"} btnBack={true} />
                 {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
                 {modalOpenDialog && (<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeleteSale} onClose={handleClose} />)}
+                {modalOpenSale && createPortal(<SaleModal TheSale={sale} onEditStatus={null} onEditDescription={null} onPrint={null} onDelete={null} onClose={handleClose}  />, document.body)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>
@@ -445,7 +497,7 @@ const Sales = () => {
                             <div className={Style.vertical_article}>
                                 { isMonthly && (
                                     <>
-                                        <TableSale rows={sales} totals={handleTotalPrint} />,
+                                        <TableSale rows={sales} totals={handleTotalPrint} isShow={true} onShow={handleFetchSale} />,
                                         <MiniTotal>{totalPrint}</MiniTotal>
                                     </>
                                 )}
