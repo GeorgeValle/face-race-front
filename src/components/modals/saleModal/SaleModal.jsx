@@ -22,8 +22,8 @@ import { useState, useEffect } from 'react'
 
 
 // eslint-disable-next-line react/prop-types
-const SaleModal = ({ TheSale= null, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
-
+const SaleModal = ({ TheSale= {}, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
+    console.log(TheSale)
     const [theStatus, setTheStatus] = useState("");
     const [theDescription, setTheDescription] = useState(TheSale.description);
     const [selectedOption, setSelectedOption] = useState(TheSale.paid);
