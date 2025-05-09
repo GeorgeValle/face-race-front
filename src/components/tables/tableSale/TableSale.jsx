@@ -1,16 +1,17 @@
 //import './TableQuotation.module.css';
 import Style from './TableSale.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPencil, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 //import EditQuantityItemModal from '../../modals/editQuantityItemModal/EditQuantityItemModal';
 import Dialog from '../../modals/dialog/Dialog';
 import {formatArgentineDate} from '../../../utils/datesUtils/formatArgentineDate'
+//import SaleModal from '../../modals/saleModal/SaleModal';
 
 
 // deleteRow, editRow
 
-export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySale=null, modalUpdateSale=null, isEdit=false}) => {
+export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySale=null, modalUpdateSale=null, isEdit=false, isShow=false, onShow=null}) => {
     const itemsPerPage = 6; // Número de items por página
     const [currentPage, setCurrentPage] = useState(0); // Página actual
     //const [isModalQuantity, setIsModalQuantity] = useState(false);
@@ -122,6 +123,7 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
     return (<div className={Style.table_wrapper}>
         {isDialog&&<Dialog onSubmit={handleDeleteRow} messageModal={"Seguro quiere eliminar este Árticulo"} messageConfirm={"Eliminar"} onClose={handleClose} ></Dialog>}
         {/*isModalQuantity&&<EditQuantityItemModal onSubmit={modalUpdateItem} initQuantity={defaultQuantity} code={defaultCode}  onClose={handleClose} ></EditQuantityItemModal> */}
+        
         <table className={`${Style.table} ${size?Style.sizeM:Style.sizeL}`}>
             <thead>
                 <tr>
@@ -148,6 +150,7 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
                                     <span className={Style.actions}>
                                         <FontAwesomeIcon icon={faTrash} className={Style.delete_btn} onClick={()=>handleModalDialogDeleteRow(row.code||0)} />
                                         {isEdit&&<FontAwesomeIcon icon={faPencil} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />}
+                                        {isShow&&<FontAwesomeIcon icon={faMagnifyingGlass} onClick={()=> onShow(row.code||0) } />}    
                                     </span>
                                 </td>
                                 <td >{formatArgentineDate(row.saleDate) || '-'}</td>

@@ -373,6 +373,10 @@ const Payment = () => {
 
     }
 
+    const handleOperationDebit = (e) =>{
+        setInputOperationDebit(e.target.value)
+    }
+
     const handleDebitPayment = () => {
 
         setPayment(prevState => [...prevState, { type: "debit", amount: parseInt(inputDebit), operation: inputOperationDebit }])
@@ -492,7 +496,7 @@ const Payment = () => {
                         </div>
                         <div className={Style.row4}>
                             <BtnCommon title={"Débito"} nameInput={"debit"} colorViolet={true} onClick={handleDebitPayment} ></BtnCommon>
-                            <TextInput typeInput={"number"} placeholderText={"Operación"}></TextInput>
+                            <TextInput typeInput={"number"} value={inputOperationDebit} placeholderText={"Operación"} onChange={(e)=>setInputOperationDebit(e.target.value)}></TextInput>
                             <TextInput typeInput={"number"} value={inputDebit} placeholderText={"Importe"} onChange={(e) => setInputDebit(e.target.value)}></TextInput>
                         </div>
                         <div className={Style.row5}>
