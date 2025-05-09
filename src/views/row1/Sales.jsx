@@ -146,7 +146,7 @@ const Sales = () => {
 
     const fetchSale = async(saleNumber) =>{
         try{
-            const request = await axios.get((`${config.API_BASE}number/${saleNumber}`))
+            const request = await axios.get((`${config.API_BASE}sale/number/${saleNumber}`))
             const response = request.data
             dispatch(addSale(response.data))
             
