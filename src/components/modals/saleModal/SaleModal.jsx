@@ -10,7 +10,8 @@ import TextViewShiftPDF from "../../textViews/textViewShiftPDF/TextViewShiftPDF"
 import {formatHourFromISO} from '../../../utils/datesUtils/formatHourFromIso'
 import {formatDateToSpanish} from '../../../utils/datesUtils/formatDateToSpanish'
 import {getConcatenatedTypes} from '../../../utils/paymentsUtils/getConcatenatedTypes'
-import {TableSale} from '../../tables/tableSale/TableSale'
+//import {TableSale} from '../../tables/tableSale/TableSale'
+import  {TableQuotation}  from '../../tables/tableQuotation/TableQuotation'
 import MiniTotal from '../../totals/miniTotal/MiniTotal'
 
 
@@ -22,8 +23,8 @@ import { useState, useEffect } from 'react'
 
 
 // eslint-disable-next-line react/prop-types
-const SaleModal = ({ TheSale= {}, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
-    console.log(TheSale)
+const SaleModal = ({ TheSale, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
+    
     const [theStatus, setTheStatus] = useState("");
     const [theDescription, setTheDescription] = useState(TheSale.description);
     const [selectedOption, setSelectedOption] = useState(TheSale.paid);
@@ -37,6 +38,7 @@ const SaleModal = ({ TheSale= {}, onPrint, onEditStatus=null, onEditDescription=
     }
     const handleBlur = () =>{
         if(!selectedOption==""){
+            console.log(selectedOption)
         onEditStatus(selectedOption)
         //setTheStatus(selectedOption)
         }
@@ -46,18 +48,35 @@ const SaleModal = ({ TheSale= {}, onPrint, onEditStatus=null, onEditDescription=
         setTotalPrint(total)
     }
 
-    
+    const handleStatus = (e)=> {
+        if(!e.target.value==""){
+            console.log(e.targe.value)
+        setSelectedOption(e.targe.value)
+        switch(e.targe.value){
+                case true:
+                    setTheStatus('Pagado');
+                    break;
+                case false:
+                    setTheStatus('NO Pagado')
+                    break;
+                default:
+                    setTheStatus('');
+            }
+        }
+    }
 
 useEffect(() => {
-        switch(selectedOption){
-            case true:
-                setTheStatus('Pagado');
-                break;
-            case false:
-                setTheStatus('NO Pagado')
-                break;
-            default:
-                setTheStatus('');
+        if(!selectedOption==""){
+            switch(selectedOption){
+                case true:
+                    setTheStatus('Pagado');
+                    break;
+                case false:
+                    setTheStatus('NO Pagado')
+                    break;
+                default:
+                    setTheStatus('');
+            }
         }
     }, [selectedOption]);
     
@@ -73,7 +92,7 @@ useEffect(() => {
                 <table className={`${Style.table} ${Style.content}`}>
                     <thead >
                         <tr>
-                            <th colSpan="4" >DATOS DEL TURNO</th>
+                            <th colSpan="4" >{`DATOS DE LA VENTA Nº ${TheSale.saleNumber} `}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,14 +111,14 @@ useEffect(() => {
                         <th>Estado:</th>
                         <td>{theStatus}</td>
                         <th>Tipo Pago:</th>
-                        <td>{getConcatenatedTypes(TheSale.payments)}</td>    
+                        <td>{getConcatenatedTypes(TheSale)}</td>    
                             
                         </tr>
                         <tr>
                             <th>Fecha:</th>
                             <td>{formatDateToSpanish(TheSale.saleDate)}</td>
                             <th>Hora:</th>
-                            <td>{formatHourFromISO(TheSale.SaleDate)}</td>
+                            <td>{formatHourFromISO(TheSale.saleDate)}</td>
                         </tr>
                         <tr>
                             <th>Observación:</th>
@@ -109,7 +128,6 @@ useEffect(() => {
                     </tbody>
                 </table>
                 <div className={Style.row_title}>
-                
                     <MiniBtn onClick={onDelete} isRed={true}><FontAwesomeIcon icon={faTrash} /></MiniBtn>
                     <div>
                     <PDFDownloadLink
@@ -120,7 +138,7 @@ useEffect(() => {
                     </PDFDownloadLink>
                     </div>
                     <div className={Style.selectContainer}>
-                        <select className={Style.styledSelect} value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)} onBlur={handleBlur}>
+                        <select className={Style.styledSelect} value={selectedOption} onChange={handleStatus} onBlur={handleBlur}>
                             <option value="">Seleccione un Estado</option>
                             <option value={true} >Pagado</option>
                             <option value={false}>No Pagado</option>
@@ -128,13 +146,11 @@ useEffect(() => {
                     </div>
                     <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setTheDescription(e.target.value)} value={theDescription} />
                     <MiniBtn onClick={handleDescription} isWhite={true}><FontAwesomeIcon icon={faFloppyDisk} /></MiniBtn>
+                    <MiniTotal >{totalPrint}</MiniTotal>
                 </div>
             </div>
-            <div className={Style.item}>
-                <TableSale rows={TheSale} totals={handleTotalPrint}></TableSale>
-            </div>
-            <div className={Style.item}>
-                <MiniTotal >{totalPrint}</MiniTotal>
+            <div className={Style.item2}>
+                <TableQuotation rows={TheSale.itemList} totals={handleTotalPrint} perPage={3}></TableQuotation>
             </div>
         </div>
     </div>
