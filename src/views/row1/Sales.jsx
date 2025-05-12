@@ -76,6 +76,7 @@ const Sales = () => {
         // setModalOpenEditItem(false);
         setModalOpenMessage(false);
         setModalOpenDialog(false);
+        setModalOpenSale(false)
     }
 
     const handleDeleteSale = () => {
@@ -374,8 +375,8 @@ const Sales = () => {
         setTotalPrint(total)
     }
 
-    const handleFetchSale = (number) =>{
-        fetchSale(number)
+    const handleFetchSale = async(number) =>{
+        await fetchSale(number)
         setModalOpenSale(true)
 
     }

@@ -143,14 +143,14 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
 
                         //let name = `${row.client.name}`
                         
-                        console.log(row)
+                        //console.log(row)
                         return (
                             <tr key={idx}>
                                 <td>
                                     <span className={Style.actions}>
                                         <FontAwesomeIcon icon={faTrash} className={Style.delete_btn} onClick={()=>handleModalDialogDeleteRow(row.code||0)} />
                                         {isEdit&&<FontAwesomeIcon icon={faPencil} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />}
-                                        {isShow&&<FontAwesomeIcon icon={faMagnifyingGlass} onClick={()=> onShow(row.code||0) } />}    
+                                        {isShow&&<FontAwesomeIcon icon={faMagnifyingGlass} onClick={()=> onShow(row.saleNumber||0) } />}    
                                     </span>
                                 </td>
                                 <td >{formatArgentineDate(row.saleDate) || '-'}</td>

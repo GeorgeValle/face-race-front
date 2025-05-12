@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     _id:null,
+    saleNumber:null,
     payment:null,
     itemList:null,
     description:null,
@@ -16,8 +17,9 @@ export const saleSlice = createSlice({
     initialState,
     reducers:{
         addSale: (state, action)=>{
-            const {_id, payment, itemList, description, saleDate, saleTime, paid, client} = action.payload;
+            const {_id, saleNumber, payment, itemList, description, saleDate, saleTime, paid, client} = action.payload;
             state._id = _id;
+            state.saleNumber = saleNumber,
             state.payment = payment;
             state.itemList = itemList;
             state.description = description;
@@ -30,7 +32,8 @@ export const saleSlice = createSlice({
             state = initialState;
         },
         changeSale:(state, action)=>{
-            const {payment, itemList, description, saleDate, SaleTime, paid, client}= action.payload;
+            const {saleNumber, payment, itemList, description, saleDate, SaleTime, paid, client}= action.payload;
+            state.saleNumber = saleNumber;
             state.payment = payment;
             state.itemList = itemList;
             state.description = description;
