@@ -50,8 +50,8 @@ const SaleModal = ({ TheSale, onPrint, onEditStatus=null, onEditDescription=null
 
     const handleStatus = (e)=> {
         if(!e.target.value==""){
-            console.log(e.targe.value)
-        setSelectedOption(e.targe.value)
+            console.log(e.target.value)
+        setSelectedOption(e.target.value)
         switch(e.targe.value){
                 case true:
                     setTheStatus('Pagado');
@@ -59,14 +59,12 @@ const SaleModal = ({ TheSale, onPrint, onEditStatus=null, onEditDescription=null
                 case false:
                     setTheStatus('NO Pagado')
                     break;
-                default:
-                    setTheStatus('');
             }
         }
     }
 
 useEffect(() => {
-        if(!selectedOption==""){
+        
             switch(selectedOption){
                 case true:
                     setTheStatus('Pagado');
@@ -74,10 +72,8 @@ useEffect(() => {
                 case false:
                     setTheStatus('NO Pagado')
                     break;
-                default:
-                    setTheStatus('');
             }
-        }
+        
     }, [selectedOption]);
     
 // formatStatusToSpanish(TheShift.status);
