@@ -8,8 +8,8 @@ import Dialog from '../../modals/dialog/Dialog';
 
 // deleteRow, editRow
 
-export const TableQuotation = ({ rows , size=false, totals=null, modalRemoveItem=null, modalUpdateItem=null, isEdit=true}) => {
-    const itemsPerPage = 6; // Número de items por página
+export const TableQuotation = ({ rows , size=false, perPage=6 , totals=null, modalRemoveItem=null, modalUpdateItem=null, isEdit=true}) => {
+    const itemsPerPage = perPage; // Número de items por página
     const [currentPage, setCurrentPage] = useState(0); // Página actual
     const [isModalQuantity, setIsModalQuantity] = useState(false);
     const [isDialog, setIsDialog] = useState(false);

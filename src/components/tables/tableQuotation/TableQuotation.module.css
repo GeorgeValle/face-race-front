@@ -104,6 +104,8 @@
 }
 
 .pagination{
+	display:flex;
+	justify-content: center;
 	margin: 0 90px;
 	padding: 20px;
 	box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.25);
