@@ -34,7 +34,7 @@ const SaleModal = ({ TheSale, onPrint, onEditStatus=null, onEditDescription=null
     
 
     const handleDescription = () =>{
-        onEditDescription(theDescription)
+        onEditDescription(TheSale.saleNumber,theDescription)
     }
     const handleBlur = () =>{
         if(!selectedOption==""){
