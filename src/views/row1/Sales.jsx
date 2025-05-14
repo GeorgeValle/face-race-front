@@ -32,12 +32,14 @@ const Sales = () => {
     const [modalOpenDialog, setModalOpenDialog] = useState(false);
     const [inputNumber, setInputNumber] = useState(Number);
     const [inputName, setInputName] = useState("");
+    const [inputSaleNumber, setInputSaleNumber] = useState(Number)
     const [inputReportType, setInputReportType] = useState("");
     const [isMonthly, setIsMonthly] = useState(false);
     const [isAnnual, setIsAnnual] = useState(false);
     const [isMethod, setIsMethod] = useState(false);
     const [isByClient, setIsByClient] = useState(false);
     const [isByItem, setIsByItem] = useState(false);
+    const [isSale, setIsSale] = useState(false)
     const [weeks, setWeeks] = useState([])
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -111,6 +113,10 @@ const Sales = () => {
     const handleInputCode = (e) => {
         setInputCode(e.target.value)
 
+    }
+
+    const handleInputSaleNumber = (e) =>{
+        setInputSaleNumber(e.target.value)
     }
 
     
@@ -243,7 +249,7 @@ const Sales = () => {
         try{
             
             await axios.put((`${config.API_BASE}sale/paid/${saleNumber}`),{paid:oneStatus})
-            console.log("completo")
+            
             
             
         }catch(error){
@@ -378,22 +384,24 @@ const Sales = () => {
             //         break;
             // }
             const reportTypes = {
-                monthly: { isMonthly: true, isAnnual: false, isMethod: false, isByClient: false, isByItem: false },
-                annual: { isMonthly: false, isAnnual: true, isMethod: false, isByClient: false, isByItem: false },
-                method: { isMonthly: false, isAnnual: false, isMethod: true, isByClient: false, isByItem: false },
-                client: { isMonthly: false, isAnnual: false, isMethod: false, isByClient: true, isByItem: false },
-                item: { isMonthly: false, isAnnual: false, isMethod: false, isByClient: false, isByItem: true },
+                monthly: { isMonthly: true, isAnnual: false, isMethod: false, isByClient: false, isByItem: false, isSale: false },
+                annual: { isMonthly: false, isAnnual: true, isMethod: false, isByClient: false, isByItem: false, isSale: false },
+                method: { isMonthly: false, isAnnual: false, isMethod: true, isByClient: false, isByItem: false, isSale: false },
+                client: { isMonthly: false, isAnnual: false, isMethod: false, isByClient: true, isByItem: false, isSale: false },
+                item: { isMonthly: false, isAnnual: false, isMethod: false, isByClient: false, isByItem: true, isSale: false },
+                sale:{isMonthly: false, isAnnual: false, isMethod: false, isByClient: false, isByItem: false, isSale: true }
             };
 
 
 
-            const reportType = reportTypes[type] || { isMonthly: false, isAnnual: false, isMethod: false, isByClient: false, isByItem: false };
+            const reportType = reportTypes[type] || { isMonthly: false, isAnnual: false, isMethod: false, isByClient: false, isByItem: false, isSale: false };
 
             setIsMonthly(reportType.isMonthly);
             setIsAnnual(reportType.isAnnual);
             setIsMethod(reportType.isMethod);
             setIsByClient(reportType.isByClient);
             setIsByItem(reportType.isByItem);
+            setIsSale(reportType.isSale);
         }
     }
 
@@ -417,6 +425,21 @@ const Sales = () => {
 
     }
 
+    const handleOnKeySaleNumber = async (e) =>{
+        if (e.key === 'Enter' || e.key === 'Intro'){
+            try{
+            await fetchSale(inputSaleNumber);
+            setModalOpenSale(true)
+            }catch{
+                setMessage("venta NO encontrada")
+            setModalOpenMessage(true)
+            setTimeout(() => {
+                setModalOpenMessage(false);
+                        }, 3500);
+            }
+        }
+    }
+
     const handleTotalPrint = (total) => {
         setTotalPrint(total)
     }
@@ -429,7 +452,7 @@ const Sales = () => {
 
     const payment = [{ label: "Efectivo", value: "cash" }, { label: "Credito", value: "credit" }, { label: "Debito", value: "debit" }, { label: "Cuenta Corriente", value: "currentAccount" }, { label: "Cheque", value: "check" }]
 
-    const reportType = [{ label: "Selecciona una opción", value: "" }, { label: "Venta Mensual", value: "monthly" }, { label: "Venta Anual", value: "annual" }, { label: "Metodo de Pago", value: "method" }, { label: "Ventas por Clientes", value: "client" }, { label: "Ventas por Producto", value: "item" }]
+    const reportType = [{ label: "Selecciona una opción", value: "" }, { label: "Venta Mensual", value: "monthly" }, { label: "Venta Anual", value: "annual" }, { label: "Metodo de Pago", value: "method" }, { label: "Ventas por Clientes", value: "client" }, { label: "Ventas por Producto", value: "item" },{label:"Número de venta",value:"sale"}]
 
     // const rows =[{numberSale:2343,saleDate:"01/05/2024",itemList:[{amount:200200}], payment:[{type:"Cash"}], client:{id:345,name:"Victor", surname:"Azimov"}},
     //             {numberSale:2236,saleDate:"01/05/2024",itemList:[{amount:300200}], payment:[{type:"Cash"}], client:{id:123,name:"Ramiro", surname:"Peña"}},
@@ -530,6 +553,15 @@ const Sales = () => {
                                                         ))}
                                                     </InputSelectDateStyled>
                                                 </article>
+                                            )
+                                        }
+                                        {
+                                            isSale&&(
+                                                <>
+                                                <article className={Style.separate}>
+                                                    <TextInputStyled typeInput="number" nameLabel={"numberSale"} titleLabel={"Número de Venta"} placeholderText={"Ej: 21923"} value={inputSaleNumber} onChange={handleInputSaleNumber} onKey={handleOnKeySaleNumber} />
+                                                </article>
+                                                </>
                                             )
                                         }
 
