@@ -25,21 +25,21 @@ import { useState, useEffect } from 'react'
 // eslint-disable-next-line react/prop-types
 const SaleModal = ({ TheSale, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
     
-    const [theStatus, setTheStatus] = useState("");
+    //const [theStatus, setTheStatus] = useState("");
     const [theDescription, setTheDescription] = useState(TheSale.description);
-    const [selectedOption, setSelectedOption] = useState(TheSale.paid);
+    const [selectedOption, setSelectedOption] = useState(Boolean(TheSale.paid));
     const [totalPrint, setTotalPrint] = useState("")
     
 
     
 
     const handleDescription = () =>{
-        onEditDescription(theDescription)
+        onEditDescription(TheSale.saleNumber,theDescription)
     }
     const handleBlur = () =>{
         if(!selectedOption==""){
             console.log(selectedOption)
-        onEditStatus(selectedOption)
+        onEditStatus(TheSale.saleNumber,selectedOption)
         //setTheStatus(selectedOption)
         }
     }
@@ -48,31 +48,21 @@ const SaleModal = ({ TheSale, onPrint, onEditStatus=null, onEditDescription=null
         setTotalPrint(total)
     }
 
-    const handleStatus = (e)=> {
-        if(!e.target.value==""){
-            console.log(e.target.value)
-        setSelectedOption(e.target.value)
-        switch(e.targe.value){
-                case true:
-                    setTheStatus('Pagado');
-                    break;
-                case false:
-                    setTheStatus('NO Pagado')
-                    break;
-            }
-        }
+    const SelectStatus = ()=>{
+        if(selectedOption===true){   
+                return 'Pagado';
+        }else{
+            return 'NO Pagado';
+        }           
     }
 
 useEffect(() => {
         
-            switch(selectedOption){
-                case true:
-                    setTheStatus('Pagado');
-                    break;
-                case false:
-                    setTheStatus('NO Pagado')
-                    break;
-            }
+        SelectStatus();
+
+        
+
+
         
     }, [selectedOption]);
     
@@ -105,7 +95,7 @@ useEffect(() => {
                         </tr>
                         <tr>
                         <th>Estado:</th>
-                        <td>{theStatus}</td>
+                        <td>{SelectStatus()}</td>
                         <th>Tipo Pago:</th>
                         <td>{getConcatenatedTypes(TheSale)}</td>    
                             
@@ -134,7 +124,7 @@ useEffect(() => {
                     </PDFDownloadLink>
                     </div>
                     <div className={Style.selectContainer}>
-                        <select className={Style.styledSelect} value={selectedOption} onChange={handleStatus} onBlur={handleBlur}>
+                        <select className={Style.styledSelect} value={selectedOption} onChange={(e)=>setSelectedOption(e.target.value)} onBlur={handleBlur}>
                             <option value="">Seleccione un Estado</option>
                             <option value={true} >Pagado</option>
                             <option value={false}>No Pagado</option>
