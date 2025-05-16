@@ -156,9 +156,11 @@ const Sales = () => {
             const request = await axios.get((`${config.API_BASE}sale/number/${saleNumber}`))
             const response = request.data
             dispatch(addSale(response.data))
-            
+            if (response.data){
+            setModalOpenSale(true)
+            }
         }catch(error){
-            setMessage("venta NO encontrado")
+            setMessage("Venta NO encontrada")
             setModalOpenMessage(true)
             setTimeout(() => {
                 setModalOpenMessage(false);
@@ -305,20 +307,7 @@ const Sales = () => {
                 }
             }
 
-            const fetchSale = async(saleNumber) =>{
-        try{
-            const request = await axios.get((`${config.API_BASE}sale/number/${saleNumber}`))
-            const response = request.data
-            dispatch(addSale(response.data))
-            
-        }catch(error){
-            setMessage("venta NO encontrado")
-            setModalOpenMessage(true)
-            setTimeout(() => {
-                setModalOpenMessage(false);
-                        }, 3500);
-        }
-    }
+        
 
             setWeeks(weeksData);
         };
@@ -429,9 +418,9 @@ const Sales = () => {
         if (e.key === 'Enter' || e.key === 'Intro'){
             try{
             await fetchSale(inputSaleNumber);
-            setModalOpenSale(true)
+            
             }catch{
-                setMessage("venta NO encontrada")
+                setMessage("Venta NO encontrada")
             setModalOpenMessage(true)
             setTimeout(() => {
                 setModalOpenMessage(false);
@@ -446,8 +435,6 @@ const Sales = () => {
 
     const handleFetchSale = async(number) =>{
         await fetchSale(number)
-        setModalOpenSale(true)
-
     }
 
     const payment = [{ label: "Efectivo", value: "cash" }, { label: "Credito", value: "credit" }, { label: "Debito", value: "debit" }, { label: "Cuenta Corriente", value: "currentAccount" }, { label: "Cheque", value: "check" }]
