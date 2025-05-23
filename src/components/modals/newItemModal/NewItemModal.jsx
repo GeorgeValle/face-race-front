@@ -25,11 +25,11 @@ const [description, setDescription] = useState("");
 
 const allCategory = [{label:'Seleccione una categoría',value:""},{label:'Indumentaria',value:'Indumentaria'}, {label:'Protección Personal', value:'Protección Personal'}, {label:'Equipaje',value:'Equipaje'}, {label:'Lingas y Trabas',value:'Lingas y Trabas'}, {label:'Luces',value:'Luces'}, {label:'Cobertores',value:'Cobertores'},{label:'Redes y sujetadores',value:'Redes y sujetadores'},{label:'Parlantes',value:'Parlantes'},{label:'Parabrisas', value:'Parabrisas'},{label:'Herramientas',value:'Herramientas'},{label:'Emblemas',value:'Emblemas'},{label:'Tableros y Velocimetros',value:'Tableros y Velocimetros'},{label:'Pisadores',Value:'Pisadores'},{label:'Escapes',value:'Escapes'},{label:'Frenos',value:'Frenos'},{label:'Repuestos',value:'Repuestos'},{label:'Servicios', value:'Servicios'},{label:'Mantenimiento',value:'Mantenimiento'},{label:'Otros',value:'Otros'}]
 
-const onSubmitCreate = async ( message) =>{
+const onSubmitCreate = async () =>{
     try {
         //setLoading(true);
         //setError("")
-        /*const request = */await axios.post(`${config.API_BASE}item/register`, {
+        const request = await axios.post(`${config.API_BASE}item/register`, {
             code:code,
             name:name,
             stockQuantity:stockQuantity,
@@ -43,7 +43,8 @@ const onSubmitCreate = async ( message) =>{
             })
             //const response =  request.data;
             //setLoading(false);
-            onSubmit(message);
+
+            onSubmit(request.data.message);
 } catch (err) {
     //setError(err);
     onSubmit(`Error al crear Item`);
@@ -62,7 +63,7 @@ const handleCategory = ( category) =>{
     <div className={Style.modal_container}  onClick={(e)=>{
         if(e.target.className === Style.modal_container){onClose()}}
     }>  
-        <form className={Style.modal} onSubmit={() => onSubmitCreate("Datos de Artículo Guardados")}>
+        <div className={Style.modal} >
             <div className={Style.modal_header}>
                 <MIniNavBar miniTitle={"Nuevo Artículo"} btnClose={true} close={onClose} />
             </div>
@@ -101,10 +102,10 @@ const handleCategory = ( category) =>{
                 
             </div>
             <div className={Style.modal_buttons}>
-                <button type="submit" className={`${Style.btn} ${Style.btn_submit}`} >Guardar </button>
+                <button type="submit" className={`${Style.btn} ${Style.btn_submit}`} onClick={ () => onSubmitCreate()} >Guardar </button>
                 <button className={`${Style.btn} ${Style.btn_cancel}`} onClick={() => onCancel()}>Cancelar </button>
             </div>
-        </form>
+        </div>
     </div>
 );
 };
