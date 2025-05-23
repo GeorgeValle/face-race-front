@@ -85,7 +85,7 @@ const onSubmitCreate = async () =>{
     <div className={Style.modal_container}  onClick={(e)=>{
         if(e.target.className === Style.modal_container){onClose()}}
     }>  
-        <form className={Style.modal} /*onSubmit={() => onSubmitCreate("Datos de Cliente Guardados")} */ >
+        <div className={Style.modal} /*onSubmit={() => onSubmitCreate("Datos de Cliente Guardados")} */ >
             <div className={Style.modal_header}>
                 <MIniNavBar miniTitle={"Nuevo Cliente"} btnClose={true} close={onClose} />
             </div>
@@ -130,7 +130,7 @@ const onSubmitCreate = async () =>{
                 <button /*type="submit" */ className={`${Style.btn} ${Style.btn_submit}`} onClick={() => onSubmitCreate()} >Guardar </button>
                 <button className={`${Style.btn} ${Style.btn_cancel}`} onClick={() => onCancel()}>Cancelar </button>
             </div>
-        </form>
+        </div>
     </div>
 );
 };
