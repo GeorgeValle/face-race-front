@@ -36,8 +36,8 @@
     justify-content: center;
     align-items: center;
     width: 994px;
-    max-height: 823px;
-    min-height: 600px;
+    max-height: 900px;
+    min-height: 800px;
     border-radius: 15px;
     stroke: #000;
     stroke-width: 0.5px;
@@ -84,6 +84,8 @@
 
     "item9 item10" .5fr
     "item11 item11" .5fr
+    "item12 item12" .5fr
+    "item13 item13" .5fr
 
     / .5fr .5fr ;
 
@@ -112,6 +114,19 @@
 .item10 { grid-area: item10; }
 
 .item11 { grid-area: item11; }
+
+.item12 {
+    margin-top: 5px;
+    grid-area: item12;
+    color:red;
+    background-color: yellow;
+}
+.item13 {
+    margin-top: 5px;
+    grid-area: item13;
+    color: white;
+    background-color: #D551E6;
+}
 
 
 .btn {
