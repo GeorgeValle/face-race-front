@@ -5,6 +5,7 @@ import BtnCommon from '../../components/btns/btnCommon/BtnCommon';
 import TextInput from '../../components/inputs/textInput/TextInput';
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled';
 import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
+import MiniTotalUnformatted from '../../components/totals/miniTotal/MiniTotalUnformatted';
 import MiniDescription from '../../components/totals/miniDescription/MiniDescription';
 import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge';
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
@@ -367,7 +368,8 @@ const Payment = () => {
 
     const handleCashPayment = () => {
 
-        setPayment(prevState => [...prevState, { type: "cash", amount: parseInt(inputCash) }])
+        setPayment(prevState => [...prevState, { type: "cash", amount: Number(inputCash) }])
+        
         setPaid(true)
         setIsPayment(true)
 
@@ -379,7 +381,7 @@ const Payment = () => {
 
     const handleDebitPayment = () => {
 
-        setPayment(prevState => [...prevState, { type: "debit", amount: parseInt(inputDebit), operation: inputOperationDebit }])
+        setPayment(prevState => [...prevState, { type: "debit", amount: Number(inputDebit), operation: inputOperationDebit }])
         setPaid(true)
         setIsPayment(true)
 
@@ -388,21 +390,21 @@ const Payment = () => {
 
     const handleCreditPayment = () => {
 
-        setPayment(prevState => [...prevState, { type: "credit", amount: parseInt(inputCredit), operation: inputOperationCredit, installments: installments }])
+        setPayment(prevState => [...prevState, { type: "credit", amount: Number(inputCredit), operation: inputOperationCredit, installments: installments }])
         setPaid(true)
         setIsPayment(true)
     }
 
     const handleCurrentAccountPayment = () => {
 
-        setPayment(prevState => [...prevState, { type: "current account", amount: parseInt(inputCurrentAccount) }])
+        setPayment(prevState => [...prevState, { type: "current account", amount: Number(inputCurrentAccount) }])
         setPaid(false)
         setIsPayment(true)
     }
 
     const handleCheckPayment = () => {
 
-        setPayment(prevState => [...prevState, { type: "check", amount: parseInt(inputCheck), numberCheck: parseInt(inputNumberCheck), payDay: handleSavePayDate() }])
+        setPayment(prevState => [...prevState, { type: "check", amount: Number(inputCheck), numberCheck: parseInt(inputNumberCheck), payDay: handleSavePayDate() }])
         setPaid(false)
         setIsPayment(true)
     }
@@ -424,7 +426,7 @@ const Payment = () => {
 
     const calculateTotalAmountItems = () => {
         const total = items.reduce((acc, item) => acc + item.amount, 0);
-        setTotalAmountItems(total);
+        setTotalAmountItems(Number(total));
     };
 
     //const totalAmount = () =>{
@@ -438,26 +440,34 @@ const Payment = () => {
     const calculateTotalAmountReceived = () => {
         const total = payment.reduce((acumulador, pago) => parseFloat(acumulador) + parseFloat(pago.amount), 0);
 
-        setTotalAmountReceived(total)
+        setTotalAmountReceived(Number(total))
     };
 
     const calculateChange = () => {
 
-        if (parseFloat(totalAmountItems) < parseFloat(totalAmountReceived)) {
-            setChange(parseFloat(totalAmountReceived) - parseFloat(totalAmountItems))
+        // if (totalAmountItems < totalAmountReceived) {
+        //     setChange(totalAmountReceived - totalAmountItems)
+        // }
+
+        if(totalAmountItems < totalAmountReceived)
+        {
+            return totalAmountReceived - totalAmountItems
+        }else{
+            return 0
         }
     }
 
     const finalTotal = formatNumberWithDots(totalAmountItems)
     const received = formatNumberWithDots(totalAmountReceived)
 
-    const finalChange = formatNumberWithDots(change)
+    
+    const finalChange = formatNumberWithDots(calculateChange())
 
     useEffect(() => {
 
         calculateTotalAmountReceived();
         calculateTotalAmountItems();
-        calculateChange();
+        //calculateChange();
     }, [payment, change]);
 
     const quantityCredit = [{ label: "1", value: 1 }, { label: "3", value: 3 }, { label: "6", value: 6 }, { label: "9", value: 9 }, { label: "12", value: 12 }]
@@ -564,7 +574,7 @@ const Payment = () => {
                     </div>
                     <div className={Style.column2}>
 
-                        <MiniTotal > {finalTotal} </MiniTotal>
+                        <MiniTotalUnformatted > {finalTotal} </MiniTotalUnformatted>
                         <MiniDescription description={"Recibido"} isGreen={true} > {received} </MiniDescription>
                         <MiniDescription description={"Vuelto"} isGreen={false} isWhite={true}> {finalChange} </MiniDescription>
                         <div className={Style.BtnLarge}>
