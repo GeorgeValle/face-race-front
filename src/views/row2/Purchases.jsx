@@ -14,11 +14,11 @@ import MessageModal from '../../components/modals/messageModal/MessageModal'
 import { TableSale } from '../../components/tables/tableSale/TableSale'
 import { createPortal } from 'react-dom'
 import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
-import SalesCharts from '../../components/graphics/salesChart/SalesChart'
+import PurchasesCharts from '../../components/graphics/purchasesChart/PurchasesChart'
 import { useDispatch, useSelector } from "react-redux";
 import { addItem,/* changeClient, deleteItem  */} from "../../redux/ItemSlice";
-import {addSale} from '../../redux/SaleSlice';
-import SaleModal from '../../components/modals/saleModal/SaleModal'
+import {addPurchase} from '../../redux/PurchaseSlice';
+import PurchaseModal from '../../components/modals/purchaseModal/PurchaseModal'
 import axios from 'axios'
 import config from '../../config/Envs'
 
@@ -160,7 +160,7 @@ const Purchases = () => {
             setModalOpenPurchase(true)
             }
         }catch(error){
-            setMessage("Venta NO encontrada")
+            setMessage("Compra NO encontrada")
             setModalOpenMessage(true)
             setTimeout(() => {
                 setModalOpenMessage(false);
@@ -215,7 +215,7 @@ const Purchases = () => {
     const fetchAnnualSupplierPurchasesByCUIT = async ()=>{ 
         try{
             const response =
-            await axios.get(`${config.API_BASE}purchase/supplier/${inputDNI}/${selectedYear}`)
+            await axios.get(`${config.API_BASE}purchase/supplier/${inputCUIT}/${selectedYear}`)
             setSupplierPurchases(response.data.data)
             console.log(response.data.data)
         }catch(error){
@@ -247,7 +247,7 @@ const Purchases = () => {
         }
     }
 
-    const fetchEditPaidStatusSale = async(purchaseNumber,oneStatus) =>{
+    const fetchEditPaidStatusPurchase = async(purchaseNumber,oneStatus) =>{
         try{
             
             await axios.put((`${config.API_BASE}purchase/paid/${purchaseNumber}`),{paid:oneStatus})
@@ -255,7 +255,7 @@ const Purchases = () => {
             
             
         }catch(error){
-            setMessage("venta NO actualizada")
+            setMessage("Compra NO actualizada")
             setModalOpenMessage(true)
             setTimeout(() => {
                 setModalOpenMessage(false);
@@ -263,14 +263,14 @@ const Purchases = () => {
         }
     }
 
-    const fetchEditDescription = async (saleNumber,oneDescription) =>{
+    const fetchEditDescription = async (purchaseNumber,oneDescription) =>{
         try{
             
-            await axios.put((`${config.API_BASE}sale/description/${saleNumber}`),{description:oneDescription});
+            await axios.put((`${config.API_BASE}purchase/description/${purchaseNumber}`),{description:oneDescription});
             
             
         }catch(error){
-            setMessage("venta NO actualizada")
+            setMessage("Compra NO actualizada")
             setModalOpenMessage(true)
             setTimeout(() => {
                 setModalOpenMessage(false);
@@ -315,7 +315,7 @@ const Purchases = () => {
         
         isMonthly&&fetchMonthly();
         isAnnual&&fetchMonthlyTotalsByName();
-        isBySuppliert&&fetchAnnualSupplierPurchasesByCUIT();
+        isBySupplier&&fetchAnnualSupplierPurchasesByCUIT();
         isMethod&&fetchTotalPaymentsByTypeAndMonth();
         isByItem&&fetchFindTotalProductAmountByCodeAndMonth();
 
@@ -388,9 +388,9 @@ const Purchases = () => {
             setIsMonthly(reportType.isMonthly);
             setIsAnnual(reportType.isAnnual);
             setIsMethod(reportType.isMethod);
-            setIsByClient(reportType.isByClient);
+            setIsBySupplier(reportType.isBySupplier);
             setIsByItem(reportType.isByItem);
-            setIsSale(reportType.isSale);
+            setIsPurchase(reportType.isPurchase);
         }
     }
 
@@ -402,7 +402,7 @@ const Purchases = () => {
 
     const handleOnKeySupplier = async (e) => {
         if (e.key === 'Enter' || e.key === 'Intro') {
-            await fetchAnnualSupplierPurchasesByCUIT
+            await fetchAnnualSupplierPurchasesByCUIT();
 
         }
     }
@@ -456,7 +456,7 @@ const Purchases = () => {
             <Container>
                 <MiniNavBar miniTitle={"Ventas"} btnBack={true} />
                 {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
-                {modalOpenDialog && (<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeleteSale} onClose={handleClose} />)}
+                {modalOpenDialog && (<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeletePurchase} onClose={handleClose} />)}
                 {modalOpenPurchase&& createPortal(<PurchaseModal ThePurchase={purchase} onEditStatus={fetchEditPaidStatusPurchase} onEditDescription={fetchEditDescription} onPrint={null} onDelete={null} onClose={handleClose}  />, document.body)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
@@ -511,11 +511,10 @@ const Purchases = () => {
                                             )
                                         }
                                         {
-                                            isByClient && (
+                                            isBySupplier && (
                                                 <article className={Style.separate}>
-                                                    <TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} />
-                                                    <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
-                                                    
+                                                    <TextInputStyled titleLabel={"Nombre del proveedor"} nameLabel={"supplier"} placeholderText={"Ej: Juan Gomez"} value={inputNameSupplier} onChange={handleInputNameSupplier} typeInput={"text"} size={false} />
+                                                    <TextInputStyled typeInput="number" nameLabel={"cuit"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputCUIT} onChange={handleInputCUIT} onKey={handleOnKeySupplier} />
                                                     <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
                                                         {Array.from({ length: 10 }, (_, i) => (
                                                             <option key={i} value={date.getFullYear() - 5 + i}>
@@ -543,10 +542,10 @@ const Purchases = () => {
                                             )
                                         }
                                         {
-                                            isSale&&(
+                                            isPurchase&&(
                                                 <>
                                                 <article className={Style.separate}>
-                                                    <TextInputStyled typeInput="number" nameLabel={"numberSale"} titleLabel={"Número de Venta"} placeholderText={"Ej: 21923"} value={inputSaleNumber} onChange={handleInputSaleNumber} onKey={handleOnKeySaleNumber} />
+                                                    <TextInputStyled typeInput="number" nameLabel={"numberPurchase"} titleLabel={"Número de compra"} placeholderText={"Ej: 21923"} value={inputPurchaseNumber} onChange={handleInputPurchaseNumber} onKey={handleOnKeyPurchaseNumber} />
                                                 </article>
                                                 </>
                                             )
@@ -568,9 +567,9 @@ const Purchases = () => {
                                     </>
                                 )}
                                 {
-                                    isByClient&&(
+                                    isByPurchase&&(
                                         <>
-                                        <TableSale rows={clientSales} totals={handleTotalPrint} />,
+                                        <TableSale rows={suppplierPurchases} totals={handleTotalPrint} />,
                                         <MiniTotal>{totalPrint}</MiniTotal>
                                         </>
                                     )
@@ -591,11 +590,11 @@ const Purchases = () => {
                     <div className={Style.item3}>
                         
                         {
-                            (isByClient || isAnnual || isMonthly || isMethod || isByItem) && (
+                            (isBySupplier || isAnnual || isMonthly || isMethod || isByItem) && (
                                 <>
                                     
                                         
-                                            <SalesCharts salesData={sales} clientSales={clientSales} item={itemSales} method={methodSales} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></SalesCharts>
+                                            <PurchasesCharts salesData={purchase} clientSales={supplierPurchases} item={itemPurchases} method={methodPurchases} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></PurchasesCharts>
                                         
                                     
                                 </>
