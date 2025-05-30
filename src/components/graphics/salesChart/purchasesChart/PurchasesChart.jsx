@@ -41,9 +41,9 @@ const MONTH_NAMES_ES = [
  * - reportType: 'monthly' | 'annual' | 'client' | 'method' | 'item'
  */
 const PurchasesCharts = ({
-    salesData = [],
+    purchasesData = [],
     monthlyTotalsByName,
-    clientSales = [],
+    supplierPurchases = [],
     method,
     item,
     selectedYear,
@@ -52,9 +52,9 @@ const PurchasesCharts = ({
 }) => {
     const formatDate = (date) => date.toISOString().split('T')[0];
 
-    const validSales = useMemo(() => salesData.filter(sale => sale.paid), [salesData]);
+    const validPurchases = useMemo(() => purchasesData.filter(purchase => purchase.paid), [purchasesData]);
 
-    const yearlySalesData = useMemo(() => {
+    const yearlyPurchasesData = useMemo(() => {
         if (reportType !== 'annual') return { labels: [], datasets: [] };
         if (!monthlyTotalsByName || typeof monthlyTotalsByName !== 'object') return { labels: [], datasets: [] };
 
@@ -65,7 +65,7 @@ const PurchasesCharts = ({
             labels,
             datasets: [
                 {
-                    label: `Ventas del Año ${selectedYear || ''}`,
+                    label: `Compras del Año ${selectedYear || ''}`,
                     data: dataValues,
                     backgroundColor: 'rgba(75, 192, 192, 0.6)'
                 }
@@ -73,22 +73,22 @@ const PurchasesCharts = ({
         };
     }, [reportType, monthlyTotalsByName, selectedYear]);
 
-    const monthlySalesData = useMemo(() => {
+    const monthlyPurchasesData = useMemo(() => {
         if (reportType !== 'monthly') return { labels: [], datasets: [] };
         if (!selectedYear || !selectedMonth) return { labels: [], datasets: [] };
 
         const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
-        const salesByDay = Array(daysInMonth).fill(0);
+        const purchasesByDay = Array(daysInMonth).fill(0);
 
-        validSales.forEach(sale => {
-            const saleDate = new Date(sale.saleDate);
+        validPurchases.forEach(purchase => {
+            const purchaseDate = new Date(purchase.purchaseDate);
             if (
-                saleDate.getFullYear() === Number(selectedYear) &&
-                saleDate.getMonth() + 1 === Number(selectedMonth)
+                purchaseDate.getFullYear() === Number(selectedYear) &&
+                purchaseDate.getMonth() + 1 === Number(selectedMonth)
             ) {
-                const day = saleDate.getDate();
-                const totalPayment = sale.payment.reduce((sum, p) => sum + Number(p.amount), 0);
-                salesByDay[day - 1] += totalPayment;
+                const day = purchaseDate.getDate();
+                const totalPayment = purchase.payment.reduce((sum, p) => sum + Number(p.amount), 0);
+                purchasesByDay[day - 1] += totalPayment;
             }
         });
 
@@ -98,35 +98,35 @@ const PurchasesCharts = ({
             labels,
             datasets: [
                 {
-                    label: `Ventas de ${MONTH_NAMES_ES[selectedMonth - 1]} ${selectedYear}`,
-                    data: salesByDay,
+                    label: `Compras de ${MONTH_NAMES_ES[selectedMonth - 1]} ${selectedYear}`,
+                    data: purchasesByDay,
                     backgroundColor: 'rgba(54, 162, 235, 0.6)'
                 }
             ]
         };
-    }, [reportType, selectedYear, selectedMonth, validSales]);
+    }, [reportType, selectedYear, selectedMonth, validPurchases]);
 
-    const clientSalesData = useMemo(() => {
-        if (reportType !== 'client') return { labels: [], datasets: [] };
-        if (!clientSales || clientSales.length === 0) return { labels: [], datasets: [] };
+    const supplierPurchasesData = useMemo(() => {
+        if (reportType !== 'supplier') return { labels: [], datasets: [] };
+        if (!supplierPurchases || supplierPurchases.length === 0) return { labels: [], datasets: [] };
 
-        const client = clientSales[0]?.client;
-        const clientName = client ? `${client.name} ${client.surname}` : 'Cliente';
+        const supplier = supplierPurchases[0]?.supplier;
+        const supplierName = supplier ? `${supplier.businessName} Alias: ${supplier.companyName}` : 'Proveedor';
 
-        const salesByMonth = Array(12).fill(0);
-        clientSales.forEach(sale => {
-            const saleDate = new Date(sale.saleDate);
-            const month = saleDate.getMonth();
-            const totalPayment = sale.payment.reduce((sum, p) => sum + Number(p.amount), 0);
-            salesByMonth[month] += totalPayment;
+        const purchasesByMonth = Array(12).fill(0);
+        supplierPurchases.forEach(purchase => {
+            const purchaseDate = new Date(purchase.purchaseDate);
+            const month = purchaseDate.getMonth();
+            const totalPayment = purchase.payment.reduce((sum, p) => sum + Number(p.amount), 0);
+            purchasesByMonth[month] += totalPayment;
         });
 
         return {
             labels: MONTH_NAMES_ES,
             datasets: [
                 {
-                    label: `Ventas cliente: ${clientName}`,
-                    data: salesByMonth,
+                    label: `Compras Proveedor: ${supplierName}`,
+                    data: purchasesByMonth,
                     fill: false,
                     borderColor: 'rgba(255,99,132,1)',
                     backgroundColor: 'rgba(255,99,132,0.5)',
@@ -134,9 +134,9 @@ const PurchasesCharts = ({
                 }
             ]
         };
-    }, [reportType, clientSales]);
+    }, [reportType, supplierPurchases]);
 
-    const methodSalesData = useMemo(() => {
+    const methodPurchasesData = useMemo(() => {
         if (reportType !== 'method') return { labels: [], datasets: [] };
         if (!method || typeof method !== 'object') return { labels: [], datasets: [] };
 
@@ -147,7 +147,7 @@ const PurchasesCharts = ({
             labels,
             datasets: [
                 {
-                    label: `Ventas por método de pago ${selectedYear || ''}`,
+                    label: `Compras por método de pago ${selectedYear || ''}`,
                     data: dataValues,
                     backgroundColor: 'rgba(153, 102, 255, 0.6)'
                 }
@@ -155,7 +155,7 @@ const PurchasesCharts = ({
         };
     }, [reportType, method, selectedYear]);
 
-    const itemSalesData = useMemo(() => {
+    const itemPurchasesData = useMemo(() => {
         if (reportType !== 'item') return { labels: [], datasets: [] };
         if (!item || typeof item !== 'object') return { labels: [], datasets: [] };
 
@@ -166,7 +166,7 @@ const PurchasesCharts = ({
             labels,
             datasets: [
                 {
-                    label: `Ventas por ítem ${selectedYear || ''}`,
+                    label: `Compras por ítem ${selectedYear || ''}`,
                     data: dataValues,
                     backgroundColor: 'rgba(255, 159, 64, 0.6)'
                 }
@@ -216,12 +216,12 @@ const PurchasesCharts = ({
 
     return (
         <div style={containerStyle}>
-            <h2 style={{ color: '#000' }}>Resumen de Ventas</h2>
+            <h2 style={{ color: '#000' }}>Resumen de Compras</h2>
 
             {reportType === 'annual' && (
                 <section style={{ marginBottom: '2rem', height: '450px' }}>
                     {monthlyTotalsByName ? (
-                        <Bar data={yearlySalesData} options={options} />
+                        <Bar data={yearlyPurchasesData} options={options} />
                     ) : (
                         <p style={{ color: '#000' }}>
                             Por favor, seleccione el año para visualizar el gráfico anual.
@@ -233,7 +233,7 @@ const PurchasesCharts = ({
             {reportType === 'monthly' && (
                 <section style={{ marginBottom: '2rem', height: '450px' }}>
                     {selectedYear && selectedMonth ? (
-                        <Bar data={monthlySalesData} options={options} />
+                        <Bar data={monthlyPurchasesData} options={options} />
                     ) : (
                         <p style={{ color: '#000' }}>
                             Por favor, seleccione año y mes para visualizar el gráfico mensual.
@@ -242,13 +242,13 @@ const PurchasesCharts = ({
                 </section>
             )}
 
-            {reportType === 'client' && (
+            {reportType === 'supplier' && (
                 <section style={{ marginBottom: '2rem', height: '450px' }}>
-                    {clientSales && clientSales.length > 0 ? (
-                        <Line data={clientSalesData} options={options} />
+                    {supplierPurchases && supplierPurchases.length > 0 ? (
+                        <Line data={supplierPurchasesData} options={options} />
                     ) : (
                         <p style={{ color: '#000' }}>
-                            Por favor, el DNI del cliente para visualizar su gráfico.
+                            Por favor, el CUIT del Proveedor para visualizar su gráfico.
                         </p>
                     )}
                 </section>
@@ -257,7 +257,7 @@ const PurchasesCharts = ({
             {reportType === 'method' && (
                 <section style={{ marginBottom: '2rem', height: '450px' }}>
                     {method ? (
-                        <Bar data={methodSalesData} options={options} />
+                        <Bar data={methodPurchasesData} options={options} />
                     ) : (
                         <p style={{ color: '#000' }}>
                             Por favor, seleccione un método con datos para visualizar el gráfico.
@@ -269,7 +269,7 @@ const PurchasesCharts = ({
             {reportType === 'item' && (
                 <section style={{ marginBottom: '2rem', height: '450px' }}>
                     {item ? (
-                        <Bar data={itemSalesData} options={options} />
+                        <Bar data={itemPurchasesData} options={options} />
                     ) : (
                         <p style={{ color: '#000' }}>
                             Por favor, ingrese un código de ítem para visualizar el gráfico.
@@ -278,7 +278,7 @@ const PurchasesCharts = ({
                 </section>
             )}
 
-            {!['monthly', 'annual', 'client', 'method', 'item'].includes(reportType) && (
+            {!['monthly', 'annual', 'supplier', 'method', 'item'].includes(reportType) && (
                 <p style={{ color: '#000' }}>
                     Por favor, seleccione un tipo de reporte válido para visualizar gráficos.
                 </p>

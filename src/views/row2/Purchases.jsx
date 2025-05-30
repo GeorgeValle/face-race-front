@@ -103,7 +103,7 @@ const Purchases = () => {
     }
 
     const handleInputCUIT = (e) => {
-        setInputCUIT(e.target.value)
+        setInputCUIT(parseInt(e.target.value))
     }
 
     const handleInputItemName = () => {
@@ -413,14 +413,14 @@ const Purchases = () => {
         }
 
     }
-
-    const handleOnKeySupplierNumber = async (e) =>{
+    
+    const handleOnKeyPurchaseNumber = async (e) =>{
         if (e.key === 'Enter' || e.key === 'Intro'){
             try{
-            await fetchSupplier(inputPurchaseNumber);
+            await fetchPurchase(inputPurchaseNumber);
             
             }catch{
-                setMessage("Venta NO encontrada")
+                setMessage("Compra NO encontrada")
             setModalOpenMessage(true)
             setTimeout(() => {
                 setModalOpenMessage(false);
@@ -433,7 +433,7 @@ const Purchases = () => {
         setTotalPrint(total)
     }
 
-    const handleFetchSale = async(number) =>{
+    const handleFetchPurchase = async(number) =>{
         await fetchPurchase(number)
     }
 
@@ -562,14 +562,14 @@ const Purchases = () => {
                             <div className={Style.vertical_article}>
                                 { isMonthly && (
                                     <>
-                                        <TableSale rows={sales} totals={handleTotalPrint} isShow={true} onShow={handleFetchSale} />,
+                                        <TableSale rows={purchases} totals={handleTotalPrint} isShow={true} onShow={handleFetchPurchase} />,
                                         <MiniTotal>{totalPrint}</MiniTotal>
                                     </>
                                 )}
                                 {
-                                    isByPurchase&&(
+                                    isBySupplier&&(
                                         <>
-                                        <TableSale rows={suppplierPurchases} totals={handleTotalPrint} />,
+                                        <TableSale rows={supplierPurchases} totals={handleTotalPrint} />,
                                         <MiniTotal>{totalPrint}</MiniTotal>
                                         </>
                                     )
@@ -594,7 +594,7 @@ const Purchases = () => {
                                 <>
                                     
                                         
-                                            <PurchasesCharts salesData={purchase} clientSales={supplierPurchases} item={itemPurchases} method={methodPurchases} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></PurchasesCharts>
+                                            <PurchasesCharts purchasesData={purchase} supplierPurchases={supplierPurchases} item={itemPurchases} method={methodPurchases} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></PurchasesCharts>
                                         
                                     
                                 </>
