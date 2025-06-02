@@ -5,7 +5,7 @@ import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
 import InputSelectStyled from '../../components/inputs/inputSelectStyled/InputSelectStyled'
-import Style from './Sales.module.css'
+import Style from './Purchases.module.css'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faPlus, faTruck/*, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
@@ -439,7 +439,7 @@ const Purchases = () => {
 
     const payment = [{ label: "Efectivo", value: "cash" }, { label: "Credito", value: "credit" }, { label: "Debito", value: "debit" }, { label: "Cuenta Corriente", value: "currentAccount" }, { label: "Cheque", value: "check" }]
 
-    const reportType = [{ label: "Selecciona una opción", value: "" }, { label: "Venta Mensual", value: "monthly" }, { label: "Venta Anual", value: "annual" }, { label: "Metodo de Pago", value: "method" }, { label: "Ventas por Clientes", value: "client" }, { label: "Ventas por Producto", value: "item" },{label:"Número de venta",value:"sale"}]
+    const reportType = [{ label: "Selecciona una opción", value: "" }, { label: "Compra Mensual", value: "monthly" }, { label: "Compra Anual", value: "annual" }, { label: "Metodo de Pago", value: "method" }, { label: "Compras por Proveedor", value: "supplier" }, { label: "Compras por Producto", value: "item" },{label:"Número de Compra",value:"purchase"}]
 
     // const rows =[{numberSale:2343,saleDate:"01/05/2024",itemList:[{amount:200200}], payment:[{type:"Cash"}], client:{id:345,name:"Victor", surname:"Azimov"}},
     //             {numberSale:2236,saleDate:"01/05/2024",itemList:[{amount:300200}], payment:[{type:"Cash"}], client:{id:123,name:"Ramiro", surname:"Peña"}},
@@ -454,7 +454,7 @@ const Purchases = () => {
 
         <div className={Style.mainContainer}>
             <Container>
-                <MiniNavBar miniTitle={"Ventas"} btnBack={true} />
+                <MiniNavBar miniTitle={"Compras a Proveedor"} btnBack={true} />
                 {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
                 {modalOpenDialog && (<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeletePurchase} onClose={handleClose} />)}
                 {modalOpenPurchase&& createPortal(<PurchaseModal ThePurchase={purchase} onEditStatus={fetchEditPaidStatusPurchase} onEditDescription={fetchEditDescription} onPrint={null} onDelete={null} onClose={handleClose}  />, document.body)}

@@ -8,17 +8,17 @@ import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge'
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
 import Style from './Cashier.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faUserPlus, faWallet, faXmark, faPencil, faMagnifyingGlass, faBroomBall } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTruck, faWallet, faXmark, faPencil, faMagnifyingGlass, faBroomBall } from "@fortawesome/free-solid-svg-icons";
 import { TableQuotation } from '../../components/tables/tableQuotation/TableQuotation';
 import MessageModal from '../../components/modals/messageModal/MessageModal';
-import NewClientModal from '../../components/modals/newClientModal/NewClientModal'
+import NewSupplierModal from '../../components/modals/newSupplierModal/NewSupplierModal'
 import ItemModal from '../../components/modals/itemModal/ItemModal';
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { addItem, deleteItem, updatePrice, subtractStock } from "../../redux/ItemSlice";
 import { addItems, removeItem, clearItems, updateItemQuantity } from '../../redux/ItemsListSlice';
 import { useDispatch, useSelector } from "react-redux";
-import { addClient, deleteClient } from "../../redux/ClientSlice";
+import { addSupplier, deleteSupplier } from "../../redux/SupplierSlice";
 import { NavLink } from "react-router-dom";
 import config from "../../config/Envs"
 import axios from "axios";
@@ -28,21 +28,20 @@ const Cashier = () => {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalItemOpen, setModalItemOpen] = useState(false);
-    const [modalClientOpen, setModalClientOpen] = useState(false);
+    const [modalSupplierOpen, setModalSupplierOpen] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0.00);
     const [totalSubAmount, setTotalSubAmount] = useState(0.00);
     const [totalAdjustment, setTotalAdjustment] = useState(0.00);
     const [totalFake, setTotalFake] = useState(0);
-    const [inputDNI, setInputDNI] = useState("")
-    const [description, setDescription] = useState("");
+    const [inputCUIT, setInputCUIT] = useState("")
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
     //colocar el open modal
     const [message, setMessage] = useState("");
     const [inputCode, setInputCode] = useState("");
     const [inputQuantity, setInputQuantity] = useState(0);
     const [inputItemName, setInputItemName] = useState("")
-    const [inputNameClient, setInputNameClient] = useState("")
-    const [isFetchClient, setIsFetchClient] = useState(false);
+    const [inputNameSupplier, setInputNameSupplier] = useState("")
+    const [isFetchSupplier, setIsFetchSupplier] = useState(false);
     //const [isDataItem, setIsDataItem] = useState(false);
     //date
     // const [day, setDay] = useState('');
@@ -54,7 +53,7 @@ const Cashier = () => {
     
 
     //Variables Redux
-    const client = useSelector((state) => state.client);
+    const supplier = useSelector((state) => state.supplier);
     const item = useSelector((state) => state.item);
     const itemsList = useSelector((state) => state.itemsList);
     const dispatch = useDispatch();
@@ -79,19 +78,19 @@ const Cashier = () => {
         }
     }
 
-    const fetchClient = async () => {
+    const fetchSupplier = async () => {
         try {
-            const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
+            const request = await axios.get((`${config.API_BASE}supplier/cuit/${inputCUIT}`))
             const response = request.data
-            dispatch(addClient(response.data))
-            setInputNameClient(`${response.data.name} ${response.data.surname}`)
+            dispatch(addSupplier(response.data))
+            setInputNameSupplier(`${response.data.businessName} Alias: ${response.data.CompanyName}`)
             
             if (response.data) {
-                setIsFetchClient(true);
+                setIsFetchSupplier(true);
 
             }
         } catch (error) {
-            setMessage("Cliente NO encontrado")
+            setMessage("Proveedor NO encontrado")
             MessageResponse(message);
         }
     }
@@ -116,10 +115,10 @@ const Cashier = () => {
         setInputItemName("");
     }
 
-    const cleanClient = () =>{
-        dispatch(deleteClient()); //delete item of redux
-        setInputDNI("");
-        setInputNameClient("");
+    const cleanSupplier = () =>{
+        dispatch(deleteSupplier()); //delete item of redux
+        setInputCUIT("");
+        setInputNameSupplier("");
     }
     //onKeyDown handles 
 
@@ -130,10 +129,10 @@ const Cashier = () => {
         }
     }
 
-    const handleOnKeyClient = async (event) => {
+    const handleOnKeySupplier = async (event) => {
         if (event.key === "Enter" || event.key === "Intro") {
             
-            await fetchClient();
+            await fetchSupplier();
             
         }
     }
@@ -152,12 +151,12 @@ const Cashier = () => {
         setInputItemName(e.target.value)
     }
 
-    const handleInputNameClient = (e) =>{
-        setInputNameClient(e.target.value)
+    const handleInputNameSupplier = (e) =>{
+        setInputNameSupplier(e.target.value)
     }
 
-    const handleInputDNI = (e) => {
-        setInputDNI(e.target.value);
+    const handleInputCUIT = (e) => {
+        setInputCUIT(e.target.value);
     }
 
     const handleInputCode = (e) => {
@@ -180,13 +179,13 @@ const Cashier = () => {
     const CloseModals = () => {
         setModalOpen(false);
         setModalOpenMessage(false);
-        setModalClientOpen(false);
+        setModalSupplierOpen(false);
         // setModalItemOpen(false);
     }
 
-    const handleSubmitNewClient= (message)=>{
+    const handleSubmitNewSupplier= (message)=>{
         setMessage(message)
-        setModalClientOpen(false)
+        setModalSupplierOpen(false)
         MessageResponse()
     }
 
@@ -273,15 +272,15 @@ const Cashier = () => {
 // Verify Item data  for enable plus button
 const isDataItem = item.name != null;
     
-const isDataListItem = itemsList.length > 0 && client.name != null;
+const isDataListItem = itemsList.length > 0 && supplier.businessName != null;
 
     return (
         <div className={Style.mainContainer}>
             <Container>
-                <MiniNavBar miniTitle={"Caja"} btnBack={true} />
+                <MiniNavBar miniTitle={"Pedido de Insumos"} btnBack={true} />
                 {modalOpenMessage && createPortal(<MessageModal onClose={CloseModals} messageModal={message} />, document.body)}
                 {modalItemOpen && createPortal( <ItemModal size={false}  addItemList={handleAddItem}  onEditStock={handleEditStockItem} handleCancel={handleCancelItemModal}  />, document.body)}
-                {modalClientOpen && createPortal(<NewClientModal onSubmit={handleSubmitNewClient} onCancel={CloseModals} onClose={CloseModals} />, document.body)}
+                {modalSupplierOpen && createPortal(<NewSupplierModal onSubmit={handleSubmitNewSupplier} onCancel={CloseModals} onClose={CloseModals} />, document.body)}
                 <article className={Style.content}>
                     <div className={Style.column1}>
                         <div className={Style.row1}>
@@ -300,9 +299,9 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
                             <TableQuotation rows={itemsList} totals={handleTotalAmount} size={true} modalRemoveItem={handleRemoveItem} modalUpdateItem={handleUpdateQuantity} isEdit={false} />
                         </div>
                         <div className={Style.row3}>
-                            <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
-                            <TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} />
-                            <MiniBtn onClick={cleanClient} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
+                            <TextInputStyled typeInput="number" nameLabel={"cuit"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputCUIT} onChange={handleInputCUIT} onKey={handleOnKeySupplier} />
+                            <TextInputStyled titleLabel={"Nombre Proveedor"} nameLabel={"suppplier"} placeholderText={"Ej: Electro Moto"} value={inputNameSupplier} onChange={handleInputNameSupplier} typeInput={"text"} size={false} />
+                            <MiniBtn onClick={cleanSupplier} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                             
                         </div>
                         
@@ -310,12 +309,12 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
                     <div className={Style.column2}>
                         <MidTotal subTotal={totalSubAmount} adjustment={totalAdjustment} total={totalAmount} />
                         <div className={Style.BtnLarge}>
-                        <NavLink to='/payment' >
-                            {isDataListItem ? (<BtnVioletLarge onClick={handleBill} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>):(<BtnVioletLarge onClick={handleBill} bgDisable={true} disabled={true} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>)}
+                        <NavLink to='/checkout' >
+                            {isDataListItem ? (<BtnVioletLarge onClick={handleBill} >Pagar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>):(<BtnVioletLarge onClick={handleBill} bgDisable={true} disabled={true} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>)}
                         </NavLink >
                         </div>
                         <div className={Style.BtnsShort}>
-                            <BtnCommon title={"Cliente "} colorViolet={true} onClick={()=>setModalClientOpen(true)}><FontAwesomeIcon icon={faUserPlus}  /></BtnCommon>
+                            <BtnCommon title={"Proveedor "} colorViolet={true} onClick={()=>setModalSupplierOpen(true)}><FontAwesomeIcon icon={faTruck}  /></BtnCommon>
                             <BtnCommon title={"Cancelar "} colorRed={true} onClick={handleClearItems}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
                         </div>
                     </div>

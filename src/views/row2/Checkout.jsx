@@ -17,7 +17,7 @@ import { TableQuotation } from '../../components/tables/tableQuotation/TableQuot
 import { useState, useEffect } from 'react'
 import { addItems, removeItem, clearItems, updateItemQuantity } from '../../redux/ItemsListSlice';
 import { useDispatch, useSelector } from "react-redux";
-import { addClient, deleteClient } from "../../redux/ClientSlice";
+import { deleteSupplier } from "../../redux/SupplierSlice";
 import config from "../../config/Envs"
 import axios from "axios";
 //import { isNumber } from 'chart.js/helpers';
@@ -36,8 +36,8 @@ const Checkout = () => {
 
     const [payment, setPayment] = useState([]);
     const [paid, setPaid] = useState(false);
-    const [saleDate, setSaleDate] = useState(Date);
-    const [saleTime, setSaleTime] = useState("");
+    const [purchaseDate, setPurchaseDate] = useState(Date);
+    //const [saleTime, setSaleTime] = useState("");
 
     const [day, setDay] = useState("");
     const [month, setMonth] = useState("");
@@ -69,7 +69,7 @@ const Checkout = () => {
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
     const [modalOpenDialog, setModalOpenDialog] = useState(false)
     const [messageModal, setMessageModal] = useState("")
-
+    const [purchaseTime, setPurchaseTime] = useState("")
     const [inputCash, setInputCash] = useState("")
     const [inputCredit, setInputCredit] = useState("")
     const [inputOperationCredit, setInputOperationCredit] = useState("")
@@ -90,7 +90,7 @@ const Checkout = () => {
 
     const dispatch = useDispatch()
     const items = useSelector((state) => state.itemsList)
-    const client = useSelector((state) => state.client)
+    const supplier = useSelector((state) => state.supplier)
 
     //handles
 
@@ -120,14 +120,14 @@ const Checkout = () => {
         setChange();
         setTotalAmountReceived();
 
-        navigate('/register_cash')
+        navigate('/cashier')
 
 
     }
 
     const handleClearItems = () => {
         dispatch(clearItems())
-        dispatch(deleteClient())
+        dispatch(deleteSupplier())
     }
 
     // const handleDayChange = () =>{
@@ -274,12 +274,12 @@ const Checkout = () => {
             const currentDate = new Date();
             date = new Date(year, month - 1, day, currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
             const currentIsoTime = currentDate.toISOString().split("T")[1];
-            setSaleTime(currentIsoTime)
+            setPurchaseTime(currentIsoTime)
         } else {
             //create date whit value in 0
             const zeroTimeISO = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0)).toISOString();
             // update state whit hout in 0
-            setSaleTime(zeroTimeISO.split("T")[1]); //save only the hour part
+            setPurchaseTime(zeroTimeISO.split("T")[1]); //save only the hour part
             date = new Date(year, month - 1, day);
         }
         // const utcHours = date.getUTCHours();
@@ -289,7 +289,7 @@ const Checkout = () => {
         // const timezoneOffset = -3 * 60 * 60 * 1000; // UTC-3 para Argentina
         // const argentinaDate = new Date(date.getTime() + timezoneOffset);
         // return argentinaDate;
-        setSaleDate(date);
+        setPurchaseDate(date);
     };
     //example generate day
     // let fecha = generateDate(day, month, year);
@@ -332,10 +332,10 @@ const Checkout = () => {
                 payment: payment,
                 itemList: items,
                 description: description,
-                saleDate: saleDate,
-                saleTime: saleTime,
+                purchaseDate: purchaseDate,
+                //saleTime: saleTime,
                 paid: paid,
-                client: client,
+                supplier: supplier,
 
 
             })
@@ -346,7 +346,7 @@ const Checkout = () => {
 
         } catch (err) {
             //setError(err);
-            setMessage(err || `Error al realizar la venta`);
+            setMessage(err || `Error al registrar la compra`);
             setModalOpenMessage(true)
         }
     }
@@ -355,16 +355,7 @@ const Checkout = () => {
         return formattedDate;
     };
 
-    const getActualHour = () => {
-        const dateNow = new Date();
-        const hour = dateNow.getHours();
-        const minutes = dateNow.getMinutes();
-        const seconds = dateNow.getSeconds();
 
-        const hourString = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-        setSaleTime(hourString)
-    }
 
     const handleCashPayment = () => {
 
@@ -438,7 +429,7 @@ const Checkout = () => {
     // 
 
     const calculateTotalAmountReceived = () => {
-        const total = payment.reduce((acumulador, pago) => parseFloat(acumulador) + parseFloat(pago.amount), 0);
+        const total = payment.reduce((accumulator, pay) => parseFloat(accumulator) + parseFloat(pay.amount), 0);
 
         setTotalAmountReceived(Number(total))
     };
@@ -575,18 +566,18 @@ const Checkout = () => {
                     <div className={Style.column2}>
 
                         <MiniTotalUnformatted > {finalTotal} </MiniTotalUnformatted>
-                        <MiniDescription description={"Recibido"} isGreen={true} > {received} </MiniDescription>
-                        <MiniDescription description={"Vuelto"} isGreen={false} isWhite={true}> {finalChange} </MiniDescription>
+                        <MiniDescription description={"Dado"} isGreen={true} > {received} </MiniDescription>
+                        <MiniDescription description={"Vuelto Nuestro"} isGreen={false} isWhite={true}> {finalChange} </MiniDescription>
                         <div className={Style.BtnLarge}>
                             {isPayment ?
                                 (
-                                    <PDFDownloadLink
-                                document={<BillPDF clientData={client} items={items} method={payment} />}
-                                fileName="Factura.pdf"
-                                style={{ textDecoration: 'none' }}
-                                >
-                                <BtnVioletLarge onClick={handleNewSale} > Confirmar Cobro <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>
-                                </PDFDownloadLink>
+                                //    <PDFDownloadLink
+                                //document={<BillPDF clientData={client} items={items} method={payment} />}
+                                //fileName="Factura.pdf"
+                                //style={{ textDecoration: 'none' }}
+                               // >
+                                <BtnVioletLarge onClick={handleNewSale} > Confirmar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>
+                                //</PDFDownloadLink>
                                 )
                                 : (<BtnVioletLarge bgDisable={true} disabled={true} >Confirmar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
                             }

@@ -47,7 +47,7 @@ const Panel = () =>{
                         </BtnVioletPanel>
                     </div>
                     <div className={Style.item7}>
-                        <BtnVioletPanel title={"Compras"} isDisabled={true} rightColor={true}>
+                        <BtnVioletPanel title={"Compras"} path={"/purchase"} rightColor={true}>
                             <FontAwesomeIcon icon={faTruckRampBox} size="lg" />
                         </BtnVioletPanel>
                     </div>
