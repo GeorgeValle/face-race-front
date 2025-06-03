@@ -84,8 +84,8 @@ useEffect(() => {
                     <tbody>
                         <tr>
                             <th>Nombre:</th>
-                            <td>{`${ThePurchase.supplier.name}`}</td>
-                            <th>DNI:</th>
+                            <td>{`${ThePurchase.supplier.businessName}`}</td>
+                            <th>DNI/CUIT:</th>
                             <td>{ThePurchase.supplier.cuit}</td>
                         </tr>
                         <tr>

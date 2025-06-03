@@ -19,7 +19,7 @@ import { useState} from 'react'
 
 
 
-const ItemModal = ({  size=false, addItemList=null,isPurchase=false , onEditStock=null, handleCancel=null  }) =>{
+const ItemModal = ({  size=false, addItemList=null, isPurchase=false, onEditStock=null, handleCancel=null  }) =>{
 
     //Variables Redux
     const item = useSelector((state) => state.item);
@@ -41,44 +41,6 @@ const ItemModal = ({  size=false, addItemList=null,isPurchase=false , onEditStoc
     const [referencePrice, setReferencePrice] = useState(item.price||0);
     const [amount, setAmount] = useState(item.price||0)
 
-    
-    
-    // function formatDateToSpanish(dateString) { 
-    //     // Create a object Date whit a String
-    //     const date = new Date(dateString);
-        
-    //     // Obtain day, month and year
-    //     const day = String(date.getDate()).padStart(2, '0');
-    //     const month = String(date.getMonth() + 1).padStart(2, '0'); 
-    //     const year = date.getFullYear();
-        
-    //     // Format to spanish DD-MM-YYYY
-    //     return `${day}-${month}-${year}`;   
-    // }
-
-    
-    // const handleBlur = () =>{
-    //     if(!selectedOption==""){
-    //     onEditStatus(selectedOption)
-    //     //setTheStatus(selectedOption)
-    //     }
-    // }
-
-    // function formatHour(hour){
-    //     switch(hour){
-    //         case '10-12':
-    //             return '10:00 a 12:00';
-                
-    //         case '13-15':
-    //             return '13:00 a 15:00';
-            
-    //         case '16-18':
-    //             return '16:00 a 18:00';
-                
-    //         default:
-    //             return "";
-    //     }
-    // }
 
 // useEffect(() => {
 //         switch(selectedOption){

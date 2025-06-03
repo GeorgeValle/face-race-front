@@ -8,11 +8,12 @@ import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge'
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
 import Style from './Cashier.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTruck, faWallet, faXmark, faPencil, faMagnifyingGlass, faBroomBall } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTruck, faWallet, faXmark,faBox , faPencil, faMagnifyingGlass, faBroomBall } from "@fortawesome/free-solid-svg-icons";
 import { TableQuotation } from '../../components/tables/tableQuotation/TableQuotation';
 import MessageModal from '../../components/modals/messageModal/MessageModal';
 import NewSupplierModal from '../../components/modals/newSupplierModal/NewSupplierModal'
 import ItemModal from '../../components/modals/itemModal/ItemModal';
+import NewItemModal from '../../components/modals/newItemModal/NewItemModal'
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { addItem, deleteItem, updatePrice, subtractStock } from "../../redux/ItemSlice";
@@ -29,6 +30,7 @@ const Cashier = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalItemOpen, setModalItemOpen] = useState(false);
     const [modalSupplierOpen, setModalSupplierOpen] = useState(false);
+    const [modalOpenNewItem, setModalOpenNewItem] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0.00);
     const [totalSubAmount, setTotalSubAmount] = useState(0.00);
     const [totalAdjustment, setTotalAdjustment] = useState(0.00);
@@ -83,7 +85,7 @@ const Cashier = () => {
             const request = await axios.get((`${config.API_BASE}supplier/cuit/${inputCUIT}`))
             const response = request.data
             dispatch(addSupplier(response.data))
-            setInputNameSupplier(`${response.data.businessName} Alias: ${response.data.CompanyName}`)
+            setInputNameSupplier(`${response.data.businessName}, Alias: ${response.data.companyName}`)
             
             if (response.data) {
                 setIsFetchSupplier(true);
@@ -180,6 +182,7 @@ const Cashier = () => {
         setModalOpen(false);
         setModalOpenMessage(false);
         setModalSupplierOpen(false);
+        setModalOpenNewItem(false);
         // setModalItemOpen(false);
     }
 
@@ -188,6 +191,18 @@ const Cashier = () => {
         setModalSupplierOpen(false)
         MessageResponse()
     }
+
+    const handleSubmitNewItem= (message)=>{
+        
+        setMessage(message);
+        modalOpenNewItem(false);
+        setModalOpenMessage(true);
+        setTimeout(() => {
+            setModalOpenMessage(false);
+                    }, 3500);
+                    
+        
+}
 
     // const CloseItemsModal = () =>{
     //     setModalItemOpen(false);
@@ -279,8 +294,9 @@ const isDataListItem = itemsList.length > 0 && supplier.businessName != null;
             <Container>
                 <MiniNavBar miniTitle={"Pedido de Insumos"} btnBack={true} />
                 {modalOpenMessage && createPortal(<MessageModal onClose={CloseModals} messageModal={message} />, document.body)}
-                {modalItemOpen && createPortal( <ItemModal size={false}  addItemList={handleAddItem}  onEditStock={handleEditStockItem} handleCancel={handleCancelItemModal}  />, document.body)}
+                {modalItemOpen && createPortal( <ItemModal size={false}  addItemList={handleAddItem}  onEditStock={handleEditStockItem} isPurchase={true} handleCancel={handleCancelItemModal}  />, document.body)}
                 {modalSupplierOpen && createPortal(<NewSupplierModal onSubmit={handleSubmitNewSupplier} onCancel={CloseModals} onClose={CloseModals} />, document.body)}
+                {modalOpenNewItem&&createPortal(<NewItemModal onSubmit={handleSubmitNewItem} onCancel={CloseModals} onClose={CloseModals}  />,document.body)}
                 <article className={Style.content}>
                     <div className={Style.column1}>
                         <div className={Style.row1}>
@@ -310,12 +326,16 @@ const isDataListItem = itemsList.length > 0 && supplier.businessName != null;
                         <MidTotal subTotal={totalSubAmount} adjustment={totalAdjustment} total={totalAmount} />
                         <div className={Style.BtnLarge}>
                         <NavLink to='/checkout' >
-                            {isDataListItem ? (<BtnVioletLarge onClick={handleBill} >Pagar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>):(<BtnVioletLarge onClick={handleBill} bgDisable={true} disabled={true} >Cobrar <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>)}
+                            {isDataListItem ? (<BtnVioletLarge onClick={handleBill} >Pago <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>):(<BtnVioletLarge onClick={handleBill} bgDisable={true} disabled={true} >Pago <FontAwesomeIcon icon={faWallet} /></BtnVioletLarge>)}
                         </NavLink >
                         </div>
                         <div className={Style.BtnsShort}>
-                            <BtnCommon title={"Proveedor "} colorViolet={true} onClick={()=>setModalSupplierOpen(true)}><FontAwesomeIcon icon={faTruck}  /></BtnCommon>
-                            <BtnCommon title={"Cancelar "} colorRed={true} onClick={handleClearItems}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
+                            <BtnCommon title={"Nuevo "} colorViolet={true} onClick={()=>setModalSupplierOpen(true)}><FontAwesomeIcon icon={faTruck}  /></BtnCommon>
+                            <BtnCommon title={"Nuevo "} colorViolet={true}  onClick={()=>setModalOpenNewItem(true)}><FontAwesomeIcon icon={faBox}  /></BtnCommon>
+                            
+                        </div>
+                        <div className={Style.BtnLarge}>
+                            <BtnVioletLarge onClick={handleClearItems} bgRed={true} >Cancelar <FontAwesomeIcon icon={faXmark} /></BtnVioletLarge>
                         </div>
                     </div>
 

@@ -1,5 +1,5 @@
 //import './TableQuotation.module.css';
-import Style from './TableSale.module.css';
+import Style from './TablePurchase.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPencil, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
@@ -155,7 +155,7 @@ export const TablePurchase = ({ rows , size=false, totals=null, modalDesahibilit
                                 </td>
                                 <td >{formatArgentineDate(row.purchaseDate) || '-'}</td>
                                 <td>{row.purchaseNumber|| '-'}</td>
-                                <td className={Style.expand} >{/*getConcatenatedFullName(row)*/`${row.supplier.BusinessName} Alias: ${row.supplier.companyName}`|| '-'}</td>
+                                <td className={Style.expand} >{/*getConcatenatedFullName(row)*/`${row.supplier.companyName} Alias: ${row.supplier.businessName}`|| '-'}</td>
                                 <td>
                                     {getConcatenatedTypes(row)||'-'}
                                     {/* $ {formatNumber(row.price)}*/}

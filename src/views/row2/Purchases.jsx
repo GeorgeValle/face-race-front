@@ -8,11 +8,12 @@ import InputSelectStyled from '../../components/inputs/inputSelectStyled/InputSe
 import Style from './Purchases.module.css'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faPlus, faTruck/*, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
+import { faMagnifyingGlass, faPlus, faTruckRampBox/*, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
 import Dialog from '../../components/modals/dialog/Dialog'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
-import { TableSale } from '../../components/tables/tableSale/TableSale'
+import { TablePurchase } from '../../components/tables/tablePurchase/TablePurchase'
 import { createPortal } from 'react-dom'
+import { NavLink } from "react-router-dom";
 import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import PurchasesCharts from '../../components/graphics/purchasesChart/PurchasesChart'
 import { useDispatch, useSelector } from "react-redux";
@@ -39,7 +40,8 @@ const Purchases = () => {
     const [isMethod, setIsMethod] = useState(false);
     const [isBySupplier, setIsBySupplier] = useState(false);
     const [isByItem, setIsByItem] = useState(false);
-    const [isPurchase, setIsPurchase] = useState(false)
+    const [isPurchase, setIsPurchase] = useState(false);
+    const [isNewPurchase, setIsNewPurchase] = useState(false);
     const [weeks, setWeeks] = useState([])
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -119,7 +121,9 @@ const Purchases = () => {
         setInputPurchaseNumber(e.target.value)
     }
 
-    
+    const handleNewPurchase = () =>{
+
+    }
 
 // const fetchMonthlyTotalsByName = async ()=>{
 //     try {
@@ -156,6 +160,7 @@ const Purchases = () => {
             const request = await axios.get((`${config.API_BASE}purchase/number/${purchaseNumber}`))
             const response = request.data
             dispatch(addPurchase(response.data))
+            
             if (response.data){
             setModalOpenPurchase(true)
             }
@@ -373,17 +378,18 @@ const Purchases = () => {
             //         break;
             // }
             const reportTypes = {
-                monthly: { isMonthly: true, isAnnual: false, isMethod: false, isBySupplier: false, isByItem: false, isPurchase: false },
-                annual: { isMonthly: false, isAnnual: true, isMethod: false, isBYSupplier: false, isByItem: false, isPurchase: false },
-                method: { isMonthly: false, isAnnual: false, isMethod: true, isBySupplier: false, isByItem: false, isPurchase: false },
-                supplier: { isMonthly: false, isAnnual: false, isMethod: false, isBySupplier: true, isByItem: false, isPurchase: false },
-                item: { isMonthly: false, isAnnual: false, isMethod: false, isBySupplier: false, isByItem: true, isPurchase: false },
-                purchase:{isMonthly: false, isAnnual: false, isMethod: false, isBySupplier: false, isByItem: false, isPurchase: true }
+                monthly: { isMonthly: true, isAnnual: false, isMethod: false, isBySupplier: false, isByItem: false, isPurchase: false, isNewPurchase:false },
+                annual: { isMonthly: false, isAnnual: true, isMethod: false, isBYSupplier: false, isByItem: false, isPurchase: false, isNewPurchase:false },
+                method: { isMonthly: false, isAnnual: false, isMethod: true, isBySupplier: false, isByItem: false, isPurchase: false, isNewPurchase:false },
+                supplier: { isMonthly: false, isAnnual: false, isMethod: false, isBySupplier: true, isByItem: false, isPurchase: false, isNewPurchase:false },
+                item: { isMonthly: false, isAnnual: false, isMethod: false, isBySupplier: false, isByItem: true, isPurchase: false, isNewPurchase:false },
+                purchase:{isMonthly: false, isAnnual: false, isMethod: false, isBySupplier: false, isByItem: false, isPurchase: true, isNewPurchase:false },
+                new:{isMonthly: false, isAnnual: false, isMethod: false, isBySupplier: false, isByItem: false, isPurchase: false, isNewPurchase:true}
             };
 
 
 
-            const reportType = reportTypes[type] || { isMonthly: false, isAnnual: false, isMethod: false, isBySupplier: false, isByItem: false, isPurchase: false };
+            const reportType = reportTypes[type] || { isMonthly: false, isAnnual: false, isMethod: false, isBySupplier: false, isByItem: false, isPurchase: false, isNewPurchase: false };
 
             setIsMonthly(reportType.isMonthly);
             setIsAnnual(reportType.isAnnual);
@@ -391,6 +397,7 @@ const Purchases = () => {
             setIsBySupplier(reportType.isBySupplier);
             setIsByItem(reportType.isByItem);
             setIsPurchase(reportType.isPurchase);
+            setIsNewPurchase(reportType.isNewPurchase)
         }
     }
 
@@ -439,7 +446,7 @@ const Purchases = () => {
 
     const payment = [{ label: "Efectivo", value: "cash" }, { label: "Credito", value: "credit" }, { label: "Debito", value: "debit" }, { label: "Cuenta Corriente", value: "currentAccount" }, { label: "Cheque", value: "check" }]
 
-    const reportType = [{ label: "Selecciona una opción", value: "" }, { label: "Compra Mensual", value: "monthly" }, { label: "Compra Anual", value: "annual" }, { label: "Metodo de Pago", value: "method" }, { label: "Compras por Proveedor", value: "supplier" }, { label: "Compras por Producto", value: "item" },{label:"Número de Compra",value:"purchase"}]
+    const reportType = [{ label: "Selecciona una opción", value: "" }, { label: "Compra Mensual", value: "monthly" }, { label: "Compra Anual", value: "annual" }, { label: "Metodo de Pago", value: "method" }, { label: "Compras por Proveedor", value: "supplier" }, { label: "Compras por Producto", value: "item" },{label:"Número de Compra",value:"purchase"},{label:"Registrar Compra",value:"new"}]
 
     // const rows =[{numberSale:2343,saleDate:"01/05/2024",itemList:[{amount:200200}], payment:[{type:"Cash"}], client:{id:345,name:"Victor", surname:"Azimov"}},
     //             {numberSale:2236,saleDate:"01/05/2024",itemList:[{amount:300200}], payment:[{type:"Cash"}], client:{id:123,name:"Ramiro", surname:"Peña"}},
@@ -550,6 +557,17 @@ const Purchases = () => {
                                                 </>
                                             )
                                         }
+                                        {
+                                            isNewPurchase&&(
+                                                <>
+                                                <article className={Style.separate}>
+                                                    <NavLink to='/cashier' >
+                                                        <BtnCommon title={"Nueva "} colorViolet={true} onClick={handleNewPurchase} ><FontAwesomeIcon icon={faTruckRampBox} size="lg" /></BtnCommon>
+                                                    </NavLink>
+                                                </article>
+                                                </>
+                                            )
+                                        }
 
 
                                     </div>
@@ -562,14 +580,14 @@ const Purchases = () => {
                             <div className={Style.vertical_article}>
                                 { isMonthly && (
                                     <>
-                                        <TableSale rows={purchases} totals={handleTotalPrint} isShow={true} onShow={handleFetchPurchase} />,
+                                        <TablePurchase rows={purchases} totals={handleTotalPrint} isShow={true} onShow={handleFetchPurchase} />,
                                         <MiniTotal>{totalPrint}</MiniTotal>
                                     </>
                                 )}
                                 {
                                     isBySupplier&&(
                                         <>
-                                        <TableSale rows={supplierPurchases} totals={handleTotalPrint} />,
+                                        <TablePurchase rows={supplierPurchases} totals={handleTotalPrint} />,
                                         <MiniTotal>{totalPrint}</MiniTotal>
                                         </>
                                     )
@@ -594,7 +612,7 @@ const Purchases = () => {
                                 <>
                                     
                                         
-                                            <PurchasesCharts purchasesData={purchase} supplierPurchases={supplierPurchases} item={itemPurchases} method={methodPurchases} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></PurchasesCharts>
+                                            <PurchasesCharts purchasesData={purchases} supplierPurchases={supplierPurchases} item={itemPurchases} method={methodPurchases} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></PurchasesCharts>
                                         
                                     
                                 </>

@@ -328,7 +328,7 @@ const Checkout = () => {
             handleSaveDate(day, month, year);
 
 
-            const request = await axios.post(`${config.API_BASE}sale/register`, {
+            const request = await axios.post(`${config.API_BASE}purchase/register`, {
                 payment: payment,
                 itemList: items,
                 description: description,
@@ -465,7 +465,7 @@ const Checkout = () => {
     return (
         <div className={Style.mainContainer}>
             <Container>
-                <MiniNavBar miniTitle={"Cobro"} btnBack={true} />
+                <MiniNavBar miniTitle={"Registrar Pago a Proveedor"} btnBack={true} />
                 {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
                 {modalOpenDialog && (<Dialog messageModal={messageModal} messageConfirm={messageConfirm} onSubmit={handleFinished} onClose={handleClose} />)}
                 {modalOpenConfirm && (<Confirm messageModal={messageModal} messageConfirm={messageConfirm} onSubmit={handleFinished} />)}
@@ -576,14 +576,14 @@ const Checkout = () => {
                                 //fileName="Factura.pdf"
                                 //style={{ textDecoration: 'none' }}
                                // >
-                                <BtnVioletLarge onClick={handleNewSale} > Confirmar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>
+                                <BtnVioletLarge onClick={handleNewSale} > Registrar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>
                                 //</PDFDownloadLink>
                                 )
-                                : (<BtnVioletLarge bgDisable={true} disabled={true} >Confirmar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
+                                : (<BtnVioletLarge bgDisable={true} disabled={true} >Registrar Pago <FontAwesomeIcon icon={faCircleCheck} /></BtnVioletLarge>)
                             }
                         </div>
-                        <div className={Style.Cancel}>
-                            <BtnCommon title={"Cancelar "} colorRed={true} onClick={handleFinished}> <FontAwesomeIcon icon={faXmark} /> </BtnCommon>
+                        <div className={Style.BtnLarge}>
+                            <BtnVioletLarge onClick={handleFinished} bgRed={true} >Cancelar <FontAwesomeIcon icon={faXmark} /></BtnVioletLarge>
                         </div>
                         <div className={Style.BtnsShort}>
                         </div>
