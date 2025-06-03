@@ -15,6 +15,10 @@ import RegisterCash from './views/row1/RegisterCash.jsx'
 import Appointment from './views/row2/Appointment.jsx'
 import Payment from './views/row1/Payment.jsx'
 import Sales from './views/row1/Sales.jsx'
+import Purchase from './views/row2/Purchases.jsx'
+import Cashier from './views/row2/Cashier.jsx'
+import Checkout from './views/row2/Checkout.jsx'
+
 //import BodyPlane from './components/common/BodyPlane.jsx'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
@@ -43,6 +47,9 @@ const App = () => {
             <Route path="/payment" element={<Payment/>} />
             <Route path="/appointment" element={<Appointment />} />
             <Route path="/sales" element={<Sales />} />
+            <Route path="/purchase" element={<Purchase />} />
+            <Route path="/cashier" element={<Cashier />} />
+            <Route path="/checkout" element={<Checkout />} />
             
             {/* <Route path="/" element={<HomeView/>}/>
             <Route path="/wiki_ideas_front/" element={<Navigate to="/"/>}/>
