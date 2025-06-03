@@ -24,11 +24,13 @@ import { useState, useEffect } from 'react'
 
 // eslint-disable-next-line react/prop-types
 const PurchaseModal = ({ ThePurchase, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
-    
+    const statusTypes = ["shipped","Partially","Complete","draft","dispute","cancelled","processing","refunded","failed"]
+
     //const [theStatus, setTheStatus] = useState("");
     const [theDescription, setTheDescription] = useState(ThePurchase.description);
     const [selectedOption, setSelectedOption] = useState(Boolean(ThePurchase.paid));
     const [totalPrint, setTotalPrint] = useState("")
+    const [status, setStatus] = useState(ThePurchase.status||"");
     
 
     
@@ -48,17 +50,17 @@ const PurchaseModal = ({ ThePurchase, onPrint, onEditStatus=null, onEditDescript
         setTotalPrint(total)
     }
 
-    const SelectStatus = ()=>{
+    const selectPaid = ()=>{
         if(selectedOption===true){   
-                return 'Pagado';
+                return 'Sí';
         }else{
-            return 'NO Pagado';
+            return 'NO';
         }           
     }
 
 useEffect(() => {
         
-        SelectStatus();
+        selectPaid();
 
         
 
@@ -94,8 +96,8 @@ useEffect(() => {
                             
                         </tr>
                         <tr>
-                        <th>Estado:</th>
-                        <td>{SelectStatus()}</td>
+                        <th>Pagado:</th>
+                        <td>{selectPaid()}</td>
                         <th>Tipo Pago:</th>
                         <td>{getConcatenatedTypes(ThePurchase)}</td>    
                             
@@ -108,7 +110,9 @@ useEffect(() => {
                         </tr>
                         <tr>
                             <th>Observación:</th>
-                            <td colSpan={3}>{theDescription}</td>
+                            <td>{theDescription}</td>
+                            <th>Estado:</th>
+                            <td>{status}</td>
                             
                         </tr>
                     </tbody>
