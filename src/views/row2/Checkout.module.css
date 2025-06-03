@@ -1,0 +1,127 @@
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.article {
+    display: flex;
+    justify-content: flex-start;
+    align-content: flex-start;
+    margin-right: 9px;
+}
+
+.content {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    /* background-color: aquamarine; */
+    /* gap: 2px 3px;  */
+    /* grid:
+        "item1" "item5" 1fr 
+        "item2" "item5" 1fr 
+        "item3" "item5" 2fr 
+        "item4" "item5" 2fr
+        / 0.5fr 0.7fr; */
+    gap: 8px;
+}
+
+.column1 {
+    background-color: transparent;
+}
+
+.column2 {
+    background-color: transparent;
+}
+
+
+
+
+.btnLayout{
+    color: white;
+    width: 250px;
+    display: flex;
+    justify-content:space-evenly;
+    margin-top:30px;
+    padding-right: 10px;
+    padding-left: 10px;;
+}
+
+.BtnLarge{
+    width: 400px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.BtnsShort{
+    width: 400px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    margin-top:5px
+}
+
+.cancel{
+    display: flex;
+    justify-self: center;
+}
+
+.row1,.row2, .row3, .row4, .row5, .row6{
+    display:flex;
+    justify-content: left;
+    justify-self: center;
+    align-items: center;
+    min-width: 500px;
+    max-width: 700px;
+    min-height: 89px;
+    flex-shrink: 0;
+    border-radius: 15px;
+    background: rgba(230, 139, 81, 0.69);
+    stroke-width: 0.5px;
+    stroke: #000;
+    border: .5px solid #000;
+    backdrop-filter: blur( 3.75px );
+    -webkit-backdrop-filter: blur( 3.75px );
+    -moz-backdrop-filter: blur( 3.75px );
+    box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.25);
+    position: relative;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+.area1{
+    margin-top: 5px;
+}
+
+.row2{
+    min-height: 135px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.row4{
+    min-height: 75px;
+
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.row5{
+    min-height: 120px;
+    min-width:  750px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.row6{
+    min-height: 80px;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.selectGroup{
+    display: flex;
+    
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between
+}
