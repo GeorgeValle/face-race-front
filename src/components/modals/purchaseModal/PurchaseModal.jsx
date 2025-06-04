@@ -12,7 +12,8 @@ import {formatDateToSpanish} from '../../../utils/datesUtils/formatDateToSpanish
 import {getConcatenatedTypes} from '../../../utils/paymentsUtils/getConcatenatedTypes'
 //import {TableSale} from '../../tables/tableSale/TableSale'
 import  {TableQuotation}  from '../../tables/tableQuotation/TableQuotation'
-import MiniTotal from '../../totals/miniTotal/MiniTotal'
+import MiniTotal from '../../totals/miniTotal/MiniTotal';
+import InputSelectStyled from '../../inputs/inputSelectStyled/InputSelectStyled'
 
 
 // import axios from 'axios'
@@ -23,50 +24,47 @@ import { useState, useEffect } from 'react'
 
 
 // eslint-disable-next-line react/prop-types
-const PurchaseModal = ({ ThePurchase, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
-    const statusTypes = ["shipped","Partially","Complete","draft","dispute","cancelled","processing","refunded","failed"]
+const PurchaseModal = ({ ThePurchase, onPrint, onEditStatus=null, onEditPaid=null, onEditDescription=null, onClose, onDelete  }) =>{
+    const statusTypes = ["shipped","Partially","Complete","draft","dispute","cancelled","processing","refunded","failed","others"]
 
     //const [theStatus, setTheStatus] = useState("");
     const [theDescription, setTheDescription] = useState(ThePurchase.description);
     const [selectedOption, setSelectedOption] = useState(Boolean(ThePurchase.paid));
+    const [paidStatus, setPaidStatus] = useState(ThePurchase.paid)
     const [totalPrint, setTotalPrint] = useState("")
     const [status, setStatus] = useState(ThePurchase.status||"");
     
 
-    
+    const allStatus = [{label:'Seleccione un estado de Compra',value:""}, {label:'Borrador',value:'draft'}, {label:'Procesando',value:'processing'}, {label:'En Camino',value:'shipped'}, {label:'Entrega Parcial', value:'partially'}, {label:'Entrega Completa',value:'complete'},  {label:'Bajo reclamo',value:'dispute'}, {label:'Cancelada',value:'Cancelled'},{label:'Reintegrada',value:'Refunded'},{label:'Fallida', value:'failed'},{label:"Otros",value:"others"}]
+    const AllPaidStatus = [{label:'Seleccione una opción',value:''},{label:'Sí',value:true},{label:'No', value:false}]
 
     const handleDescription = () =>{
+
         onEditDescription(ThePurchase.purchaseNumber,theDescription)
     }
-    const handleBlur = () =>{
-        if(!selectedOption==""){
-            console.log(selectedOption)
-        onEditStatus(ThePurchase.purchaseNumber,selectedOption)
-        //setTheStatus(selectedOption)
+
+    const handleStatus = ( status) =>{
+    
+        if(!status==""){
+        setStatus(status)
+        onEditStatus(ThePurchase.purchaseNumber,status)
         }
     }
+
+    const handlePaidStatus = ( statusPaid) =>{
+    
+        if(!statusPaid==""){
+        setStatus(statusPaid)
+        onEditPaid(ThePurchase.purchaseNumber,statusPaid)
+        }
+    }
+
 
     const handleTotalPrint = (total) => {
         setTotalPrint(total)
     }
 
-    const selectPaid = ()=>{
-        if(selectedOption===true){   
-                return 'Sí';
-        }else{
-            return 'NO';
-        }           
-    }
 
-useEffect(() => {
-        
-        selectPaid();
-
-        
-
-
-        
-    }, [selectedOption]);
     
 // formatStatusToSpanish(TheShift.status);
 
@@ -97,7 +95,7 @@ useEffect(() => {
                         </tr>
                         <tr>
                         <th>Pagado:</th>
-                        <td>{selectPaid()}</td>
+                        <td><InputSelectStyled  defaultValue={paidStatus} onLabel={" "} sideLabel={true} isLabel={false} isGroup={false} titleLabel={"Pagado:"} onSetValue={handlePaidStatus} options={AllPaidStatus} /></td>
                         <th>Tipo Pago:</th>
                         <td>{getConcatenatedTypes(ThePurchase)}</td>    
                             
@@ -112,7 +110,7 @@ useEffect(() => {
                             <th>Observación:</th>
                             <td>{theDescription}</td>
                             <th>Estado:</th>
-                            <td>{status}</td>
+                            <td><InputSelectStyled  defaultValue={status} onLabel={" "} sideLabel={true} isLabel={false} isGroup={false} titleLabel={"Estado:"} onSetValue={handleStatus} options={allStatus} /></td>
                             
                         </tr>
                     </tbody>
@@ -127,13 +125,7 @@ useEffect(() => {
                         <MiniBtn onClick={onPrint} isWhite={true}><FontAwesomeIcon icon={faPrint} /></MiniBtn>
                     </PDFDownloadLink>
                     </div>
-                    <div className={Style.selectContainer}>
-                        <select className={Style.styledSelect} value={selectedOption} onChange={(e)=>setSelectedOption(e.target.value)} onBlur={handleBlur}>
-                            <option value="">Seleccione un Estado</option>
-                            <option value={true} >Pagado</option>
-                            <option value={false}>No Pagado</option>
-                        </select>
-                    </div>
+                   
                     <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setTheDescription(e.target.value)} value={theDescription} />
                     <MiniBtn onClick={handleDescription} isWhite={true}><FontAwesomeIcon icon={faFloppyDisk} /></MiniBtn>
                     <MiniTotal >{totalPrint}</MiniTotal>

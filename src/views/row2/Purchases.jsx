@@ -248,16 +248,23 @@ const Purchases = () => {
             setMethodPurchase(response.data.data)
             setTotalPrint(sumMonthlyAmounts(response.data.data))
         }catch(error){
-            setMessage("Error al buscar las ventas")
+            setMessage("Error al buscar las compras")
         }
     }
 
-    const fetchEditPaidStatusPurchase = async(purchaseNumber,oneStatus) =>{
+    const fetchEditStatusPurchase = async(purchaseNumber,oneStatus)=>{
         try{
             
-            await axios.put((`${config.API_BASE}purchase/paid/${purchaseNumber}`),{paid:oneStatus})
+            await axios.put((`${config.API_BASE}purchase/status/${purchaseNumber}`),{status:oneStatus})
+        }catch(error){
+            setMessage("Error al editar el estado de compra")
+        }
+    }
+
+    const fetchEditPaidStatusPurchase = async(purchaseNumber,onePaidStatus) =>{
+        try{
             
-            
+            await axios.put((`${config.API_BASE}purchase/paid/${purchaseNumber}`),{paid:onePaidStatus})
             
         }catch(error){
             setMessage("Compra NO actualizada")
@@ -464,7 +471,7 @@ const Purchases = () => {
                 <MiniNavBar miniTitle={"Compras a Proveedor"} btnBack={true} />
                 {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
                 {modalOpenDialog && (<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeletePurchase} onClose={handleClose} />)}
-                {modalOpenPurchase&& createPortal(<PurchaseModal ThePurchase={purchase} onEditStatus={fetchEditPaidStatusPurchase} onEditDescription={fetchEditDescription} onPrint={null} onDelete={null} onClose={handleClose}  />, document.body)}
+                {modalOpenPurchase&& createPortal(<PurchaseModal ThePurchase={purchase} onEditStatus={fetchEditStatusPurchase} onEditPaid={fetchEditPaidStatusPurchase} onEditDescription={fetchEditDescription} onPrint={null} onDelete={null} onClose={handleClose}  />, document.body)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>
