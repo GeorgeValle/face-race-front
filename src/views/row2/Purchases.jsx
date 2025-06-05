@@ -20,8 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem,/* changeClient, deleteItem  */} from "../../redux/ItemSlice";
 import {addPurchase,toggleChecked} from '../../redux/PurchaseSlice';
 import PurchaseModal from '../../components/modals/purchaseModal/PurchaseModal'
-import axios from 'axios'
+import LoaderMotorcycle from '../../components/loaders/loaderMotorcycle/LoaderMotorcycle';
 import config from '../../config/Envs'
+import axios from 'axios'
 
 const Purchases = () => {
     const [date, setDate] = useState(new Date());
@@ -56,7 +57,7 @@ const Purchases = () => {
     const [methodPurchases, setMethodPurchase] = useState({})
     const [itemPurchases, setItemPurchases] = useState({})
     const [modalOpenPurchase, setModalOpenPurchase] = useState(false)
-
+    const [loading, setLoading]= useState(false);
 
     
     const item = useSelector((state)=> state.item);
@@ -145,11 +146,13 @@ const Purchases = () => {
     const fetchMonthly = async () => {
         //params: { month: selectedMonth + 1, year: selectedYear }
         try {
+            setLoading(true)
             const response =
                 await axios.get(`${config.API_BASE}purchase/month/${selectedMonth + 1}/year/${selectedYear}`)
             setPurchases(response.data.data);
-            
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             setMessage("sin info")
 
         }
@@ -157,14 +160,16 @@ const Purchases = () => {
 
     const fetchPurchase = async(purchaseNumber) =>{
         try{
+            setLoading(true)
             const request = await axios.get((`${config.API_BASE}purchase/number/${purchaseNumber}`))
             const response = request.data
             dispatch(addPurchase(response.data))
-            
+            setLoading(false)
             if (response.data){
             setModalOpenPurchase(true)
             }
         }catch(error){
+            setLoading(false)
             setMessage("Compra NO encontrada")
             setModalOpenMessage(true)
             setTimeout(() => {
@@ -176,28 +181,31 @@ const Purchases = () => {
     const fetchItem = async() => {
         
         try{
+            setLoading(true)
             const request = await axios.get((`${config.API_BASE}item/code/${inputCode}`))
             const response = request.data
             dispatch(addItem(response.item))
             setInputItemName(`${response.item.name} ${response.item.brand}`)
+            setLoading(false)
         }catch(error){
+            setLoading(false)
             setMessage("Artículo NO encontrado")
             setModalOpenMessage(true)
             setTimeout(() => {
                 setModalOpenMessage(false);
                         }, 3500);
         }
-        
-        
     }
 
     const fetchMonthlyTotalsByName = async ()=>{
         try {
+            setLoading(true)
             const response =
                 await axios.get(`${config.API_BASE}purchase/year/${selectedYear}`)
                 setMonthlyTotalsByName(response.data.data);
-    
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             setMessage("sin info")
     
         }
@@ -205,24 +213,31 @@ const Purchases = () => {
 
     const fetchFindTotalProductAmountByCodeAndMonth = async () =>{
         
-    try{   const response =
+    try{   
+        setLoading(true)
+        const response =
                 await axios.get(`${config.API_BASE}purchase/item/${inputCode}/${selectedYear}`)
                 setItemPurchases(response.data.data);
                 await fetchItem();
                 
                 setTotalPrint(sumMonthlyAmounts(response.data.data))
-    }catch(error){
+        setLoading(false)
+        }catch(error){
+        setLoading(false)    
         setMessage("sin info")
     }
     }
 
     const fetchAnnualSupplierPurchasesByCUIT = async ()=>{ 
         try{
+            setLoading(true)
             const response =
             await axios.get(`${config.API_BASE}purchase/supplier/${inputCUIT}/${selectedYear}`)
             setSupplierPurchases(response.data.data)
             console.log(response.data.data)
+            setLoading(false)
         }catch(error){
+            setLoading(false)
             setMessage("Error al buscar las ventas")
         }
     }
@@ -231,41 +246,50 @@ const Purchases = () => {
 
     const fetchTotalPaymentsByTypeAndMonth = async () =>{
         try{
+            setLoading(true)
             const response =
             await axios.get(`${config.API_BASE}purchase/payments/${inputMethod}/${selectedYear}`)
             setMethodPurchase(response.data.data)
             setTotalPrint(sumMonthlyAmounts(response.data.data))
+            setLoading(false)
         }catch(error){
+            setLoading(false)
             setMessage("Error al buscar las ventas")
         }
     }
 
     const fetchTotalPaymentsByTypeAndYear = async (pay) =>{
         try{
+            setLoading(true)
             const response =
             await axios.get(`${config.API_BASE}purchase/payments/${pay}/${selectedYear}`)
             setMethodPurchase(response.data.data)
             setTotalPrint(sumMonthlyAmounts(response.data.data))
+            setLoading(false)
         }catch(error){
+            setLoading(false)
             setMessage("Error al buscar las compras")
         }
     }
 
     const fetchEditStatusPurchase = async(purchaseNumber,oneStatus)=>{
         try{
-            
+            setLoading(true)
             await axios.put((`${config.API_BASE}purchase/status/${purchaseNumber}`),{status:oneStatus})
+            setLoading(false)
         }catch(error){
+            setLoading(false)
             setMessage("Error al editar el estado de compra")
         }
     }
 
     const fetchEditPaidStatusPurchase = async(purchaseNumber,onePaidStatus) =>{
         try{
-            
+            setLoading(true)
             await axios.put((`${config.API_BASE}purchase/paid/${purchaseNumber}`),{paid:onePaidStatus})
-            
+            setLoading(false)
         }catch(error){
+            setLoading(false)
             setMessage("Compra NO actualizada")
             setModalOpenMessage(true)
             setTimeout(() => {
@@ -276,11 +300,12 @@ const Purchases = () => {
 
     const fetchEditDescription = async (purchaseNumber,oneDescription) =>{
         try{
-            
+            setLoading(true)
             await axios.put((`${config.API_BASE}purchase/description/${purchaseNumber}`),{description:oneDescription});
             
-            
+            setLoading(false)
         }catch(error){
+            setLoading(false)
             setMessage("Compra NO actualizada")
             setModalOpenMessage(true)
             setTimeout(() => {
@@ -291,12 +316,13 @@ const Purchases = () => {
 
     const handleEditStockItem = async (code, quantity) => {
         try {
+            setLoading(true)
             await axios.put(`${config.API_BASE}item/incrementStock/${code}`, {
                 quantity: parseInt(quantity),
             });
-
+            setLoading(false)
         } catch (error) {
-            
+            setLoading(false)
             setMessage('Error al actualizar el Stock')
             //MessageResponse();
         }
@@ -501,6 +527,7 @@ const Purchases = () => {
                 {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
                 {modalOpenDialog && (<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeletePurchase} onClose={handleClose} />)}
                 {modalOpenPurchase&& createPortal(<PurchaseModal ThePurchase={purchase} onEditStatus={fetchEditStatusPurchase} onEditPaid={fetchEditPaidStatusPurchase} onEditDescription={fetchEditDescription} onEditChecked={handleChecked} onPrint={null} onDelete={null} onClose={handleClose}  />, document.body)}
+                {loading&&<LoaderMotorcycle/>}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>

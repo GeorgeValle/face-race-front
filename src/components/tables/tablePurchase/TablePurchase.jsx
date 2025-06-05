@@ -149,8 +149,8 @@ export const TablePurchase = ({ rows , size=false, totals=null, modalDesahibilit
                                 <td>
                                     <span className={Style.actions}>
                                         <FontAwesomeIcon icon={faTrash} className={Style.delete_btn} onClick={()=>handleModalDialogDeleteRow(row.purchaseNumber||0)} />
-                                        {isEdit&&<FontAwesomeIcon icon={faPencil} onClick={()=> handleEditQuantity(row.purchaseNumber||0, row.quantity||0) } />}
-                                        {isShow&&<FontAwesomeIcon icon={faMagnifyingGlass} onClick={()=> onShow(row.purchaseNumber||0) } />}    
+                                        {isEdit&&<FontAwesomeIcon icon={faPencil} className={Style.pen_btn} onClick={()=> handleEditQuantity(row.purchaseNumber||0, row.quantity||0) } />}
+                                        {isShow&&<FontAwesomeIcon icon={faMagnifyingGlass} className={Style.margnifying_glass_btn} onClick={()=> onShow(row.purchaseNumber||0) } />}    
                                     </span>
                                 </td>
                                 <td >{formatArgentineDate(row.purchaseDate) || '-'}</td>
