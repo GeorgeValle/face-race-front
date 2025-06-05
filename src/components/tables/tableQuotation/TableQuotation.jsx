@@ -15,6 +15,7 @@ export const TableQuotation = ({ rows ,isChecked=false, size=false, perPage=6 , 
     const [isDialog, setIsDialog] = useState(false);
     const [defaultQuantity, setDefaultQuantity] = useState(0);
     const [defaultCode, setdefaultCode] = useState(0);
+    const [init, setInit]=useState(false)
 
     //Handles 
     // handle quantity
@@ -29,7 +30,13 @@ export const TableQuotation = ({ rows ,isChecked=false, size=false, perPage=6 , 
         }
 
         const handleCheckedStatus = (code, checked, quantity) =>{
-            editChecked(code, checked, quantity)
+            try{
+                editChecked(code, checked, quantity)
+                setInit(true)
+            }catch(error)
+            {
+                setInit(false)
+            }
         }
 
         //handleDeleteRow
@@ -117,9 +124,9 @@ export const TableQuotation = ({ rows ,isChecked=false, size=false, perPage=6 , 
                                 <td>
                                     {row.code&&(
                                     <span className={Style.actions}>
-                                        <FontAwesomeIcon icon={faTrash} className={Style.delete_btn} onClick={()=>handleModalDialogDeleteRow(row.code||0)} />
-                                        {isEdit&&<FontAwesomeIcon icon={faPencil} className={Style.pen_btn} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />}
-                                        {isChecked&&<FontAwesomeIcon icon={faCircleCheck} className={row.checked?Style.checked:Style.unchecked} onClick={()=> handleCheckedStatus(row.code||0, row.checked||false, row.quantity||0) } />}
+                                        <FontAwesomeIcon icon={faTrash} className={`${row.checked?Style.undeleted_btn:Style.delete_btn} ${init&&Style.checked_init}`} onClick={()=>handleModalDialogDeleteRow(row.code||0)} />
+                                        {isEdit&&<FontAwesomeIcon icon={faPencil} className={`${row.checked?Style.unpen_btn:Style.pen_btn} ${init&&Style.checked_init}`} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />}
+                                        {isChecked&&<FontAwesomeIcon icon={faCircleCheck} className={`${row.checked?Style.checked:Style.unchecked} ${init&&Style.checked_init}`} onClick={()=> handleCheckedStatus(row.code||0, row.checked||false, row.quantity||0) } />}
                                     </span>
                                     )|| '-'}
                                 </td>
