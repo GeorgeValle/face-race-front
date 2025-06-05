@@ -48,8 +48,13 @@
     box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.35);
     border: .5px gray;
     animation: bounce 1s infinite;
+    
 }
 
+/*@keyframes init{
+    from{transform: rotateY(0deg)}
+    to{transform: rotateY(90deg)}
+}*/
 
 
 /* .loader {

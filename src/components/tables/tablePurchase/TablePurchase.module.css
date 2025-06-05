@@ -97,9 +97,36 @@
 	cursor: pointer;
 }
 
+.pen_btn{
+	color:#000;
+	cursor: pointer;
+}
+
+.margnifying_glass_btn{
+	color:#000000
+}
 .delete_btn {
 	color: #e10d05;
+	cursor: pointer;
 }
+
+.dele_btn:active, .pen_btn:active, .margnifying_glass_btn:active{
+    
+	animation: click 0.5s linear;
+	transform-style: preserve-3d;
+	backface-visibility: hidden;
+
+}
+
+@keyframes click{
+0%{
+	transform:  scale(1);}
+50%{
+	transform:   scale(0.8);}
+100%{
+	transform:  scale(1);}
+}
+
 
 .pagination{
 	margin: 0 90px;
