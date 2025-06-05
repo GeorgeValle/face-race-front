@@ -18,7 +18,7 @@ import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import PurchasesCharts from '../../components/graphics/purchasesChart/PurchasesChart'
 import { useDispatch, useSelector } from "react-redux";
 import { addItem,/* changeClient, deleteItem  */} from "../../redux/ItemSlice";
-import {addPurchase} from '../../redux/PurchaseSlice';
+import {addPurchase,toggleChecked} from '../../redux/PurchaseSlice';
 import PurchaseModal from '../../components/modals/purchaseModal/PurchaseModal'
 import axios from 'axios'
 import config from '../../config/Envs'
@@ -196,7 +196,6 @@ const Purchases = () => {
             const response =
                 await axios.get(`${config.API_BASE}purchase/year/${selectedYear}`)
                 setMonthlyTotalsByName(response.data.data);
-            console.log(response.data.data)
     
         } catch (error) {
             setMessage("sin info")
@@ -248,16 +247,23 @@ const Purchases = () => {
             setMethodPurchase(response.data.data)
             setTotalPrint(sumMonthlyAmounts(response.data.data))
         }catch(error){
-            setMessage("Error al buscar las ventas")
+            setMessage("Error al buscar las compras")
         }
     }
 
-    const fetchEditPaidStatusPurchase = async(purchaseNumber,oneStatus) =>{
+    const fetchEditStatusPurchase = async(purchaseNumber,oneStatus)=>{
         try{
             
-            await axios.put((`${config.API_BASE}purchase/paid/${purchaseNumber}`),{paid:oneStatus})
+            await axios.put((`${config.API_BASE}purchase/status/${purchaseNumber}`),{status:oneStatus})
+        }catch(error){
+            setMessage("Error al editar el estado de compra")
+        }
+    }
+
+    const fetchEditPaidStatusPurchase = async(purchaseNumber,onePaidStatus) =>{
+        try{
             
-            
+            await axios.put((`${config.API_BASE}purchase/paid/${purchaseNumber}`),{paid:onePaidStatus})
             
         }catch(error){
             setMessage("Compra NO actualizada")
@@ -282,6 +288,19 @@ const Purchases = () => {
                         }, 3500);
         }
     } 
+
+    const handleEditStockItem = async (code, quantity) => {
+        try {
+            await axios.put(`${config.API_BASE}item/incrementStock/${code}`, {
+                quantity: parseInt(quantity),
+            });
+
+        } catch (error) {
+            
+            setMessage('Error al actualizar el Stock')
+            //MessageResponse();
+        }
+    };
 
 
 
@@ -440,6 +459,24 @@ const Purchases = () => {
         setTotalPrint(total)
     }
 
+    const handleChecked = async(purchaseNumber,oneCode, checkedStatus, quantity) =>{
+        dispatch(toggleChecked({code:oneCode}));
+        
+        try{ 
+            await axios.put((`${config.API_BASE}purchase/checked/${purchaseNumber}/${oneCode}`),{checked:checkedStatus});
+            await axios.put((`${config.API_BASE}item/incrementStock/${oneCode}`), 
+            {
+                quantity: parseInt(quantity),
+            });
+        }catch(error){
+            setMessage("Cambios NO realizados")
+            setModalOpenMessage(true)
+            setTimeout(() => {
+                setModalOpenMessage(false);
+                        }, 3500);
+        }
+    }
+
     const handleFetchPurchase = async(number) =>{
         await fetchPurchase(number)
     }
@@ -456,7 +493,6 @@ const Purchases = () => {
 
     
 
-
     return (
 
         <div className={Style.mainContainer}>
@@ -464,7 +500,7 @@ const Purchases = () => {
                 <MiniNavBar miniTitle={"Compras a Proveedor"} btnBack={true} />
                 {modalOpenMessage && (<MessageModal messageModal={message} onClose={handleClose} />)}
                 {modalOpenDialog && (<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDeletePurchase} onClose={handleClose} />)}
-                {modalOpenPurchase&& createPortal(<PurchaseModal ThePurchase={purchase} onEditStatus={fetchEditPaidStatusPurchase} onEditDescription={fetchEditDescription} onPrint={null} onDelete={null} onClose={handleClose}  />, document.body)}
+                {modalOpenPurchase&& createPortal(<PurchaseModal ThePurchase={purchase} onEditStatus={fetchEditStatusPurchase} onEditPaid={fetchEditPaidStatusPurchase} onEditDescription={fetchEditDescription} onEditChecked={handleChecked} onPrint={null} onDelete={null} onClose={handleClose}  />, document.body)}
                 <article className={Style.content}>
                     <div className={Style.item1}>
                         <article className={Style.center}>
@@ -587,7 +623,7 @@ const Purchases = () => {
                                 {
                                     isBySupplier&&(
                                         <>
-                                        <TablePurchase rows={supplierPurchases} totals={handleTotalPrint} />,
+                                        <TablePurchase rows={supplierPurchases} totals={handleTotalPrint} isShow={true} onShow={handleFetchPurchase}/>,
                                         <MiniTotal>{totalPrint}</MiniTotal>
                                         </>
                                     )

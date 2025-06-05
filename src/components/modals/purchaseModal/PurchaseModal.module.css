@@ -1,5 +1,5 @@
-modal_container {
-    z-index: 2;
+.modal_container {
+    z-index: 3;
     display: flex;
     position: fixed;
     left: 0;
