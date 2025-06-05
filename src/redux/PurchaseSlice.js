@@ -9,6 +9,7 @@ const initialState = {
     purchaseDate:null,
     paid:null,
     supplier:null,
+    status:null
 };
 
 export const purchaseSlice = createSlice({
@@ -16,7 +17,7 @@ export const purchaseSlice = createSlice({
     initialState,
     reducers:{
         addPurchase: (state, action)=>{
-            const {_id, purchaseNumber, payment, itemList, description, purchaseDate,  paid, supplier} = action.payload;
+            const {_id, purchaseNumber, payment, itemList, description, purchaseDate,  paid, supplier, status} = action.payload;
             state._id = _id;
             state.purchaseNumber = purchaseNumber;
             state.payment = payment;
@@ -25,12 +26,13 @@ export const purchaseSlice = createSlice({
             state.purchaseDate = purchaseDate;            
             state.paid = paid;
             state.supplier = supplier;
+            state.status = status;
         },
         resetPurchase: (state) => {
             state = initialState;
         },
         changePurchase:(state, action)=>{
-            const {purchaseNumber, payment, itemList, description, purchaseDate, paid, supplier}= action.payload;
+            const {purchaseNumber, payment, itemList, description, purchaseDate, paid, supplier, status}= action.payload;
             state.purchaseNumber = purchaseNumber;
             state.payment = payment;
             state.itemList = itemList;
@@ -38,9 +40,18 @@ export const purchaseSlice = createSlice({
             state.purchaseDate = purchaseDate;            
             state.paid = paid;
             state.supplier = supplier;
+            state.status = status;
+        },
+        toggleChecked: (state, action) => {
+            const { code } = action.payload; // code item
+            const item = state.itemList.find(item => item.code === code); // find item
+            if (item) {
+                item.checked = !item.checked; // change checked status
+            }
         }
+
     }
 });
 
-export const {addPurchase, resetPurchase, changeSPurchase}= purchaseSlice.actions;
+export const {addPurchase, resetPurchase, changeSPurchase, toggleChecked}= purchaseSlice.actions;
 export default purchaseSlice.reducer; 

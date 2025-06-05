@@ -1,14 +1,14 @@
 import './TableQuotation.module.css';
 import Style from './TableQuotation.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPencil, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import EditQuantityItemModal from '../../modals/editQuantityItemModal/EditQuantityItemModal';
 import Dialog from '../../modals/dialog/Dialog';
 
 // deleteRow, editRow
 
-export const TableQuotation = ({ rows , size=false, perPage=6 , totals=null, modalRemoveItem=null, modalUpdateItem=null, isEdit=true}) => {
+export const TableQuotation = ({ rows ,isChecked=false, size=false, perPage=6 , totals=null, modalRemoveItem=null, modalUpdateItem=null, editChecked=null, isEdit=true}) => {
     const itemsPerPage = perPage; // Número de items por página
     const [currentPage, setCurrentPage] = useState(0); // Página actual
     const [isModalQuantity, setIsModalQuantity] = useState(false);
@@ -26,6 +26,10 @@ export const TableQuotation = ({ rows , size=false, perPage=6 , totals=null, mod
         setDefaultQuantity(quantity);
         setdefaultCode(code);
         setIsModalQuantity(true);
+        }
+
+        const handleCheckedStatus = (code, checked, quantity) =>{
+            editChecked(code, checked, quantity)
         }
 
         //handleDeleteRow
@@ -111,10 +115,13 @@ export const TableQuotation = ({ rows , size=false, perPage=6 , totals=null, mod
                         return (
                             <tr key={idx}>
                                 <td>
+                                    {row.code&&(
                                     <span className={Style.actions}>
                                         <FontAwesomeIcon icon={faTrash} className={Style.delete_btn} onClick={()=>handleModalDialogDeleteRow(row.code||0)} />
-                                        {isEdit&&<FontAwesomeIcon icon={faPencil} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />}
+                                        {isEdit&&<FontAwesomeIcon icon={faPencil} className={Style.pen_btn} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />}
+                                        {isChecked&&<FontAwesomeIcon icon={faCircleCheck} className={row.checked?Style.checked:Style.unchecked} onClick={()=> handleCheckedStatus(row.code||0, row.checked||false, row.quantity||0) } />}
                                     </span>
+                                    )|| '-'}
                                 </td>
                                 <td>{row.code|| '-'}</td>
                                 <td className={Style.expand}>{row.name || '-'}</td>
