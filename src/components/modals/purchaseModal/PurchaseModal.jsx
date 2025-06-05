@@ -14,6 +14,7 @@ import {getConcatenatedTypes} from '../../../utils/paymentsUtils/getConcatenated
 import  {TableQuotation}  from '../../tables/tableQuotation/TableQuotation'
 import MiniTotal from '../../totals/miniTotal/MiniTotal';
 import InputSelectStyled from '../../inputs/inputSelectStyled/InputSelectStyled'
+//import {toggleChecked} from '../../../redux/PurchaseSlice';
 
 
 // import axios from 'axios'
@@ -24,38 +25,48 @@ import { useState, useEffect } from 'react'
 
 
 // eslint-disable-next-line react/prop-types
-const PurchaseModal = ({ ThePurchase, onPrint, onEditStatus=null, onEditPaid=null, onEditDescription=null, onClose, onDelete  }) =>{
+const PurchaseModal = ({ ThePurchase, onPrint, onEditStatus=null, onEditPaid=null, onEditDescription=null, onEditChecked=null, onClose, onDelete  }) =>{
     const statusTypes = ["shipped","Partially","Complete","draft","dispute","cancelled","processing","refunded","failed","others"]
 
     //const [theStatus, setTheStatus] = useState("");
     const [theDescription, setTheDescription] = useState(ThePurchase.description);
-    const [selectedOption, setSelectedOption] = useState(Boolean(ThePurchase.paid));
-    const [paidStatus, setPaidStatus] = useState(ThePurchase.paid)
+    //const [selectedOption, setSelectedOption] = useState(Boolean(ThePurchase.paid));
+    const [paidStatus, setPaidStatus] = useState(Boolean(ThePurchase.paid))
     const [totalPrint, setTotalPrint] = useState("")
-    const [status, setStatus] = useState(ThePurchase.status||"");
+    const [status, setStatus] = useState(ThePurchase.status);
     
+    
+    const allStatus = [{label:'Seleccione un estado de Compra',value:''}, {label:'Borrador',value:'draft'}, {label:'Procesando',value:'processing'}, {label:'En Camino',value:'shipped'}, {label:'Entrega Parcial', value:'partially'}, {label:'Entrega Completa',value:'complete'},  {label:'Bajo reclamo',value:'dispute'}, {label:'Cancelada',value:'Cancelled'},{label:'Reintegrada',value:'Refunded'},{label:'Fallida', value:'failed'},{label:"Otros",value:"others"}]
+    const allPaidStatus = [{label:'Seleccione una opción',value:''},{label:'Sí',value:true},{label:'No', value:false}]
 
-    const allStatus = [{label:'Seleccione un estado de Compra',value:""}, {label:'Borrador',value:'draft'}, {label:'Procesando',value:'processing'}, {label:'En Camino',value:'shipped'}, {label:'Entrega Parcial', value:'partially'}, {label:'Entrega Completa',value:'complete'},  {label:'Bajo reclamo',value:'dispute'}, {label:'Cancelada',value:'Cancelled'},{label:'Reintegrada',value:'Refunded'},{label:'Fallida', value:'failed'},{label:"Otros",value:"others"}]
-    const AllPaidStatus = [{label:'Seleccione una opción',value:''},{label:'Sí',value:true},{label:'No', value:false}]
+    //const dispatch = useDispatch()
+
 
     const handleDescription = () =>{
 
         onEditDescription(ThePurchase.purchaseNumber,theDescription)
     }
 
-    const handleStatus = ( status) =>{
+    const handleStatus = ( oneStatus) =>{
     
-        if(!status==""){
-        setStatus(status)
-        onEditStatus(ThePurchase.purchaseNumber,status)
+        if(!oneStatus==""){
+        setStatus(oneStatus)
+        onEditStatus(ThePurchase.purchaseNumber,oneStatus)
         }
     }
 
     const handlePaidStatus = ( statusPaid) =>{
     
         if(!statusPaid==""){
-        setStatus(statusPaid)
+        setPaidStatus(statusPaid)
         onEditPaid(ThePurchase.purchaseNumber,statusPaid)
+        }
+    }
+
+    const handleCheckStatus = (code, checkStatus , quantity) =>{
+
+        if(!checkStatus==true&&code){
+            onEditChecked(ThePurchase.purchaseNumber,code,true, quantity)
         }
     }
 
@@ -65,7 +76,10 @@ const PurchaseModal = ({ ThePurchase, onPrint, onEditStatus=null, onEditPaid=nul
     }
 
 
-    
+    useEffect(() => {
+
+        }, []); 
+
 // formatStatusToSpanish(TheShift.status);
 
     return(
@@ -95,7 +109,7 @@ const PurchaseModal = ({ ThePurchase, onPrint, onEditStatus=null, onEditPaid=nul
                         </tr>
                         <tr>
                         <th>Pagado:</th>
-                        <td><InputSelectStyled  defaultValue={paidStatus} onLabel={" "} sideLabel={true} isLabel={false} isGroup={false} titleLabel={"Pagado:"} onSetValue={handlePaidStatus} options={AllPaidStatus} /></td>
+                        <td><InputSelectStyled  defaultValue={paidStatus} onLabel={" "} sideLabel={true} isLabel={false} isGroup={false} titleLabel={"Pagado:"} onSetValue={handlePaidStatus} options={allPaidStatus} /></td>
                         <th>Tipo Pago:</th>
                         <td>{getConcatenatedTypes(ThePurchase)}</td>    
                             
@@ -132,7 +146,7 @@ const PurchaseModal = ({ ThePurchase, onPrint, onEditStatus=null, onEditPaid=nul
                 </div>
             </div>
             <div className={Style.item2}>
-                <TableQuotation rows={ThePurchase.itemList} totals={handleTotalPrint} perPage={3}></TableQuotation>
+                <TableQuotation rows={ThePurchase.itemList} editChecked={handleCheckStatus} isChecked={true} totals={handleTotalPrint} perPage={3}></TableQuotation>
             </div>
         </div>
     </div>

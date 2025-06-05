@@ -274,7 +274,9 @@ const handleAddItemList = async () =>{
     const subAmount = (inputPrice* inputQuantity)
 
     //add this custom item in array itemList
-    const newItem = { code: item.code, name: item.name, quantity: Number(inputQuantity), price: inputPrice, referencePrice: referencePrice, discountPercentage:discount, amountDiscount: amountDiscount, surchargePercentage:surcharge, amountSurcharge: amountSurcharge, amountAdjustment: amountAdjustment, subAmount: subAmount, amount: amount };
+    const newItem = isPurchase
+        ?{ code: item.code, name: item.name, quantity: Number(inputQuantity), price: inputPrice, referencePrice: referencePrice, discountPercentage:discount, amountDiscount: amountDiscount, surchargePercentage:surcharge, amountSurcharge: amountSurcharge, amountAdjustment: amountAdjustment, subAmount: subAmount, amount: amount, checked:false }
+        :{ code: item.code, name: item.name, quantity: Number(inputQuantity), price: inputPrice, referencePrice: referencePrice, discountPercentage:discount, amountDiscount: amountDiscount, surchargePercentage:surcharge, amountSurcharge: amountSurcharge, amountAdjustment: amountAdjustment, subAmount: subAmount, amount: amount};
     addItemList(newItem)
 
 }

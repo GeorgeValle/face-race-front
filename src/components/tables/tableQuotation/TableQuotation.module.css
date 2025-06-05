@@ -101,6 +101,23 @@
 
 .delete_btn {
 	color: #e10d05;
+	cursor: pointer;
+}
+
+.pen_btn{
+	color:#222;
+	cursor: pointer;
+}
+
+
+.checked{
+	color:#42a942;
+	cursor:not-allowed;
+}
+
+.unchecked{
+	color:#777;
+	cursor: pointer;
 }
 
 .pagination{
