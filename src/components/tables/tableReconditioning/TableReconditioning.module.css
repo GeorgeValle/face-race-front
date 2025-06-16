@@ -1,0 +1,204 @@
+/* Calendar table css */
+.calendarContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.weekRow {
+    display: flex;
+    gap: 10px;
+}
+
+.dayColumn {
+    flex: 1;
+    min-width: 100px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    backdrop-filter: blur( 5.75px );
+    -webkit-backdrop-filter: blur( 3.75px );
+    -moz-backdrop-filter: blur( 3.75px );
+    /* background: rgb(155, 155, 155,  0.41); */
+    background: rgba(230, 139, 81, 0.79);
+    
+    text-align: center;
+    border-radius: 2%;
+    box-shadow: 5px 6px 1px 0px rgba(0, 0, 0, 0.35);
+}
+
+.header {
+    
+    color: #05060f99;
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+    color: #FFF;
+    text-shadow: 2px 2px 2px  rgba(0, 0, 0, 0.65);
+    -webkit-text-stroke-width: .6px;
+    -webkit-text-stroke-color: #000000;
+    font-family: "Open Sans", sans-serif;
+    font-size: 20px;
+    font-style:normal;
+    font-weight: 700;
+    line-height:normal;
+    margin-bottom: 5px;
+}
+
+.availableSlot {
+    background-color: #add8e6;
+    /* Celeste */
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.bookedSlot {
+    background-color: #eeb899;
+    /* orange */
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.pastSlot {
+    background-color: #8f8e8e;
+    /* gray */
+    cursor:not-allowed;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.pendingSlot {
+    /* background-color: #d4f153; */
+    background-color: #8bc34a;
+    /* Green */
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.attendedSlot {
+    background-color: #2421ec;
+    /* Blue */
+    cursor: pointer;
+    color: white;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.canceledSlot {
+    background-color: #ff6347;
+    /* red */
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.missingSlot {
+    /* orange */
+    /* background-color: #dd641e; */
+    /* yellow */
+    background-color: #d4f153;
+    
+    /* color: white; */
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.separate {
+    display: flex;
+    width: 85%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: content-box;
+    border-radius: 15px;
+    background: rgba(230, 139, 81, 0.69);
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 1px;
+    padding-bottom: 7px;
+    margin: 7px 9px;
+    border: #000 1px solid;
+    box-shadow: 6px 7px 1px 0px rgba(0, 0, 0, 0.25);
+}
+
+.inputDate_group {
+    box-sizing: content-box;
+    max-width: fit-content;
+    display: flex;
+    flex-direction: column;
+    height: 63px;
+    text-align: center;
+    border-radius: 15px;
+    background: rgba(230, 139, 81, 0.69);
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 1px;
+    padding-bottom: 7px;
+    margin: 7px 9px;
+    border: #000 1px solid;
+    box-shadow: 6px 7px 1px 0px rgba(0, 0, 0, 0.25);
+}
+
+.inputDate_group:hover .label, .input:focus {
+    color: #ccc;
+}
+
+.styledSelect {
+    display:flex;
+    width: 100%; /* Adjust width as needed */
+    padding: 10px; /* Add padding */
+    
+    
+    border: 1px solid #ccc; /* Border style */
+    border: 1px solid #05060f;
+    border-radius: 4px; /* Rounded corners */
+    background-color: #f9f9f9; 
+    font-size: 16px; 
+    
+}
+
+.label {
+    display: block;
+    margin-bottom: .1px;
+    color: #05060f99;
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+    color: #FFF;
+    text-shadow: 2px 2px 2px  rgba(0, 0, 0, 0.65);
+    -webkit-text-stroke-width: thin;
+    -webkit-text-stroke-color: #000000;
+    font-family: "Lato", sans-serif;
+    font-size: 19px;
+    font-style:normal;
+    font-weight: 700;
+    line-height:normal;
+}
+
+.article {
+    display: flex;
+    justify-content: flex-start;
+    align-content: flex-start;
+    margin-right: 9px;
+}
+
+.buttonsPositions{
+    display: flex;
+    justify-content:space-between;
+    flex-direction: column;
+    gap: 5px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+}
+
+
+
+
