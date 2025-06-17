@@ -18,6 +18,7 @@ import Sales from './views/row1/Sales.jsx'
 import Purchase from './views/row2/Purchases.jsx'
 import Cashier from './views/row2/Cashier.jsx'
 import Checkout from './views/row2/Checkout.jsx'
+import Reconditioning from './views/row2/Reconditioning.jsx'
 
 //import BodyPlane from './components/common/BodyPlane.jsx'
 // import reactLogo from './assets/react.svg'
@@ -50,6 +51,7 @@ const App = () => {
             <Route path="/purchase" element={<Purchase />} />
             <Route path="/cashier" element={<Cashier />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/reconditioning" element={<Reconditioning />} />
             
             {/* <Route path="/" element={<HomeView/>}/>
             <Route path="/wiki_ideas_front/" element={<Navigate to="/"/>}/>
