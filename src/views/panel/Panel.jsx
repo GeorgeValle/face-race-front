@@ -62,7 +62,7 @@ const Panel = () =>{
                         </BtnVioletPanel>
                     </div>
                     <div className={Style.item10}>
-                        <BtnVioletPanel title={"Rectificaciones"} isDisabled={true} topColor={true}>
+                        <BtnVioletPanel title={"Rectificaciones"}  topColor={true} path={"/reconditioning"}>
                             <FontAwesomeIcon icon={faMotorcycle} size="lg" />
                         </BtnVioletPanel>
                     </div>
