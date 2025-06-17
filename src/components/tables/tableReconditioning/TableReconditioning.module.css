@@ -76,7 +76,7 @@
     margin: 2px 0;
 }
 
-.attendedSlot {
+.deliveredSlot {
     background-color: #2421ec;
     /* Blue */
     cursor: pointer;
@@ -94,7 +94,7 @@
     margin: 2px 0;
 }
 
-.missingSlot {
+.readySlot {
     /* orange */
     /* background-color: #dd641e; */
     /* yellow */

@@ -66,11 +66,11 @@ useEffect(() => {
             case 'pending':
                 setTheStatus('Pendiente');
                 break;
-            case 'attended':
-                setTheStatus('Atendido');
+            case 'delivered':
+                setTheStatus('Entregado');
                 break;
-            case 'missing':
-                setTheStatus('Ausente');
+            case 'ready':
+                setTheStatus('Listo');
                 break;
             case 'canceled':
                 setTheStatus('Cancelado');
@@ -92,7 +92,7 @@ useEffect(() => {
                 <table className={`${Style.table} ${Style.content}`}>
                     <thead >
                         <tr>
-                            <th colSpan="4" >DATOS DEL TURNO</th>
+                            <th colSpan="4" >DATOS DE LA RECTIFICACIÓN</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -141,9 +141,9 @@ useEffect(() => {
                     <div className={Style.selectContainer}>
                         <select className={Style.styledSelect} value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)} onBlur={handleBlur}>
                             <option value="">Seleccione un Estado</option>
-                            <option value="attended">Atendido</option>
+                            <option value="delivered">Entregado</option>
                             <option value="canceled">Cancelado</option>
-                            <option value="missing">Ausente</option>
+                            <option value="ready">Listo</option>
                             <option value="pending">Pendiente</option>
                         </select>
                     </div>

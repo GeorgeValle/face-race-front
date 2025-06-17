@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 // eslint-disable-next-line react/prop-types
 const ReconditioningPDF = ({ reconditionings }) => {
     // eslint-disable-next-line react/prop-types
-    const totalPages = Math.ceil(reconditioning.length / 10);
+    const totalPages = Math.ceil(reconditionings.length / 10);
 
     function formatDateToSpanish(dateString) { 
         // Create a object Date whit a String
@@ -67,11 +67,11 @@ const ReconditioningPDF = ({ reconditionings }) => {
             case 'canceled':
                 return 'Cancelado';
             
-            case 'attended':
-                return 'Atendido';
+            case 'delivered':
+                return 'Entregado';
                 
-            case 'missing':
-                return 'Ausente';
+            case 'ready':
+                return 'Listo';
             default:
                 return "";
     }

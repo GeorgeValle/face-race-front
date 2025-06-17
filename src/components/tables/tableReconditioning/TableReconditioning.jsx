@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 // import Calendar from 'react-calendar';
 // import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
-import styles from './TableCalendar.module.css';
+import styles from './TableReconditioning.module.css';
 import config from "../../../config/Envs"
 import TextInputStyled from "../../inputs/inputTextStyled/TextInputStyled"
 import TextViewInfoStyled from "../../textViews/textViewInfoStyled/TextViewInfoStyled"
@@ -13,15 +13,16 @@ import { faMagnifyingGlass, faChartPie /*faPlus, faPencil*/ } from "@fortawesome
 import { useDispatch } from "react-redux";
 import { addClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
 import { addShift, deleteShift } from "../../../redux/ShiftSlice"
+import { addTurn, deleteTurn } from "../../../redux/TurnSlice"
 import { useSelector } from 'react-redux';
-import MessageModal from "../../../components/modals/messageModal/MessageModal"
-import Dialog from "../../../components/modals/dialog/Dialog"
+import MessageModal from "../../modals/messageModal/MessageModal"
+import Dialog from "../../modals/dialog/Dialog"
 import ReconditioningModal from '../../modals/reconditioningModal/ReconditioningModal';
-import AppointmentsListPDF from '../../textViews/appointmentListPDF/AppointmentsListPDF'
-import AppointmentPieChartModal from '../../modals/appointmentPieChartModal/AppointmentPieChartModal'
+import ReconditioningsListPDF from '../../pdf/reconditioningPDF/ReconditioningPDF'
+import ReconditioningPieChartModal from '../../modals/reconditioningPieChartModal/ReconditioningPieChartModal'
 import LoaderMotorcycle from '../../loaders/loaderMotorcycle/LoaderMotorcycle';
 
-const TableCalendar = () => {
+const TableReconditioning = () => {
     const [date, setDate] = useState(new Date());
     const [theDate, setTheDate] = useState(new Date());
     const [theTimeSlot, setTheTimeSlot] = useState("");
@@ -46,7 +47,8 @@ const TableCalendar = () => {
     const [loading, setLoading] = useState(false);
 
     const client = useSelector((state) => state.client);
-    const shift = useSelector((state) => state.shift);
+    //const shift = useSelector((state) => state.shift);
+    const turn = useSelector((state)=> state.turn);
 
 
     const dispatch = useDispatch();
@@ -71,7 +73,7 @@ const TableCalendar = () => {
         setMessage("")
     }
 
-    const filterAppointmentsByStatus = (status) => {
+    const filterReconditioningsByStatus = (status) => {
 
         if (!status == "") {
             const filtered =
@@ -84,7 +86,7 @@ const TableCalendar = () => {
 
     const handleFilteredByStatus = (event) => {
         const selectedStatus = event.target.value;
-        filterAppointmentsByStatus(selectedStatus);
+        filterReconditioningsByStatus(selectedStatus);
         setSelectedOption(selectedStatus);
     }
 
@@ -113,7 +115,7 @@ const TableCalendar = () => {
 
     const handleEditDescription = async (oneDescription) => {
         try {
-            await axios.put(`${config.API_BASE}appointment/id/${shift._id}`, {
+            await axios.put(`${config.API_BASE}reconditioning/id/${turn._id}`, {
                 description: oneDescription,
             });
 
@@ -127,14 +129,14 @@ const TableCalendar = () => {
         //update local appointment.status 
         setAppointments(prevAppointments =>
             prevAppointments.map(appointment =>
-                appointment._id === shift._id
+                appointment._id === turn._id
                     ? { ...appointment, description: oneDescription }
                     : appointment))
     };
 
     const handleEditStatus = async (oneStatus) => {
         try {
-            await axios.put(`${config.API_BASE}appointment/id/${shift._id}`, {
+            await axios.put(`${config.API_BASE}reconditioning/id/${turn._id}`, {
                 status: oneStatus,
             });
 
@@ -147,7 +149,7 @@ const TableCalendar = () => {
         //update local appointment.status 
         setAppointments(prevAppointments =>
             prevAppointments.map(appointment =>
-                appointment._id === shift._id
+                appointment._id === turn._id
                     ? { ...appointment, status: oneStatus }
                     : appointment))
     };
@@ -158,24 +160,24 @@ const TableCalendar = () => {
 
         try {
             //delete in DB
-            const request = await axios.delete(`${config.API_BASE}appointment/delete/${theId}`)
+            const request = await axios.delete(`${config.API_BASE}reconditioning/delete/${theId}`)
             const response = request.data;
 
             if (response.deleted === true) {
                 setMessage(response.message)
                 MessageResponse();
-                deleteShift();
+                deleteTurn();
 
                 setAppointments(prevAppointments =>
                     prevAppointments.filter(appointment => appointment._id !== theId)
                 );
             } else {
-                setMessage(response.message || "NO se eliminó ningún turno")
+                setMessage(response.message || "NO se eliminó ninguna rectificación")
                 MessageResponse();
             }
 
         } catch (error) {
-            setMessage('Error al eliminar el turno')
+            setMessage('Error al eliminar el rectificación')
             MessageResponse();
         }
 
@@ -185,11 +187,11 @@ const TableCalendar = () => {
     const fetchByDNI = async (dni) => {
         try {
             setLoading(true)
-            const request = await axios.get(`${config.API_BASE}appointment/dni/${dni}`)
+            const request = await axios.get(`${config.API_BASE}reconditioning/dni/${dni}`)
             const response = request.data
 
             if (response.data) {
-                dispatch(addShift(response.data))
+                dispatch(addTurn(response.data))
                 setModalOpenAppointment(true)
                 setTheDate(response.data.shiftDate)
                 setTheTimeSlot(response.data.timeSlot)
@@ -198,7 +200,7 @@ const TableCalendar = () => {
             }
         } catch (error) {
             setLoading(false)
-            setMessage("Error al buscar Turno con el DNI")
+            setMessage("Error al buscar rectificación con el DNI")
             MessageResponse();
         }
     }
@@ -232,7 +234,7 @@ const TableCalendar = () => {
             //params: { month: selectedMonth + 1, year: selectedYear }
             try {
                 const response =
-                    await axios.get(`${config.API_BASE}appointment/date/${selectedMonth + 1}/${selectedYear}`)
+                    await axios.get(`${config.API_BASE}reconditioning/date/${selectedMonth + 1}/${selectedYear}`)
                 setAppointments(response.data.data);
                 setFilteredAppointments(response.data.data)
             } catch (error) {
@@ -289,7 +291,7 @@ const TableCalendar = () => {
 
 
         try {
-            const request = await axios.post(`${config.API_BASE}appointment/register`, newAppointment);
+            const request = await axios.post(`${config.API_BASE}reconditioning/register`, newAppointment);
             const response = request.data;
             if (response.registered === true) {
 
@@ -303,7 +305,7 @@ const TableCalendar = () => {
             }
 
         } catch (error) {
-            setMessage("Error al registrar el turno ",);
+            setMessage("Error al registrar la rectificación ",);
             MessageResponse();
 
 
@@ -323,7 +325,7 @@ const TableCalendar = () => {
             setDate(date)
             setTheDate(date)
             setTheTimeSlot(slot)
-            setMessageModal(`¿Está seguro de agendar un turno para ${client.name} ${client.surname}?`)
+            setMessageModal(`¿Quiere agendar la entrega de rectificación para ${client.name} ${client.surname}?`)
 
             setMessageDialog('Agendar')
             setModalOpenDialog2(true);
@@ -371,14 +373,14 @@ const TableCalendar = () => {
 
                                 if (appointment) {
                                     switch (appointment.status) {
-                                        case 'attended':
-                                            slotClass = styles.attendedSlot;
+                                        case 'delivered':
+                                            slotClass = styles.deliveredSlot;
                                             break;
                                         case 'canceled':
                                             slotClass = styles.canceledSlot;
                                             break;
-                                        case 'missing':
-                                            slotClass = styles.missingSlot;
+                                        case 'ready':
+                                            slotClass = styles.readySlot;
                                             break;
                                         case 'pending':
                                             slotClass = styles.pendingSlot;
@@ -411,10 +413,10 @@ const TableCalendar = () => {
     return (
         <div>
             {modalOpenMessage && createPortal(<MessageModal messageModal={message} onClose={handleClose} />, document.body)}
-            {modalOpenDialog1 && createPortal(<Dialog messageModal={`¿Está seguro de ELIMINAR el turno para ${shift.person}?`} messageConfirm={"ELIMINAR"} onSubmit={handleDelete} onClose={handleClose} />, document.body)}
+            {modalOpenDialog1 && createPortal(<Dialog messageModal={`¿Está seguro de ELIMINAR la rectificación para ${turn.person}?`} messageConfirm={"ELIMINAR"} onSubmit={handleDelete} onClose={handleClose} />, document.body)}
             {modalOpenDialog2 && createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose} />, document.body)}
-            {modalOpenAppointmentPieChart && createPortal(<AppointmentPieChartModal appointments={appointments} onClose={handleClose} />, document.body)}
-            {modalOpenAppointment && createPortal(<ReconditioningModal TheShift={shift} onEditStatus={handleEditStatus} onEditDescription={handleEditDescription} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose} />, document.body)}
+            {modalOpenAppointmentPieChart && createPortal(<ReconditioningPieChartModal reconditionings={appointments} onClose={handleClose} />, document.body)}
+            {modalOpenAppointment && createPortal(<ReconditioningModal TheShift={turn} onEditStatus={handleEditStatus} onEditDescription={handleEditDescription} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose} />, document.body)}
             {loading&&<LoaderMotorcycle/>}
             <div className={styles.center}>
                 <div className={styles.separate} >
@@ -451,7 +453,7 @@ const TableCalendar = () => {
                         </select>
                     </div>
                     <div className={styles.buttonsPositions} >
-                        <AppointmentsListPDF appointments={filteredAppointments} />
+                        <ReconditioningsListPDF reconditionings={filteredAppointments} />
                         <MiniBtn onClick={handleAppointmentPieChart} ><FontAwesomeIcon icon={faChartPie} /></MiniBtn>
                     </div>
                     <div className={styles.inputDate_group}>
@@ -461,24 +463,24 @@ const TableCalendar = () => {
                         <div className={styles.selectContainer}>
                             <select className={styles.styledSelect} value={selectedOption} onChange={handleFilteredByStatus} >
                                 <option value="">Todos</option>
-                                <option value="attended">Atendido</option>
+                                <option value="delivered">Entregado</option>
                                 <option value="canceled">Cancelado</option>
-                                <option value="missing">Ausente</option>
+                                <option value="ready">Listo</option>
                                 <option value="pending">Pendiente</option>
                             </select>
                         </div>
                     </div>
                 </div>
                 {/* <label>
-          Semana:
-          <select value={selectedWeek} onChange={handleWeekChange}>
+            Semana:
+            <select value={selectedWeek} onChange={handleWeekChange}>
             <option value={null}>Todas</option>
             {weeks.map((_, index) => (
-              <option key={index} value={index}>
+                <option key={index} value={index}>
                 Semana {index + 1}
-              </option>
+            </option>
             ))}
-          </select>
+            </select>
         </label> */}
             </div>
             {/* <Calendar  onChange={handleDateChange} value={date} /> */}
@@ -489,4 +491,4 @@ const TableCalendar = () => {
     );
 };
 
-export default TableCalendar;
+export default TableReconditioning;

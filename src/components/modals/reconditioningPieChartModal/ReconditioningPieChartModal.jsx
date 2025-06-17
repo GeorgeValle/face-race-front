@@ -1,4 +1,4 @@
-import Style from './AppointmentPieChartModal.module.css';
+import Style from './ReconditioningPieChartModal.module.css';
 //import BtnClose from '../../btns/btnClose/BtnClose';
 import MiniNavBar from '../../miniNavbar/MIniNavBar';
 import {Chart as ChartJS,
@@ -13,7 +13,7 @@ ChartJS.register(
     Tooltip,
     Legend)
 
-const AppointmentPieChartModal = ({ reconditionings, onClose }) => {
+const ReconditioningPieChartModal = ({ reconditionings, onClose }) => {
 
     // const chartRef = useRef(null);
     
@@ -24,14 +24,14 @@ const AppointmentPieChartModal = ({ reconditionings, onClose }) => {
     // }, []);
 
     const data = {
-        labels: ['Pendientes', 'Cancelados', 'Ausentes', 'Atendidos'],
+        labels: ['Pendientes', 'Cancelados', 'Listos', 'Entregados'],
         datasets: [{
-            label: 'Estados de turnos',
+            label: 'Estados de rectificaciones',
             data: [
                 reconditionings.filter(reconditioning => reconditioning.status === 'pending').length,
                 reconditionings.filter(reconditioning => reconditioning.status === 'canceled').length,
-                reconditionings.filter(reconditioning => reconditioning.status === 'missing').length,
-                reconditionings.filter(reconditioning => reconditioning.status === 'attended').length,
+                reconditionings.filter(reconditioning => reconditioning.status === 'ready').length,
+                reconditionings.filter(reconditioning => reconditioning.status === 'delivered').length,
             ],
             backgroundColor: [
                 //'rgba(255, 206, 86, 0.2)',
@@ -54,7 +54,7 @@ const AppointmentPieChartModal = ({ reconditionings, onClose }) => {
     const options = {
         title: {
             display: true,
-            text: 'Estados de turnos',
+            text: 'Estados de Rectificaciones',
         },
         
     };
@@ -73,7 +73,7 @@ const AppointmentPieChartModal = ({ reconditionings, onClose }) => {
             if (e.target.className === Style.modal_container) { onClose() }
         }}>
             <div className={Style.modal} >
-                <MiniNavBar miniTitle={"Estado de las Entregas"} btnClose={true} close={onClose} /> 
+                <MiniNavBar miniTitle={"Estado de las rectificciones"} btnClose={true} close={onClose} /> 
                 <div className={Style.item}>
                     
                     {/* <div className={Style.close} ><BtnClose close={onClose} /></div> */}
@@ -93,4 +93,4 @@ const AppointmentPieChartModal = ({ reconditionings, onClose }) => {
     )
 }
 
-export default AppointmentPieChartModal
+export default ReconditioningPieChartModal

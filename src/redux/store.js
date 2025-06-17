@@ -8,6 +8,7 @@ import appointmentsListReduce from "./AppointmentsListSlice"
 import itemsListReducer from "./ItemsListSlice";
 import saleReducer from "./SaleSlice";
 import purchaseReducer from "./PurchaseSlice"
+import turnReducer from "./TurnSlice"
 
 export const store = configureStore({
     reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
         appointmentsList: appointmentsListReduce,
         itemsList: itemsListReducer,
         sale: saleReducer,
-        purchase: purchaseReducer
+        purchase: purchaseReducer,
+        turn: turnReducer,
     },
 });
