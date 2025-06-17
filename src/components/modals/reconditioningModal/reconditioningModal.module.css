@@ -23,11 +23,6 @@
     flex-shrink: 0;
     padding: 2px;
     z-index: 12;
-    /* display: flex;
-    justify-items: center;
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: wrap; */
     display: grid;
     justify-content: center;
     align-items: center;
@@ -44,16 +39,6 @@
     -moz-backdrop-filter: blur(3.75px);
     box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.25);
 }
-
-
-/* .modal_buttons{
-    display:flex;
-    justify-content: space-evenly;
-    padding:20px,20px;
-    align-content: center;
-} */
-
-
 
 .modal_header {
     height: 30px;
@@ -136,15 +121,6 @@
     align-items: center;
 }
 
-/* .btn {
-    border: none;
-    color: #fff;
-    padding: 0.5rem 1.5rem;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.35);
-    font-size: 1.2rem;
-} */
 
 .labels{
     display:flex;
@@ -155,18 +131,6 @@
     
 }
 
-/* .inputs{
-    display:flex;
-    justify-content: space-between;
-} */
-
-/* .btn_submit {
-    background: linear-gradient(90deg, #5161E6 0%, #D551E6 100%);
-}
-
-.btn_cancel {
-    background: linear-gradient(90deg, #E65152 0%, #E651AC 100%);
-} */
 
 .close {
     cursor: pointer;

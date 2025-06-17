@@ -1,4 +1,4 @@
-import Style from './ReconditioningModal.module.css'
+import Style from './reconditioningModal.module.css'
 // import MIniNavBar from '../../miniNavbar/MIniNavBar'
 import BtnClose from '../../btns/btnClose/BtnClose'
 import TextInputStyled from '../../inputs/inputTextStyled/TextInputStyled'
@@ -7,15 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash, faPrint,faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import TextViewShiftPDF from "../../textViews/textViewShiftPDF/TextViewShiftPDF"
-
-// import axios from 'axios'
 import { useState, useEffect } from 'react'
-// import config from '../../../config/Envs'
-// import { useDispatch } from "react-redux";
-// import {  changeClient  } from "../../../redux/ClientSlice";
 
-
-// eslint-disable-next-line react/prop-types
 const ReconditioningModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
 
     const [theStatus, setTheStatus] = useState("");
@@ -87,7 +80,7 @@ useEffect(() => {
         if(e.target.className === Style.modal_container){onClose()}}}>
         <div className={Style.modal} >
             <div className={Style.item}>
-                {/* <MIniNavBar miniTitle={""} btnClose={true} close={onClose} /> */}
+                
                 <div className={Style.close} ><BtnClose close={onClose}/></div>
                 <table className={`${Style.table} ${Style.content}`}>
                     <thead >
