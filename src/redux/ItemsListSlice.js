@@ -9,8 +9,9 @@ const itemsListSlice = createSlice({
         addItems: (state, action) => {
             const existingItem = state.find(item => item.code === action.payload.code);
             if (existingItem) {
+                let stock = parseInt(existingItem.quantity)
                 // If the item exist, sum the quantity. 
-                existingItem.quantity += action.payload.quantity;
+                existingItem.quantity = stock + parseInt(action.payload.quantity);
             } else {
                 // If dont exist, add the new item
                 state.push(action.payload);
@@ -27,7 +28,8 @@ const itemsListSlice = createSlice({
             const { code, quantity } = action.payload;
             const existingItem = state.find(item => item.code === code);
             if (existingItem) {
-                existingItem.quantity = quantity; // update the quantity of item
+                //let stock =parseInt(quantity)
+                existingItem.quantity =  parseInt(quantity); // update the quantity of item
             }
         }
     },
