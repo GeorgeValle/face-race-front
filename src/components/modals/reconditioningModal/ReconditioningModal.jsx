@@ -8,13 +8,18 @@ import { faTrash, faPrint,faFloppyDisk } from "@fortawesome/free-solid-svg-icons
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import TextViewShiftPDF from "../../textViews/textViewShiftPDF/TextViewShiftPDF"
 import { useState, useEffect } from 'react'
+import InputSelectStyled from '../../inputs/inputSelectStyled/InputSelectStyled'
 
 const ReconditioningModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
 
-    const [theStatus, setTheStatus] = useState("");
+   
+
+    const [theStatus, setTheStatus] = useState(TheShift.status);
     const [theDescription, setTheDescription] = useState(TheShift.description);
     const [selectedOption, setSelectedOption] = useState(TheShift.status);
 
+    const allStatus = [{label:'Seleccione un estado',value:''}, {label:'Pendiente',value:'pending'}, {label:'Cancelado',value:'Cancelled'},{label:'Listo',value:'ready'}, {label:'Entregado',value:'delivered'}]
+    
     function formatDateToSpanish(dateString) { 
         // Create a object Date whit a String
         const date = new Date(dateString);
@@ -54,24 +59,31 @@ const ReconditioningModal = ({ TheShift= null, onPrint, onEditStatus=null, onEdi
         }
     }
 
-useEffect(() => {
-        switch(selectedOption){
-            case 'pending':
-                setTheStatus('Pendiente');
-                break;
-            case 'delivered':
-                setTheStatus('Entregado');
-                break;
-            case 'ready':
-                setTheStatus('Listo');
-                break;
-            case 'canceled':
-                setTheStatus('Cancelado');
-                break;
-            default:
-                setTheStatus('Agendado');
+    const handleStatus = ( oneStatus ) =>{
+        if(!oneStatus==""){
+        setTheStatus(oneStatus)
+        onEditStatus(oneStatus)
         }
-    }, [selectedOption]);
+    }
+
+    // useEffect(() => {
+      //  switch(selectedOption){
+      //      case 'pending':
+      //          setTheStatus('Pendiente');
+      //          break;
+      //      case 'delivered':
+      //          setTheStatus('Entregado');
+      //          break;
+     //      case 'ready':
+     //           setTheStatus('Listo');
+      //          break;
+     //       case 'canceled':
+     //           setTheStatus('Cancelado');
+     //           break;
+    //        default:
+    //            setTheStatus('Agendado');
+    //    }
+   // }, [selectedOption]);
     
 // formatStatusToSpanish(TheShift.status);
 
@@ -102,7 +114,7 @@ useEffect(() => {
                         </tr>
                         <tr>
                         <th>Estado:</th>
-                        <td>{theStatus}</td>
+                        <td><InputSelectStyled  defaultValue={theStatus} onLabel={" "} sideLabel={true} isLabel={false} isGroup={false} titleLabel={"Estado:"} onSetValue={handleStatus} options={allStatus} /></td>
                         <th>Teléfono:</th>
                         <td>{TheShift.phone}</td>    
                             
@@ -131,7 +143,7 @@ useEffect(() => {
                         <MiniBtn onClick={onPrint} isWhite={true}><FontAwesomeIcon icon={faPrint} /></MiniBtn>
                     </PDFDownloadLink>
                     </div>
-                    <div className={Style.selectContainer}>
+                    {/*<div className={Style.selectContainer}>
                         <select className={Style.styledSelect} value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)} onBlur={handleBlur}>
                             <option value="">Seleccione un Estado</option>
                             <option value="delivered">Entregado</option>
@@ -139,7 +151,7 @@ useEffect(() => {
                             <option value="ready">Listo</option>
                             <option value="pending">Pendiente</option>
                         </select>
-                    </div>
+                    </div> */}
                     <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setTheDescription(e.target.value)} value={theDescription} />
                     <MiniBtn onClick={handleDescription} isWhite={true}><FontAwesomeIcon icon={faFloppyDisk} /></MiniBtn>
                 </div>
