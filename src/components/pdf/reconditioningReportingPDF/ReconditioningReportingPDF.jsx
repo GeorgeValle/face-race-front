@@ -206,7 +206,7 @@ const ReconditioningReportingPDF = ({ appointments, selectedMonth=0,selectedYear
         <p style={{ color: '#7f8c8d' }}>Distribución por estado </p>
       </div>
       
-      <div style={{ position: 'relative', height: '600px', margin: '30px 0' }}>
+      <div style={{ position: 'relative', height: '740px', margin: '30px 0' }}>
         <div ref={chartRef}>
           <Pie data={data} options={options} />
         </div>
