@@ -322,12 +322,7 @@ const TableReconditioning = () => {
         } catch (error) {
             setMessage("Error al registrar la rectificación ",);
             MessageResponse();
-
-
         }
-
-
-
     }
 
     const handleSlotClick = async (theAppointment, isBooked, date, slot) => {
@@ -486,19 +481,8 @@ const TableReconditioning = () => {
                         </div>
                     </div>
                 </div>
-                {/* <label>
-            Semana:
-            <select value={selectedWeek} onChange={handleWeekChange}>
-            <option value={null}>Todas</option>
-            {weeks.map((_, index) => (
-                <option key={index} value={index}>
-                Semana {index + 1}
-            </option>
-            ))}
-            </select>
-        </label> */}
             </div>
-            {/* <Calendar  onChange={handleDateChange} value={date} /> */}
+            
             {calendar&&(
             <div className={styles.calendarContainer}>
                 {renderColumns()}
