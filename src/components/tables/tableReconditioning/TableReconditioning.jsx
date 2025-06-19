@@ -7,6 +7,7 @@ import config from "../../../config/Envs"
 import TextInputStyled from "../../inputs/inputTextStyled/TextInputStyled"
 import TextViewInfoStyled from "../../textViews/textViewInfoStyled/TextViewInfoStyled"
 import MiniBtn from "../../btns/miniBtn/MiniBtn"
+import MiniNavBar from '../../miniNavbar/MIniNavBar';
 import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMagnifyingGlass, faChartPie /*faPlus, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
@@ -21,6 +22,7 @@ import ReconditioningModal from '../../modals/reconditioningModal/Reconditioning
 import ReconditioningsListPDF from '../../pdf/reconditioningPDF/ReconditioningPDF'
 import ReconditioningPieChartModal from '../../modals/reconditioningPieChartModal/ReconditioningPieChartModal'
 import LoaderMotorcycle from '../../loaders/loaderMotorcycle/LoaderMotorcycle';
+import ReconditioningReportingPDF from '../../pdf/reconditioningReportingPDF/ReconditioningReportingPDF';
 
 const TableReconditioning = () => {
     const [date, setDate] = useState(new Date());
@@ -42,6 +44,8 @@ const TableReconditioning = () => {
     const [modalOpenMessage, setModalOpenMessage] = useState("");
     const [modalOpenDialog2, setModalOpenDialog2] = useState(false);
     const [modalOpenAppointment, setModalOpenAppointment] = useState(false);
+    const [report, setReport] = useState(false);
+    const [calendar, setCalendar] = useState(true);
     const [modalOpenAppointmentPieChart, setModalOpenAppointmentPieChart] = useState(false);
     const [isFetchClient, setIsFetchClient] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -153,6 +157,17 @@ const TableReconditioning = () => {
                     ? { ...appointment, status: oneStatus }
                     : appointment))
     };
+
+    const handleReport = () =>{
+        setCalendar(false)
+        setReport(true)
+    }
+
+    const handleCalendar = () =>{
+        
+        setReport(false)
+        setCalendar(true)
+    }
 
     const handleDelete = async () => {
 
@@ -454,7 +469,7 @@ const TableReconditioning = () => {
                     </div>
                     <div className={styles.buttonsPositions} >
                         <ReconditioningsListPDF reconditionings={filteredAppointments} />
-                        <MiniBtn onClick={handleAppointmentPieChart} ><FontAwesomeIcon icon={faChartPie} /></MiniBtn>
+                        <MiniBtn onClick={handleReport} ><FontAwesomeIcon icon={faChartPie} /></MiniBtn>
                     </div>
                     <div className={styles.inputDate_group}>
                         <label className={styles.label}>
@@ -484,9 +499,17 @@ const TableReconditioning = () => {
         </label> */}
             </div>
             {/* <Calendar  onChange={handleDateChange} value={date} /> */}
+            {calendar&&(
             <div className={styles.calendarContainer}>
                 {renderColumns()}
-            </div>
+            </div>)
+            }
+            {report&&(
+            <div>
+                <MiniNavBar miniTitle="Reportería"  btnClose={true} close={handleCalendar} />
+                <ReconditioningReportingPDF appointments={appointments} selectedMonth={selectedMonth} selectedYear={selectedYear} />
+            </div>)
+            }
         </div>
     );
 };
