@@ -57,8 +57,8 @@ const Panel = () =>{
                         </BtnVioletPanel>
                     </div>
                     <div className={Style.item9}>
-                        <BtnVioletPanel title={"Rectificaciones"}  topColor={true} path={"/reconditioning"}>
-                            <FontAwesomeIcon icon={faMotorcycle} size="lg" />
+                        <BtnVioletPanel title={"Turnos"}  topColor={true} path={"/reconditioning"}>
+                            <FontAwesomeIcon icon={faCalendarPlus} size="lg" />
                         </BtnVioletPanel>
                     </div>
                     {/* <div className={Style.item10}> */}
