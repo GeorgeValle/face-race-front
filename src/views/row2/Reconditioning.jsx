@@ -12,7 +12,7 @@ import MessageModal from "../../components/modals/messageModal/MessageModal"
 import Dialog from "../../components/modals/dialog/Dialog"
 import Style from './Reconditioning.module.css'
 import TableReconditioning from '../../components/tables/tableReconditioning/TableReconditioning'
-
+import TableCalendar from '../../components/tables/tableCalendar/TableCalendar'
 
 const Reconditioning = () =>{
 
@@ -22,6 +22,8 @@ const Reconditioning = () =>{
     const [messageDialog, setMessageDialog] = useState("");
     const [modalOpenDialog, setModalOpenDialog] = useState("");
     const [modalOpenMessage, setModalOpenMessage] = useState(false);
+    const [IsShift, setIsShift] = useState(true);
+    const [isReconditioning, setIsReconditioning] = useState(false)
     
     //const [openCalendar, setOpenCalendar] = useState(true);
 
@@ -37,6 +39,15 @@ const Reconditioning = () =>{
 
     }
 
+    const handleIsReconditioning = () =>{
+        setIsShift(false)
+        setIsReconditioning(true)
+    }
+
+    const handleIsShift = () =>{
+        setIsReconditioning(false)
+        setIsShift(true)
+    }
 
 
 
@@ -60,7 +71,21 @@ const Reconditioning = () =>{
                                 // openSupplier&&<TextViewSupplier TheSupplier={supplier} onEdit={()=>setModalOpenEditSupplier(true)} onDelete={handleDialogDelete} />
                             
                             }
-                            <TableReconditioning />
+                            {
+                                IsShift&&(
+                                    <>
+                                        <TableCalendar changeTurn={handleIsReconditioning}/>
+                                    </>
+                                )
+                            }
+                            {
+                                isReconditioning&&(
+                                    <>
+                                        <TableReconditioning changeTurn={handleIsShift} />
+                                    </>
+                                )
+                            }
+                            
                             
                         
                     </div>

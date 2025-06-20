@@ -36,11 +36,11 @@ const Panel = () =>{
                         </BtnVioletPanel>
                         
                     </div>
-                    <div className={Style.item5}>
+                    {/* <div className={Style.item5}> */}
                         {/* <BtnVioletPanel title={"Pedidos"} isDisabled={true} leftColor={true}>
                             <FontAwesomeIcon icon={faTableList} size="lg" />
                         </BtnVioletPanel> */}
-                    </div>
+                    {/* </div> */}
                     <div className={Style.item6}>
                         <BtnVioletPanel title={"Proveedores"} path={"/supplier"}  topColor={true}>
                             <FontAwesomeIcon icon={faTruckField} size="lg" />
@@ -57,15 +57,15 @@ const Panel = () =>{
                         </BtnVioletPanel>
                     </div>
                     <div className={Style.item9}>
-                        <BtnVioletPanel title={"Turnos"} leftColor={true} path={"/appointment"}>
-                            <FontAwesomeIcon icon={faCalendarPlus} size="lg" />
-                        </BtnVioletPanel>
-                    </div>
-                    <div className={Style.item10}>
                         <BtnVioletPanel title={"Rectificaciones"}  topColor={true} path={"/reconditioning"}>
                             <FontAwesomeIcon icon={faMotorcycle} size="lg" />
                         </BtnVioletPanel>
                     </div>
+                    {/* <div className={Style.item10}> */}
+                        {/* <BtnVioletPanel title={"Turnos"} leftColor={true} path={"/appointment"}>
+                            <FontAwesomeIcon icon={faCalendarPlus} size="lg" />
+                        </BtnVioletPanel> */}
+                    {/* </div> */}
 
                     
                 </article>

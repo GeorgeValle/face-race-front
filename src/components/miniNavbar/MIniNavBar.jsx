@@ -6,7 +6,7 @@ import BtnQuit from '../btns/btnQuit/BtnQuit';
 import BtnClose from '../btns/btnClose/BtnClose';
 
 
-const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=false, btnClose=false, close}) => {
+const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=false, btnClose=false, isLogo=true, close}) => {
 
     return (
         <>
@@ -24,12 +24,16 @@ const MiniNavBar = ({btnBack=false, miniTitle="Aquí va el título", btnQuit=fal
                     <h2 className={navStyles.title} >{miniTitle}</h2>                
                 </div>
                 
-                
-                <img
+            {
+                isLogo&&(
+                    <img
                     alt="logo Collaneri"
                     src={logo}
                     className={navStyles.miniLogo}
                 />
+                )
+            }    
+                
                 
                 {
                     btnClose && <BtnClose close={close}/>

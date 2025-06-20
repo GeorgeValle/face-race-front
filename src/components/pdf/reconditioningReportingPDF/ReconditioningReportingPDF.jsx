@@ -1,12 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Image } from '@react-pdf/renderer';
 
-// Registrar componentes necesarios de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// Componente para el PDF
 const ReportPDF = ({ chartImage, statusCounts }) => {
   const styles = StyleSheet.create({
     page: {
@@ -117,10 +115,11 @@ const ReportPDF = ({ chartImage, statusCounts }) => {
   );
 };
 
-// Componente principal
-const ReconditioningReportingPDF = ({ appointments, selectedMonth=0,selectedYear=0  }) => {
+const ReconditioningReportingPDF = ({ appointments, selectedMonth=0, selectedYear=0 }) => {
   const chartRef = useRef(null);
-  
+  const [chartReady, setChartReady] = useState(false);
+  const [chartImage, setChartImage] = useState(null);
+
   // Filtrar y contar los estados
   const statusCounts = appointments.reduce((acc, appointment) => {
     acc[appointment.status] = (acc[appointment.status] || 0) + 1;
@@ -145,16 +144,16 @@ const ReconditioningReportingPDF = ({ appointments, selectedMonth=0,selectedYear
           statusCounts['delivered'] || 0
         ],
         backgroundColor: [
-          'rgba(28, 200, 138, 0.8)', // Verde para Pendientes
-          'rgba(231, 74, 59, 0.8)',  // Rojo para Cancelado
-          'rgba(246, 194, 62, 0.8)',  // Amarillo para Listo
-          'rgba(54, 185, 204, 0.8)'    // Azul para Entregado
+          'rgba(28, 200, 138, 0.8)',
+          'rgba(231, 74, 59, 0.8)',
+          'rgba(246, 194, 62, 0.8)',
+          'rgba(54, 185, 204, 0.8)'
         ],
         borderColor: [
-          'rgba(28, 200, 138, 1)', // Verde para Pendientes
-          'rgba(231, 74, 59, 1)',  // Rojo para Cancelado
-          'rgba(246, 194, 62, 1)',  // Amarillo para Listo
-          'rgba(54, 185, 204, 1)'    // Azul para Entregado
+          'rgba(28, 200, 138, 1)',
+          'rgba(231, 74, 59, 1)',
+          'rgba(246, 194, 62, 1)',
+          'rgba(54, 185, 204, 1)'
         ],
         borderWidth: 1,
       },
@@ -187,56 +186,92 @@ const ReconditioningReportingPDF = ({ appointments, selectedMonth=0,selectedYear
         }
       }
     },
+    animation: {
+      onComplete: () => {
+        // Cuando la animación del gráfico termina, marcamos como listo
+        setChartReady(true);
+        // Capturamos la imagen del gráfico
+        if (chartRef.current) {
+          setChartImage(chartRef.current.querySelector('canvas').toDataURL('image/png'));
+        }
+      }
+    }
   };
- //let lineMonth = `Distribución por estado mes ${appointments[0].shiftDate.getMonth()+1} Año ${appointments[0].shiftDate.getFullYear()}`;
+
+  useEffect(() => {
+    // Forzar un nuevo render del gráfico cuando el componente se monta
+    if (chartRef.current && chartRef.current.chartInstance) {
+      chartRef.current.chartInstance.update();
+    }
+  }, []);
+
   return (
     <div style={{
-      maxWidth: '700px', // Ajustar el ancho del contenedor
-      margin: '30px auto',
-      padding: '30px',
+      maxWidth: '620px',
+      margin: '25px auto',
+      padding: '25px',
       background: 'white',
       borderRadius: '10px',
       boxShadow: '0 0 20px rgba(0,0,0,0.1)',
-      position: 'relative' // Para asegurar que el botón esté visible
+      position: 'relative'
     }}>
       <div style={{ textAlign: 'center', marginBottom: '30px' }}>
         <h1 style={{ color: '#2c3e50', fontWeight: '700', marginBottom: '10px' }}>
           Análisis de Rectificaciones
         </h1>
-        <p style={{ color: '#7f8c8d' }}>Distribución por estado </p>
+        <p style={{ color: '#7f8c8d' }}>Distribución por estado</p>
       </div>
       
-      <div style={{ position: 'relative', height: '740px', margin: '30px 0' }}>
+      <div style={{ position: 'relative', height: '600px', margin: '30px 0' }}>
         <div ref={chartRef}>
           <Pie data={data} options={options} />
         </div>
       </div>
       
-      <PDFDownloadLink 
-        document={<ReportPDF chartImage={chartRef.current?.querySelector('canvas')?.toDataURL('image/png')} statusCounts={statusCounts} />}
-        fileName={`reporte_rectificaciones_${new Date().toISOString().split('T')[0]}.pdf`}
-        style={{
-          background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
-          color: 'white',
+      {chartReady && (
+        <PDFDownloadLink 
+          document={<ReportPDF chartImage={chartImage} statusCounts={statusCounts} />}
+          fileName={`reporte_rectificaciones_${new Date().toISOString().split('T')[0]}.pdf`}
+          style={{
+            background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+            color: 'white',
+            padding: '12px 25px',
+            border: 'none',
+            borderRadius: '30px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: '600',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+            display: 'block',
+            margin: '0 auto',
+            textDecoration: 'none',
+            textAlign: 'center',
+            width: '200px'
+          }}
+        >
+          {({ loading }) => (
+            loading ? 'Generando PDF...' : 'Exportar a PDF'
+          )}
+        </PDFDownloadLink>
+      )}
+      
+      {!chartReady && (
+        <div style={{
+          background: '#f5f7fa',
+          color: '#7f8c8d',
           padding: '12px 25px',
-          border: 'none',
           borderRadius: '30px',
-          cursor: 'pointer',
           fontSize: '16px',
           fontWeight: '600',
-          transition: 'all 0.3s ease',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
           display: 'block',
           margin: '0 auto',
-          textDecoration: 'none',
           textAlign: 'center',
           width: '200px'
-        }}
-      >
-        {({ loading }) => (
-          loading ? 'Generando PDF...' : 'Exportar a PDF'
-        )}
-      </PDFDownloadLink>
+        }}>
+          Preparando gráfico...
+        </div>
+      )}
       
       <div style={{ textAlign: 'center', marginTop: '30px', color: '#7f8c8d', fontSize: '14px' }}>
         <p>Haz clic en el botón para exportar este reporte como PDF</p>
