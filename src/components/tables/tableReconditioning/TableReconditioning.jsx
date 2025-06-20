@@ -10,7 +10,7 @@ import MiniBtn from "../../btns/miniBtn/MiniBtn"
 import MiniNavBar from '../../miniNavbar/MIniNavBar';
 import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass, faChartPie /*faPlus, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
+import { faChartPie, faCalendarPlus /*faPlus, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
 import { useDispatch } from "react-redux";
 import { addClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
 import { addShift, deleteShift } from "../../../redux/ShiftSlice"
@@ -24,7 +24,7 @@ import ReconditioningPieChartModal from '../../modals/reconditioningPieChartModa
 import LoaderMotorcycle from '../../loaders/loaderMotorcycle/LoaderMotorcycle';
 import ReconditioningReportingPDF from '../../pdf/reconditioningReportingPDF/ReconditioningReportingPDF';
 
-const TableReconditioning = () => {
+const TableReconditioning = ({ changeTurn=null}) => {
     const [date, setDate] = useState(new Date());
     const [theDate, setTheDate] = useState(new Date());
     const [theTimeSlot, setTheTimeSlot] = useState("");
@@ -242,6 +242,14 @@ const TableReconditioning = () => {
 
     }
 
+    const handleOnKeyClient = async (event) => {
+        if (event.key === "Enter" || event.key === "Intro") {
+            
+            await fetchClient();
+            
+        }
+    }
+
 
     useEffect(() => {
 
@@ -431,8 +439,9 @@ const TableReconditioning = () => {
             <div className={styles.center}>
                 <div className={styles.separate} >
                     <div className={styles.article} >
-                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Cliente" value={inputDNI} onChange={(e) => setInputDNI(e.target.value)} />
-                        <MiniBtn onClick={fetchClient} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                        <MiniBtn onClick={changeTurn} ><FontAwesomeIcon icon={faCalendarPlus} /></MiniBtn>
+                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Cliente" value={inputDNI} onChange={(e) => setInputDNI(e.target.value)} onKey={handleOnKeyClient} />
+                        
                     </div>
                     <div className={styles.article}>
 
@@ -485,6 +494,7 @@ const TableReconditioning = () => {
             
             {calendar&&(
             <div className={styles.calendarContainer}>
+                <MiniNavBar miniTitle="Fecha de Entrega" isLogo={false} />
                 {renderColumns()}
             </div>)
             }

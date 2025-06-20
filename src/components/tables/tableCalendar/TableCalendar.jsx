@@ -8,9 +8,10 @@ import config from "../../../config/Envs"
 import TextInputStyled from "../../inputs/inputTextStyled/TextInputStyled"
 import TextViewInfoStyled from "../../textViews/textViewInfoStyled/TextViewInfoStyled"
 import MiniBtn from "../../btns/miniBtn/MiniBtn"
+import MiniNavBar from '../../miniNavbar/MIniNavBar';
 import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass, faChartPie /*faPlus, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
+import { faMotorcycle, faChartPie /*faPlus, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
 import { useDispatch } from "react-redux";
 import { addClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
 import { addShift, deleteShift } from "../../../redux/ShiftSlice"
@@ -22,7 +23,7 @@ import AppointmentsListPDF from '../../textViews/appointmentListPDF/Appointments
 import AppointmentPieChartModal from '../../modals/appointmentPieChartModal/AppointmentPieChartModal'
 import LoaderMotorcycle from '../../loaders/loaderMotorcycle/LoaderMotorcycle';
 
-const TableCalendar = () => {
+const TableCalendar = ({ changeTurn=null}) => {
     const [date, setDate] = useState(new Date());
     const [theDate, setTheDate] = useState(new Date());
     const [theTimeSlot, setTheTimeSlot] = useState("");
@@ -222,8 +223,14 @@ const TableCalendar = () => {
             setMessage("Cliente NO encontrado")
             MessageResponse();
         }
+    }
 
-
+    const handleOnKeyClient = async (event) => {
+        if (event.key === "Enter" || event.key === "Intro") {
+            
+            await fetchClient();
+            
+        }
     }
 
 
@@ -420,8 +427,9 @@ const TableCalendar = () => {
             <div className={styles.center}>
                 <div className={styles.separate} >
                     <div className={styles.article} >
-                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Cliente" value={inputDNI} onChange={(e) => setInputDNI(e.target.value)} />
-                        <MiniBtn onClick={fetchClient} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                        <MiniBtn onClick={changeTurn} ><FontAwesomeIcon icon={faMotorcycle} /></MiniBtn>
+                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Cliente" value={inputDNI} onChange={(e) => setInputDNI(e.target.value)} onKey={handleOnKeyClient} />
+                        
                     </div>
                     <div className={styles.article}>
 
@@ -484,6 +492,7 @@ const TableCalendar = () => {
             </div>
             {/* <Calendar  onChange={handleDateChange} value={date} /> */}
             <div className={styles.calendarContainer}>
+                <MiniNavBar miniTitle="Fecha de Recepción" isLogo={false} />
                 {renderColumns()}
             </div>
         </div>
