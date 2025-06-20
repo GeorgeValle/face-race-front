@@ -54,7 +54,7 @@ const Reconditioning = () =>{
     return(
         <div className={Style.mainContainer}>
             <Container>
-                <MiniNavBar miniTitle={"Rectificaciones"} btnBack={true}/>
+                <MiniNavBar miniTitle={"Turnos para Rectificaciones"} btnBack={true}/>
 
                 {modalOpenMessage&&(<MessageModal messageModal={message} onClose={handleClose}/>)}
                 {modalOpenDialog&&(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleDelete} onClose={handleClose}/>)}

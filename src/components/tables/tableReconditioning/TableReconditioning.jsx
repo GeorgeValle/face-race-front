@@ -494,7 +494,7 @@ const TableReconditioning = ({ changeTurn=null}) => {
             
             {calendar&&(
             <div className={styles.calendarContainer}>
-                <MiniNavBar miniTitle="Fecha de Entrega" isLogo={false} />
+                <MiniNavBar miniTitle="Fecha para entregar la motocicleta" isLogo={false} />
                 {renderColumns()}
             </div>)
             }

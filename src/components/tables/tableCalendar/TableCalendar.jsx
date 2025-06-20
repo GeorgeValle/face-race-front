@@ -492,7 +492,7 @@ const TableCalendar = ({ changeTurn=null}) => {
             </div>
             {/* <Calendar  onChange={handleDateChange} value={date} /> */}
             <div className={styles.calendarContainer}>
-                <MiniNavBar miniTitle="Fecha de Recepción" isLogo={false} />
+                <MiniNavBar miniTitle="Turno para recepción de motocicleta" isLogo={false} />
                 {renderColumns()}
             </div>
         </div>
