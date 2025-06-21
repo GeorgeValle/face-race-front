@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useRef, useState } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -11,7 +11,10 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
+import { PDFDownloadLink, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import html2canvas from 'html2canvas';
 
+// Registrar componentes de Chart.js
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -23,268 +26,435 @@ ChartJS.register(
     Legend
 );
 
+// Estilos para el PDF
+const styles = StyleSheet.create({
+    page: {
+        padding: 30,
+        fontFamily: 'Helvetica'
+    },
+    header: {
+        marginBottom: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#000',
+        paddingBottom: 10
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 5
+    },
+    subtitle: {
+        fontSize: 16,
+        marginBottom: 5
+    },
+    date: {
+        fontSize: 12,
+        color: '#666'
+    },
+    chartContainer: {
+        marginTop: 20,
+        marginBottom: 20,
+        alignItems: 'center'
+    },
+    totals: {
+        marginTop: 20,
+        marginBottom: 40
+    },
+    totalItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 5
+    },
+    footer: {
+        position: 'absolute',
+        bottom: 30,
+        left: 30,
+        right: 30,
+        fontSize: 10,
+        textAlign: 'center',
+        borderTopWidth: 1,
+        borderTopColor: '#000',
+        paddingTop: 10
+    },
+    boldText: {
+        fontWeight: 'bold'
+    }
+});
+
+// Nombres de meses en español
 const MONTH_NAMES_ES = [
     'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
     'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
 ];
 
-/**
- * Componente SalesCharts para mostrar gráficos de ventas.
- * Props:
- * - salesData: array de ventas (usado para monthly y annual si no se pasa monthlyTotalsByName)
- * - monthlyTotalsByName: objeto con totales por mes { enero, febrero, ... } (usado para annual)
- * - clientSales: array de ventas filtradas para cliente específico y año (usado para gráfico client)
- * - method: objeto con totales por mes según método de pago (usado para gráfico method)
- * - item: objeto con totales por mes según item (usado para gráfico item)
- * - selectedYear: año seleccionado (number|null)
- * - selectedMonth: mes seleccionado (1-12|null)
- * - reportType: 'monthly' | 'annual' | 'client' | 'method' | 'item'
- */
-const SalesCharts = ({
+const SalesChart = ({
     salesData = [],
-    monthlyTotalsByName,
+    monthlyTotalsByName = {},
     clientSales = [],
-    method,
-    item,
-    selectedYear,
-    selectedMonth,
-    reportType
+    method = {},
+    item = {},
+    selectedYear = new Date().getFullYear(),
+    selectedMonth = new Date().getMonth() + 1,
+    reportType = 'monthly'
 }) => {
-    const formatDate = (date) => date.toISOString().split('T')[0];
+    const chartRef = useRef(null);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [pdfData, setPdfData] = useState(null);
 
-    const validSales = useMemo(() => salesData.filter(sale => sale.paid), [salesData]);
-
-    const yearlySalesData = useMemo(() => {
-        if (reportType !== 'annual') return { labels: [], datasets: [] };
-        if (!monthlyTotalsByName || typeof monthlyTotalsByName !== 'object') return { labels: [], datasets: [] };
-
-        const labels = MONTH_NAMES_ES;
-        const dataValues = labels.map(month => Number(monthlyTotalsByName[month]) || 0);
-
-        return {
-            labels,
-            datasets: [
-                {
-                    label: `Ventas del Año ${selectedYear || ''}`,
-                    data: dataValues,
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)'
-                }
-            ]
-        };
-    }, [reportType, monthlyTotalsByName, selectedYear]);
-
-    const monthlySalesData = useMemo(() => {
-        if (reportType !== 'monthly') return { labels: [], datasets: [] };
-        if (!selectedYear || !selectedMonth) return { labels: [], datasets: [] };
-
-        const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
-        const salesByDay = Array(daysInMonth).fill(0);
-
-        validSales.forEach(sale => {
-            const saleDate = new Date(sale.saleDate);
-            if (
-                saleDate.getFullYear() === Number(selectedYear) &&
-                saleDate.getMonth() + 1 === Number(selectedMonth)
-            ) {
-                const day = saleDate.getDate();
-                const totalPayment = sale.payment.reduce((sum, p) => sum + Number(p.amount), 0);
-                salesByDay[day - 1] += totalPayment;
-            }
-        });
-
-        const labels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString());
-
-        return {
-            labels,
-            datasets: [
-                {
-                    label: `Ventas de ${MONTH_NAMES_ES[selectedMonth - 1]} ${selectedYear}`,
-                    data: salesByDay,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
-                }
-            ]
-        };
-    }, [reportType, selectedYear, selectedMonth, validSales]);
-
-    const clientSalesData = useMemo(() => {
-        if (reportType !== 'client') return { labels: [], datasets: [] };
-        if (!clientSales || clientSales.length === 0) return { labels: [], datasets: [] };
-
-        const client = clientSales[0]?.client;
-        const clientName = client ? `${client.name} ${client.surname}` : 'Cliente';
-
-        const salesByMonth = Array(12).fill(0);
-        clientSales.forEach(sale => {
-            const saleDate = new Date(sale.saleDate);
-            const month = saleDate.getMonth();
-            const totalPayment = sale.payment.reduce((sum, p) => sum + Number(p.amount), 0);
-            salesByMonth[month] += totalPayment;
-        });
-
-        return {
-            labels: MONTH_NAMES_ES,
-            datasets: [
-                {
-                    label: `Ventas cliente: ${clientName}`,
-                    data: salesByMonth,
-                    fill: false,
-                    borderColor: 'rgba(255,99,132,1)',
-                    backgroundColor: 'rgba(255,99,132,0.5)',
-                    tension: 0.3
-                }
-            ]
-        };
-    }, [reportType, clientSales]);
-
-    const methodSalesData = useMemo(() => {
-        if (reportType !== 'method') return { labels: [], datasets: [] };
-        if (!method || typeof method !== 'object') return { labels: [], datasets: [] };
-
-        const labels = MONTH_NAMES_ES;
-        const dataValues = labels.map(month => Number(method[month]) || 0);
-
-        return {
-            labels,
-            datasets: [
-                {
-                    label: `Ventas por método de pago ${selectedYear || ''}`,
-                    data: dataValues,
-                    backgroundColor: 'rgba(153, 102, 255, 0.6)'
-                }
-            ]
-        };
-    }, [reportType, method, selectedYear]);
-
-    const itemSalesData = useMemo(() => {
-        if (reportType !== 'item') return { labels: [], datasets: [] };
-        if (!item || typeof item !== 'object') return { labels: [], datasets: [] };
-
-        const labels = MONTH_NAMES_ES;
-        const dataValues = labels.map(month => Number(item[month]) || 0);
-
-        return {
-            labels,
-            datasets: [
-                {
-                    label: `Ventas por ítem ${selectedYear || ''}`,
-                    data: dataValues,
-                    backgroundColor: 'rgba(255, 159, 64, 0.6)'
-                }
-            ]
-        };
-    }, [reportType, item, selectedYear]);
-
-    const options = {
+    // Configuración común para los gráficos
+    const commonChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
-        layout: {
-            padding: 10
-        },
         plugins: {
-            legend: { position: 'top', labels: { color: '#000' } },
-            title: { display: false },
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false,
+            },
             tooltip: {
-                backgroundColor: '#fff', // Tooltip background white
-                titleColor: '#000',
-                bodyColor: '#000'
+                callbacks: {
+                    label: function (context) {
+                        return `Ventas: $${context.raw.toLocaleString('es-AR')}`;
+                    }
+                }
             }
         },
         scales: {
-            x: {
-                grid: { color: '#e0e0e0' },
-                ticks: { color: '#000' },
-                backgroundColor: '#fff' // No direct support, style container instead
-            },
             y: {
                 beginAtZero: true,
-                grid: { color: '#e0e0e0' },
-                ticks: { color: '#000' }
+                ticks: {
+                    callback: function (value) {
+                        return '$' + value.toLocaleString('es-AR');
+                    }
+                }
             }
         }
     };
 
-    // Estilo de contenedor para fondo blanco en gráfico
-    const containerStyle = {
-        maxWidth: 1100,
-        height: '600px',
-        margin: '0 auto',
-        padding: '1rem',
-        backgroundColor: '#fff', // fondo blanco
-        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-        borderRadius: '8px'
+    // Configuración para gráfico de líneas
+    const lineChartOptions = {
+        ...commonChartOptions,
+        elements: {
+            line: {
+                fill: false,
+                borderWidth: 3
+            },
+            point: {
+                radius: 5,
+                hitRadius: 10,
+                hoverRadius: 8
+            }
+        }
     };
 
+    // Preparar datos para el gráfico
+    const getChartData = () => {
+        switch (reportType) {
+            case 'annual':
+                return {
+                    labels: MONTH_NAMES_ES,
+                    datasets: [{
+                        label: `Ventas ${selectedYear}`,
+                        data: MONTH_NAMES_ES.map(month => monthlyTotalsByName[month] || 0),
+                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                    }]
+                };
+
+            case 'monthly':
+                const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+                return {
+                    labels: Array.from({ length: daysInMonth }, (_, i) => i + 1),
+                    datasets: [{
+                        label: `Ventas ${MONTH_NAMES_ES[selectedMonth - 1]} ${selectedYear}`,
+                        data: Array.from({ length: daysInMonth }, (_, i) =>
+                            salesData.filter(sale => {
+                                const saleDate = new Date(sale.saleDate);
+                                return saleDate.getDate() === i + 1 &&
+                                    saleDate.getMonth() + 1 === Number(selectedMonth) &&
+                                    saleDate.getFullYear() === Number(selectedYear);
+                            }).reduce((sum, sale) => sum + sale.payment.reduce((pSum, p) => pSum + Number(p.amount), 0), 0)
+                        ),
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    }]
+                };
+
+            case 'item':
+                return {
+                    labels: Object.keys(item),
+                    datasets: [{
+                        label: 'Ventas por Producto',
+                        data: Object.values(item),
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    }]
+                };
+
+            case 'client':
+                return {
+                    labels: MONTH_NAMES_ES,
+                    datasets: [{
+                        label: `Ventas del Cliente ${clientSales[0]?.client?.dni || ''}`,
+                        data: MONTH_NAMES_ES.map((_, index) => {
+                            return clientSales.filter(sale => {
+                                const saleDate = new Date(sale.saleDate);
+                                return saleDate.getMonth() === index &&
+                                    saleDate.getFullYear() === Number(selectedYear);
+                            }).reduce((sum, sale) => sum + sale.payment.reduce((pSum, p) => pSum + Number(p.amount), 0), 0);
+                        }),
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        tension: 0.1,
+                        pointBackgroundColor: 'rgb(75, 192, 192)',
+                        pointBorderColor: '#fff',
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'rgb(75, 192, 192)',
+                        pointHoverBorderColor: 'rgba(220,220,220,1)',
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2
+                    }]
+                };
+
+            case 'method':
+                return {
+                    labels: Object.keys(method),
+                    datasets: [{
+                        label: 'Ventas por Método de Pago',
+                        data: Object.values(method),
+                        backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                    }]
+                };
+
+            default:
+                return {
+                    labels: [],
+                    datasets: []
+                };
+        }
+    };
+
+    // Función para capturar el gráfico actual
+    const captureCurrentChart = async () => {
+        if (!chartRef.current) return null;
+
+        // Esperar a que Chart.js termine de renderizar
+        const chart = ChartJS.getChart(chartRef.current.canvas);
+        if (chart) {
+            await new Promise(resolve => {
+                const checkAnimation = () => {
+                    if (!chart.animating) resolve();
+                    else requestAnimationFrame(checkAnimation);
+                };
+                checkAnimation();
+            });
+        }
+
+        // Pequeño delay adicional para asegurar renderizado
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Capturar el canvas como imagen
+        try {
+            const canvas = await html2canvas(chartRef.current.canvas);
+            return canvas.toDataURL('image/png');
+        } catch (error) {
+            console.error("Error capturando gráfico:", error);
+            return null;
+        }
+    };
+
+    // Función para preparar los datos del PDF
+    const preparePdfData = async () => {
+        setIsGenerating(true);
+
+        try {
+            // Capturar el gráfico actual
+            const chartImage = await captureCurrentChart();
+            if (!chartImage) return;
+
+            // Calcular totales según el tipo de reporte
+            let totalSales = 0;
+            const monthlyDetails = {};
+
+            switch (reportType) {
+                case 'annual':
+                    totalSales = Object.values(monthlyTotalsByName).reduce((sum, val) => sum + (Number(val) || 0), 0);
+                    MONTH_NAMES_ES.forEach(month => {
+                        if (monthlyTotalsByName[month]) {
+                            monthlyDetails[month] = monthlyTotalsByName[month];
+                        }
+                    });
+                    break;
+
+                case 'monthly':
+                    salesData.forEach(sale => {
+                        const saleDate = new Date(sale.saleDate);
+                        if (saleDate.getMonth() + 1 === Number(selectedMonth) &&
+                            saleDate.getFullYear() === Number(selectedYear)) {
+                            const amount = sale.payment.reduce((sum, p) => sum + Number(p.amount), 0);
+                            totalSales += amount;
+                            const day = saleDate.getDate();
+                            monthlyDetails[`Día ${day}`] = amount;
+                        }
+                    });
+                    break;
+
+                case 'item':
+                    Object.entries(item).forEach(([month, value]) => {
+                        totalSales += Number(value) || 0;
+                        monthlyDetails[month] = value;
+                    });
+                    break;
+
+                case 'client':
+                    MONTH_NAMES_ES.forEach((month, index) => {
+                        const amount = clientSales
+                            .filter(sale => new Date(sale.saleDate).getMonth() === index)
+                            .reduce((sum, sale) => sum + sale.payment.reduce((pSum, p) => pSum + Number(p.amount), 0), 0);
+                        if (amount > 0) {
+                            totalSales += amount;
+                            monthlyDetails[month] = amount;
+                        }
+                    });
+                    break;
+
+                case 'method':
+                    Object.entries(method).forEach(([methodName, value]) => {
+                        totalSales += Number(value) || 0;
+                        monthlyDetails[methodName] = value;
+                    });
+                    break;
+            }
+
+            setPdfData({
+                chartImage,
+                totalSales,
+                monthlyDetails
+            });
+
+        } catch (error) {
+            console.error('Error al generar PDF:', error);
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    // Componente PDF
+    const SalesReportPDF = () => (
+        <Document>
+            <Page size="A4" style={styles.page}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>Reporte de Ventas</Text>
+                    <Text style={styles.subtitle}>
+                        {reportType === 'annual' && `Análisis de ventas anuales ${selectedYear}`}
+                        {reportType === 'monthly' && `Análisis de ventas mensuales ${MONTH_NAMES_ES[selectedMonth - 1]} ${selectedYear}`}
+                        {reportType === 'item' && `Ventas por producto`}
+                        {reportType === 'client' && `Ventas por cliente`}
+                        {reportType === 'method' && `Ventas por método de pago`}
+                    </Text>
+                    <Text style={styles.date}>Generado el {new Date().toLocaleDateString('es-ES')}</Text>
+                </View>
+
+                {pdfData?.chartImage && (
+                    <View style={styles.chartContainer}>
+                        <Image src={pdfData.chartImage} style={{ width: '100%' }} />
+                    </View>
+                )}
+
+                <View style={styles.totals}>
+                    <Text style={styles.boldText}>Resumen de Ventas</Text>
+
+                    <View style={styles.totalItem}>
+                        <Text>Total General:</Text>
+                        <Text>$ {pdfData?.totalSales?.toLocaleString('es-AR') || 0}</Text>
+                    </View>
+
+                    {Object.entries(pdfData?.monthlyDetails || {}).map(([period, amount]) => (
+                        <View style={styles.totalItem} key={period}>
+                            <Text>{period}:</Text>
+                            <Text>$ {amount.toLocaleString('es-AR')}</Text>
+                        </View>
+                    ))}
+                </View>
+
+                <View style={styles.footer}>
+                    <Text>Colaneri e Hijos</Text>
+                    <Text>Email: colaneriehijos@gmail.com</Text>
+                    <Text>Face Race © {new Date().getFullYear()} - Todos los derechos reservados</Text>
+                </View>
+            </Page>
+        </Document>
+    );
+
     return (
-        <div style={containerStyle}>
-            <h2 style={{ color: '#000' }}>Resumen de Ventas</h2>
+        <div style={{
+            position: 'relative',
+            maxWidth: '1000px',
+            margin: '0 auto',
+            padding: '20px',
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            minHeight: '600px'
+        }}>
+            <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 100 }}>
+                <button
+                    onClick={preparePdfData}
+                    disabled={isGenerating}
+                    style={{
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        padding: '10px 15px',
+                        marginRight: '10px'
+                    }}
+                >
+                    {isGenerating ? 'Preparando...' : 'Preparar PDF'}
+                </button>
 
-            {reportType === 'annual' && (
-                <section style={{ marginBottom: '2rem', height: '450px' }}>
-                    {monthlyTotalsByName ? (
-                        <Bar data={yearlySalesData} options={options} />
-                    ) : (
-                        <p style={{ color: '#000' }}>
-                            Por favor, seleccione el año para visualizar el gráfico anual.
-                        </p>
-                    )}
-                </section>
-            )}
+                {pdfData && (
+                    <PDFDownloadLink
+                        document={<SalesReportPDF />}
+                        fileName={`reporte_ventas_${reportType}_${new Date().toISOString().slice(0, 10)}.pdf`}
+                    >
+                        {({ loading }) => (
+                            <button
+                                style={{
+                                    backgroundColor: loading ? '#2E7D32' : '#4CAF50',
+                                    color: 'white',
+                                    padding: '10px 15px'
+                                }}
+                                disabled={loading}
+                            >
+                                {loading ? 'Generando PDF...' : 'Descargar PDF'}
+                            </button>
+                        )}
+                    </PDFDownloadLink>
+                )}
+            </div>
 
-            {reportType === 'monthly' && (
-                <section style={{ marginBottom: '2rem', height: '450px' }}>
-                    {selectedYear && selectedMonth ? (
-                        <Bar data={monthlySalesData} options={options} />
-                    ) : (
-                        <p style={{ color: '#000' }}>
-                            Por favor, seleccione año y mes para visualizar el gráfico mensual.
-                        </p>
-                    )}
-                </section>
-            )}
+            <h2 style={{ color: '#333', marginBottom: '20px' }}>
+                {reportType === 'annual' && `Ventas Anuales ${selectedYear}`}
+                {reportType === 'monthly' && `Ventas de ${MONTH_NAMES_ES[selectedMonth - 1]} ${selectedYear}`}
+                {reportType === 'item' && `Ventas por Producto`}
+                {reportType === 'client' && `Ventas por Cliente`}
+                {reportType === 'method' && `Ventas por Método de Pago`}
+            </h2>
 
-            {reportType === 'client' && (
-                <section style={{ marginBottom: '2rem', height: '450px' }}>
-                    {clientSales && clientSales.length > 0 ? (
-                        <Line data={clientSalesData} options={options} />
-                    ) : (
-                        <p style={{ color: '#000' }}>
-                            Por favor, el DNI del cliente para visualizar su gráfico.
-                        </p>
-                    )}
-                </section>
-            )}
-
-            {reportType === 'method' && (
-                <section style={{ marginBottom: '2rem', height: '450px' }}>
-                    {method ? (
-                        <Bar data={methodSalesData} options={options} />
-                    ) : (
-                        <p style={{ color: '#000' }}>
-                            Por favor, seleccione un método con datos para visualizar el gráfico.
-                        </p>
-                    )}
-                </section>
-            )}
-
-            {reportType === 'item' && (
-                <section style={{ marginBottom: '2rem', height: '450px' }}>
-                    {item ? (
-                        <Bar data={itemSalesData} options={options} />
-                    ) : (
-                        <p style={{ color: '#000' }}>
-                            Por favor, ingrese un código de ítem para visualizar el gráfico.
-                        </p>
-                    )}
-                </section>
-            )}
-
-            {!['monthly', 'annual', 'client', 'method', 'item'].includes(reportType) && (
-                <p style={{ color: '#000' }}>
-                    Por favor, seleccione un tipo de reporte válido para visualizar gráficos.
-                </p>
-            )}
+            <div style={{ height: '500px', marginTop: '40px' }}>
+                {reportType === 'client' ? (
+                    <Line
+                        ref={chartRef}
+                        data={getChartData()}
+                        options={lineChartOptions}
+                    />
+                ) : (
+                    <Bar
+                        ref={chartRef}
+                        data={getChartData()}
+                        options={commonChartOptions}
+                    />
+                )}
+            </div>
         </div>
     );
 };
 
-export default SalesCharts;
+export default SalesChart;
