@@ -1,9 +1,12 @@
-# React + Vite
+# Proyecto Face Race
+## sistema de información para la empresa Colaneri e Hijos de Rosario
+### Trabajo final para la carrera Analista de Sistemas
+### Universidad: Instituto Superior Santo Domingo
 
 
-Trabajo final de la carrera: ANALISTA DE SISTEMAS
 
-EMPRESA: COLANERI E HIJOS
+
+
 
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
