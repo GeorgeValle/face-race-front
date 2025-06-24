@@ -22,8 +22,9 @@ import AppointmentModal from '../../modals/AppointmentModal/AppointmentModal';
 import AppointmentsListPDF from '../../textViews/appointmentListPDF/AppointmentsListPDF'
 import AppointmentPieChartModal from '../../modals/appointmentPieChartModal/AppointmentPieChartModal'
 import LoaderMotorcycle from '../../loaders/loaderMotorcycle/LoaderMotorcycle';
+import AppointmentReportingPDF from '../../pdf/appointmentReportingPDF/AppointmentReportingPDF';
 
-const TableCalendar = ({ changeTurn=null}) => {
+const TableCalendar = ({ changeTurn = null }) => {
     const [date, setDate] = useState(new Date());
     const [theDate, setTheDate] = useState(new Date());
     const [theTimeSlot, setTheTimeSlot] = useState("");
@@ -46,7 +47,8 @@ const TableCalendar = ({ changeTurn=null}) => {
     const [modalOpenAppointmentPieChart, setModalOpenAppointmentPieChart] = useState(false);
     const [isFetchClient, setIsFetchClient] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    const [report, setReport] = useState(false);
+    const [calendar, setCalendar] = useState(true);
     const client = useSelector((state) => state.client);
     const shift = useSelector((state) => state.shift);
 
@@ -108,10 +110,10 @@ const TableCalendar = ({ changeTurn=null}) => {
         setModalOpenDialog1(true);
     }
 
-    const handleAppointmentPieChart = () => {
-        setModalOpenAppointmentPieChart(true);
+    // const handleAppointmentPieChart = () => {
+    //     setModalOpenAppointmentPieChart(true);
 
-    }
+    // }
 
     const handleEditDescription = async (oneDescription) => {
         try {
@@ -153,6 +155,17 @@ const TableCalendar = ({ changeTurn=null}) => {
                     ? { ...appointment, status: oneStatus }
                     : appointment))
     };
+
+    const handleReport = () =>{
+        setCalendar(false)
+        setReport(true)
+    }
+
+    const handleCalendar = () =>{
+        
+        setReport(false)
+        setCalendar(true)
+    }
 
     const handleDelete = async () => {
 
@@ -212,7 +225,7 @@ const TableCalendar = ({ changeTurn=null}) => {
             const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
             const response = request.data
             dispatch(addClient(response.data))
-            
+
             if (response.data) {
                 setIsFetchClient(true);
                 fetchByDNI(response.data.dni);
@@ -227,9 +240,9 @@ const TableCalendar = ({ changeTurn=null}) => {
 
     const handleOnKeyClient = async (event) => {
         if (event.key === "Enter" || event.key === "Intro") {
-            
+
             await fetchClient();
-            
+
         }
     }
 
@@ -423,13 +436,13 @@ const TableCalendar = ({ changeTurn=null}) => {
             {modalOpenDialog2 && createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose} />, document.body)}
             {modalOpenAppointmentPieChart && createPortal(<AppointmentPieChartModal appointments={appointments} onClose={handleClose} />, document.body)}
             {modalOpenAppointment && createPortal(<AppointmentModal TheShift={shift} onEditStatus={handleEditStatus} onEditDescription={handleEditDescription} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose} />, document.body)}
-            {loading&&<LoaderMotorcycle/>}
+            {loading && <LoaderMotorcycle />}
             <div className={styles.center}>
                 <div className={styles.separate} >
                     <div className={styles.article} >
                         <MiniBtn onClick={changeTurn} ><FontAwesomeIcon icon={faMotorcycle} /></MiniBtn>
                         <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Cliente" value={inputDNI} onChange={(e) => setInputDNI(e.target.value)} onKey={handleOnKeyClient} />
-                        
+
                     </div>
                     <div className={styles.article}>
 
@@ -461,7 +474,7 @@ const TableCalendar = ({ changeTurn=null}) => {
                     </div>
                     <div className={styles.buttonsPositions} >
                         <AppointmentsListPDF appointments={filteredAppointments} />
-                        <MiniBtn onClick={handleAppointmentPieChart} ><FontAwesomeIcon icon={faChartPie} /></MiniBtn>
+                        <MiniBtn onClick={handleReport} ><FontAwesomeIcon icon={faChartPie} /></MiniBtn>
                     </div>
                     <div className={styles.inputDate_group}>
                         <label className={styles.label}>
@@ -491,10 +504,20 @@ const TableCalendar = ({ changeTurn=null}) => {
         </label> */}
             </div>
             {/* <Calendar  onChange={handleDateChange} value={date} /> */}
-            <div className={styles.calendarContainer}>
-                <MiniNavBar miniTitle="Turno para recepción de motocicleta" isLogo={false} />
-                {renderColumns()}
-            </div>
+            {
+                calendar&&(
+                    <div className={styles.calendarContainer}>
+                        <MiniNavBar miniTitle="Turno para recepción de motocicleta" isLogo={false} />
+                        {renderColumns()}
+                    </div>)
+            }
+            {
+                report&&(
+                <div>
+                    <MiniNavBar miniTitle="Reportería"  btnClose={true} close={handleCalendar} />
+                    <AppointmentReportingPDF appointments={appointments} selectedMonth={selectedMonth} selectedYear={selectedYear} />
+                </div>)
+            }
         </div>
     );
 };
