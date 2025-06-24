@@ -72,14 +72,14 @@ const ReportPDF = ({ chartImage, statusCounts }) => {
           <Text style={styles.title}>Reporte de Rectificaciones</Text>
           <Text style={styles.subtitle}>Análisis de estado de rectificaciones</Text>
           <Text style={styles.subtitle}>
-            Generado el {new Date().toLocaleDateString('es-ES', { 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
+            Generado el {new Date().toLocaleDateString('es-ES', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
             })}
           </Text>
         </View>
-        
+
         <View style={styles.chartContainer}>
           {chartImage && <Image src={chartImage} />}
         </View>
@@ -102,7 +102,7 @@ const ReportPDF = ({ chartImage, statusCounts }) => {
             <Text>{statusCounts.delivered || 0}</Text>
           </View>
         </View>
-        
+
         <View style={styles.footer}>
           <Text>Colaneri e Hijos</Text>
           <Text style={styles.companyInfo}>Email: colaneriehijos@gmail.com</Text>
@@ -115,7 +115,7 @@ const ReportPDF = ({ chartImage, statusCounts }) => {
   );
 };
 
-const ReconditioningReportingPDF = ({ appointments, selectedMonth=0, selectedYear=0 }) => {
+const ReconditioningReportingPDF = ({ appointments, selectedMonth = 0, selectedYear = 0 }) => {
   const chartRef = useRef(null);
   const [chartReady, setChartReady] = useState(false);
   const [chartImage, setChartImage] = useState(null);
@@ -169,14 +169,14 @@ const ReconditioningReportingPDF = ({ appointments, selectedMonth=0, selectedYea
       },
       title: {
         display: true,
-        text: `Distribución de Rectificaciones por Estado Mes: ${selectedMonth} Año: ${selectedYear}`,
+        text: `Distribución de Rectificaciones por Estado Mes: ${selectedMonth +1} Año: ${selectedYear}`,
         font: {
           size: 16
         }
       },
       tooltip: {
         callbacks: {
-          label: function(context) {
+          label: function (context) {
             const label = context.label || '';
             const value = context.raw || 0;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -221,15 +221,15 @@ const ReconditioningReportingPDF = ({ appointments, selectedMonth=0, selectedYea
         </h1>
         <p style={{ color: '#7f8c8d' }}>Distribución por estado</p>
       </div>
-      
+
       <div style={{ position: 'relative', height: '600px', margin: '30px 0' }}>
         <div ref={chartRef}>
           <Pie data={data} options={options} />
         </div>
       </div>
-      
+
       {chartReady && (
-        <PDFDownloadLink 
+        <PDFDownloadLink
           document={<ReportPDF chartImage={chartImage} statusCounts={statusCounts} />}
           fileName={`reporte_rectificaciones_${new Date().toISOString().split('T')[0]}.pdf`}
           style={{
@@ -255,7 +255,7 @@ const ReconditioningReportingPDF = ({ appointments, selectedMonth=0, selectedYea
           )}
         </PDFDownloadLink>
       )}
-      
+
       {!chartReady && (
         <div style={{
           background: '#f5f7fa',
@@ -272,7 +272,7 @@ const ReconditioningReportingPDF = ({ appointments, selectedMonth=0, selectedYea
           Preparando gráfico...
         </div>
       )}
-      
+
       <div style={{ textAlign: 'center', marginTop: '30px', color: '#7f8c8d', fontSize: '14px' }}>
         <p>Haz clic en el botón para exportar este reporte como PDF</p>
       </div>
