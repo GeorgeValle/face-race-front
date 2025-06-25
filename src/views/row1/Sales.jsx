@@ -191,7 +191,7 @@ const Sales = () => {
             const response =
                 await axios.get(`${config.API_BASE}sale/year/${selectedYear}`)
                 setMonthlyTotalsByName(response.data.data);
-            console.log(response.data.data)
+            //console.log(response.data.data)
     
         } catch (error) {
             setMessage("sin info")
@@ -217,7 +217,9 @@ const Sales = () => {
             const response =
             await axios.get(`${config.API_BASE}sale/client/${inputDNI}/${selectedYear}`)
             setClientSales(response.data.data)
-            console.log(response.data.data)
+            setInputNameClient(`${response.data.data[0].client.name} ${response.data.data[0].client.surname}`)
+
+            //console.log(response.data.data)
         }catch(error){
             setMessage("Error al buscar las ventas")
         }
@@ -595,7 +597,7 @@ const Sales = () => {
                                 <>
                                     
                                         
-                                            <SalesCharts salesData={sales} clientSales={clientSales} item={itemSales} method={methodSales} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></SalesCharts>
+                                            <SalesCharts salesData={sales} clientSales={clientSales} item={itemSales} method={methodSales} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName} clientName={inputNameClient}></SalesCharts>
                                         
                                     
                                 </>
