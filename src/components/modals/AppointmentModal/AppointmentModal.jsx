@@ -7,9 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash, faPrint,faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import TextViewShiftPDF from "../../textViews/textViewShiftPDF/TextViewShiftPDF"
+import InputSelectStyled from '../../inputs/inputSelectStyled/InputSelectStyled'
+import { useState, /*useEffect */ } from 'react'
 
 // import axios from 'axios'
-import { useState, useEffect } from 'react'
 // import config from '../../../config/Envs'
 // import { useDispatch } from "react-redux";
 // import {  changeClient  } from "../../../redux/ClientSlice";
@@ -18,9 +19,11 @@ import { useState, useEffect } from 'react'
 // eslint-disable-next-line react/prop-types
 const AppointmentModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDescription=null, onClose, onDelete  }) =>{
 
-    const [theStatus, setTheStatus] = useState("");
+    const [theStatus, setTheStatus] = useState(TheShift.status);
     const [theDescription, setTheDescription] = useState(TheShift.description);
-    const [selectedOption, setSelectedOption] = useState(TheShift.status);
+    //const [selectedOption, setSelectedOption] = useState(TheShift.status);
+
+    const allStatus = [{label:'Seleccione un estado',value:''}, {label:'Pendiente',value:'pending'}, {label:'Cancelado',value:'Cancelled'},{label:'Ausente',value:'missing'}, {label:'Atendido',value:'attended'}]
 
     function formatDateToSpanish(dateString) { 
         // Create a object Date whit a String
@@ -38,12 +41,13 @@ const AppointmentModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDe
     const handleDescription = () =>{
         onEditDescription(theDescription)
     }
-    const handleBlur = () =>{
+    
+    /*const handleBlur = () =>{
         if(!selectedOption==""){
         onEditStatus(selectedOption)
         //setTheStatus(selectedOption)
         }
-    }
+    } */
 
     function formatHour(hour){
         switch(hour){
@@ -61,26 +65,34 @@ const AppointmentModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDe
         }
     }
 
-useEffect(() => {
-        switch(selectedOption){
-            case 'pending':
-                setTheStatus('Pendiente');
-                break;
-            case 'attended':
-                setTheStatus('Atendido');
-                break;
-            case 'missing':
-                setTheStatus('Ausente');
-                break;
-            case 'canceled':
-                setTheStatus('Cancelado');
-                break;
-            default:
-                setTheStatus('Agendado');
+
+    const handleStatus = ( oneStatus ) =>{
+        if(!oneStatus==""){
+        setTheStatus(oneStatus)
+        onEditStatus(oneStatus)
         }
-    }, [selectedOption]);
+    }
+
+/* useEffect(() => {
+//         switch(selectedOption){
+//             case 'pending':
+//                 setTheStatus('Pendiente');
+//                 break;
+//             case 'attended':
+//                 setTheStatus('Atendido');
+//                 break;
+//             case 'missing':
+//                 setTheStatus('Ausente');
+//                 break;
+//             case 'canceled':
+//                 setTheStatus('Cancelado');
+//                 break;
+//             default:
+//                 setTheStatus('Agendado');
+//         }
+//     }, [selectedOption]);
     
-// formatStatusToSpanish(TheShift.status);
+*/ //formatStatusToSpanish(TheShift.status);
 
     return(
     <div className={Style.modal_container}  onClick={(e)=>{
@@ -109,7 +121,7 @@ useEffect(() => {
                         </tr>
                         <tr>
                         <th>Estado:</th>
-                        <td>{theStatus}</td>
+                        <td><InputSelectStyled  defaultValue={theStatus} onLabel={" "} sideLabel={true} isLabel={false} isGroup={false} titleLabel={"Estado:"} onSetValue={handleStatus} options={allStatus} /></td>
                         <th>Teléfono:</th>
                         <td>{TheShift.phone}</td>    
                             
@@ -138,7 +150,7 @@ useEffect(() => {
                         <MiniBtn onClick={onPrint} isWhite={true}><FontAwesomeIcon icon={faPrint} /></MiniBtn>
                     </PDFDownloadLink>
                     </div>
-                    <div className={Style.selectContainer}>
+                    {/*<div className={Style.selectContainer}>
                         <select className={Style.styledSelect} value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)} onBlur={handleBlur}>
                             <option value="">Seleccione un Estado</option>
                             <option value="attended">Atendido</option>
@@ -146,7 +158,7 @@ useEffect(() => {
                             <option value="missing">Ausente</option>
                             <option value="pending">Pendiente</option>
                         </select>
-                    </div>
+                    </div> */}
                     <TextInputStyled titleLabel={"Observaciones"} size={false} onChange={(e) => setTheDescription(e.target.value)} value={theDescription} />
                     <MiniBtn onClick={handleDescription} isWhite={true}><FontAwesomeIcon icon={faFloppyDisk} /></MiniBtn>
                 </div>
