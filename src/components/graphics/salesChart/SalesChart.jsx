@@ -26,7 +26,7 @@ ChartJS.register(
     Legend
 );
 
-// Estilos para el PDF
+//  PDF Styles
 const styles = StyleSheet.create({
     page: {
         padding: 30,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     }
 });
 
-// Nombres de meses en español
+// names of months in spanish
 const MONTH_NAMES_ES = [
     'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
     'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
@@ -95,13 +95,14 @@ const SalesChart = ({
     item = {},
     selectedYear = new Date().getFullYear(),
     selectedMonth = new Date().getMonth() + 1,
-    reportType = 'monthly'
+    reportType = 'monthly',
+    clientName = ''
 }) => {
     const chartRef = useRef(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [pdfData, setPdfData] = useState(null);
 
-    // Configuración común para los gráficos
+    // common config for charts
     const commonChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -132,7 +133,7 @@ const SalesChart = ({
         }
     };
 
-    // Configuración para gráfico de líneas
+    // Common config for line chart
     const lineChartOptions = {
         ...commonChartOptions,
         elements: {
@@ -148,7 +149,7 @@ const SalesChart = ({
         }
     };
 
-    // Preparar datos para el gráfico
+    // prepare data for charts
     const getChartData = () => {
         switch (reportType) {
             case 'annual':
@@ -193,7 +194,7 @@ const SalesChart = ({
                 return {
                     labels: MONTH_NAMES_ES,
                     datasets: [{
-                        label: `Ventas del Cliente ${clientSales[0]?.client?.dni || ''}`,
+                        label: `Ventas del Cliente ${clientName}, DNI: ${clientSales[0]?.client?.dni || ''}`,
                         data: MONTH_NAMES_ES.map((_, index) => {
                             return clientSales.filter(sale => {
                                 const saleDate = new Date(sale.saleDate);
@@ -232,11 +233,11 @@ const SalesChart = ({
         }
     };
 
-    // Función para capturar el gráfico actual
+    //  function for catch actual chart
     const captureCurrentChart = async () => {
         if (!chartRef.current) return null;
 
-        // Esperar a que Chart.js termine de renderizar
+        // wait to chart.js finish the render
         const chart = ChartJS.getChart(chartRef.current.canvas);
         if (chart) {
             await new Promise(resolve => {
@@ -248,10 +249,10 @@ const SalesChart = ({
             });
         }
 
-        // Pequeño delay adicional para asegurar renderizado
+        // little delay for aditional security in render
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        // Capturar el canvas como imagen
+        //  catch the canvas as image
         try {
             const canvas = await html2canvas(chartRef.current.canvas);
             return canvas.toDataURL('image/png');
@@ -261,12 +262,12 @@ const SalesChart = ({
         }
     };
 
-    // Función para preparar los datos del PDF
+    //  function for prepare data in the PDF
     const preparePdfData = async () => {
         setIsGenerating(true);
 
         try {
-            // Capturar el gráfico actual
+            //  catch actual chart Image
             const chartImage = await captureCurrentChart();
             if (!chartImage) return;
 
@@ -337,7 +338,7 @@ const SalesChart = ({
         }
     };
 
-    // Componente PDF
+    //  PDF Component
     const SalesReportPDF = () => (
         <Document>
             <Page size="A4" style={styles.page}>
