@@ -16,7 +16,7 @@ const ReconditioningModal = ({ TheShift= null, onPrint, onEditStatus=null, onEdi
 
     const [theStatus, setTheStatus] = useState(TheShift.status);
     const [theDescription, setTheDescription] = useState(TheShift.description);
-    const [selectedOption, setSelectedOption] = useState(TheShift.status);
+    //const [selectedOption, setSelectedOption] = useState(TheShift.status);
 
     const allStatus = [{label:'Seleccione un estado',value:''}, {label:'Pendiente',value:'pending'}, {label:'Cancelado',value:'Cancelled'},{label:'Listo',value:'ready'}, {label:'Entregado',value:'delivered'}]
     
@@ -36,12 +36,13 @@ const ReconditioningModal = ({ TheShift= null, onPrint, onEditStatus=null, onEdi
     const handleDescription = () =>{
         onEditDescription(theDescription)
     }
-    const handleBlur = () =>{
+    
+    /* const handleBlur = () =>{
         if(!selectedOption==""){
         onEditStatus(selectedOption)
         //setTheStatus(selectedOption)
         }
-    }
+    } */
 
     function formatHour(hour){
         switch(hour){

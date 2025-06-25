@@ -328,6 +328,19 @@ const Purchases = () => {
         }
     };
 
+    const handleFetchChecked = async (purchaseNumber,code,checkedStatus)=>{
+        try {
+            setLoading(true)
+            await axios.put((`${config.API_BASE}purchase/checked/${purchaseNumber}/${code}`),{checked:checkedStatus});
+            
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            setMessage('Error al actualizar el Check')
+            //MessageResponse();
+        }
+    }
+
 
 
     useEffect(() => {
@@ -485,15 +498,17 @@ const Purchases = () => {
         setTotalPrint(total)
     }
 
-    const handleChecked = async(purchaseNumber,oneCode, checkedStatus, quantity) =>{
+    const handleChecked = async(purchaseNumber,oneCode, checkedStatus, oneQuantity) =>{
         dispatch(toggleChecked({code:oneCode}));
         
         try{ 
-            await axios.put((`${config.API_BASE}purchase/checked/${purchaseNumber}/${oneCode}`),{checked:checkedStatus});
-            await axios.put((`${config.API_BASE}item/incrementStock/${oneCode}`), 
-            {
-                quantity: parseInt(quantity),
-            });
+            await handleEditStockItem(oneCode,oneQuantity)
+            await handleFetchChecked(purchaseNumber,oneCode,checkedStatus)
+            //await axios.put((`${config.API_BASE}purchase/checked/${purchaseNumber}/${oneCode}`),{checked:checkedStatus});
+            // await axios.put((`${config.API_BASE}item/incrementStock/${oneCode}`), 
+            // {
+            //     quantity: parseInt(oneQuantity),
+            // });
         }catch(error){
             setMessage("Cambios NO realizados")
             setModalOpenMessage(true)
