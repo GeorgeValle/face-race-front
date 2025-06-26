@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import config from "../../config/Envs"
 import { handleError } from '../../config/ErrorHandling'
+import InputTextSearchStyled from '../../components/inputs/inputTextSearchStyled/InputTextSearchStyled'
 //import TextViewItem from '../../components/textViews/textViewItem/TextViewItem'
 
 
@@ -46,6 +47,7 @@ const Warehouse = () => {
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
     const [inputCode, setInputCode] = useState("");
+    const [inputNameItem, setInputNameItem] = useState("");
     const [inputList, setInputList] = useState("");
     const [isListItems, setIsListItems] = useState(false);
     const [isItem, setIsItem ] = useState(false);
@@ -114,7 +116,22 @@ const Warehouse = () => {
             
         }
 
-        
+        const fetchItemsByLetters = async(letters) =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}item/name/${letters}`))
+                const response = request.data
+                return response
+            }catch(error){
+                
+                setMessage("Artículo NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);7
+                return []
+            }
+        }        
 
         const fetchListItems = async(category) => {
             
@@ -159,6 +176,20 @@ const Warehouse = () => {
             }
         }
 
+
+    const handleListResults = async(letters) =>{
+        setInputNameItem(letters)
+        return await fetchItemsByLetters(letters)
+        
+    }
+
+    const handleFetchOneItem = (item)=>{
+        dispatch(addItem(item))
+        setIsListItems(false)
+            setIsReorderPointList(false)
+            setIsItem(true)
+
+    }
 
     const handleClose=()=>{
         setModalOpenNewModal(false);
@@ -253,6 +284,7 @@ const handleReorderPointList = () =>{
     fetchReorderPointList();
 }
 
+
 //to du
 const categories =[{label:"Selecciona una opción",value:""},{label:"Indumentaria", value:'Indumentaria'}, {label:'Protección Personal',value:'Protección Personal'}, {label:'Equipaje', value:'Equipaje'}, {label:'Lingas y Trabas', value:'Lingas y Trabas'}, {label:'Luces', value:"Luces"}, {label:'Cobertores', value:'Cobertores'},{label:'Redes y sujetadores', value:'Redes y sujetadores'},{label:'Parlantes',value:'Parlantes'},{label:'Parabrisas',value:'Parabrisas'},{label:'Herramientas',value:'Herramientas'},{label:'Emblemas',value:'Emblemas'},{label:'Tableros y Velocimetros',value:'Tableros y Velocimetros'},{label:'Pisadores', value:'Pisadores'},{label:'Escapes',value:'Escapes'},{label:'Frenos',value:'Frenos'},{label:'Repuestos',value:'Repuestos'},{label:'Servicios',value:'Servicios'},{label:'Otros',value:'Otros'}];
 return (
@@ -276,7 +308,8 @@ return (
                                         <MiniBtn onClick={fetchItem} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
-                                        <TextInputStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} />
+                                        {/*<TextInputStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} /> */}
+                                        <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem}/>
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
