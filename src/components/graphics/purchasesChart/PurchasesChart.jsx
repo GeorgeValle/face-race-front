@@ -14,7 +14,7 @@ import {
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import html2canvas from 'html2canvas';
 
-// Registrar componentes de Chart.js
+//  register components of chart.js
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -26,7 +26,7 @@ ChartJS.register(
     Legend
 );
 
-// Estilos para el PDF
+// PDF Styles
 const styles = StyleSheet.create({
     page: {
         padding: 30,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     }
 });
 
-// Nombres de meses en español
+// names of months in spanish
 const MONTH_NAMES_ES = [
     'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
     'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
@@ -96,12 +96,14 @@ const PurchaseChart = ({
     selectedYear = new Date().getFullYear(),
     selectedMonth = new Date().getMonth() + 1,
     reportType = 'monthly'
+    
+
 }) => {
     const chartRef = useRef(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [pdfData, setPdfData] = useState(null);
 
-    // Configuración común para los gráficos
+    // common config for charts
     const commonChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -132,7 +134,7 @@ const PurchaseChart = ({
         }
     };
 
-    // Configuración para gráfico de líneas
+    // common config for line chart
     const lineChartOptions = {
         ...commonChartOptions,
         elements: {
@@ -148,7 +150,7 @@ const PurchaseChart = ({
         }
     };
 
-    // Preparar datos para el gráfico
+    //  prepare data for charts
     const getChartData = () => {
         switch (reportType) {
             case 'annual':
@@ -193,7 +195,7 @@ const PurchaseChart = ({
                 return {
                     labels: MONTH_NAMES_ES,
                     datasets: [{
-                        label: `Compras al Proveedor ${supplierPurchases[0]?.supplier?.businessName || ''}`,
+                        label: `Compras al Proveedor  ${supplierPurchases[0]?.supplier?.businessName || ''}`,
                         data: MONTH_NAMES_ES.map((_, index) => {
                             return supplierPurchases.filter(purchase => {
                                 const purchaseDate = new Date(purchase.purchaseDate);
@@ -232,7 +234,7 @@ const PurchaseChart = ({
         }
     };
 
-    // Función para capturar el gráfico actual
+    //  function for catch te actual chart image
     const captureCurrentChart = async () => {
         if (!chartRef.current) return null;
 
@@ -248,7 +250,7 @@ const PurchaseChart = ({
             });
         }
 
-        // Pequeño delay adicional para asegurar renderizado
+        //  little delay for aditional security in the render
         await new Promise(resolve => setTimeout(resolve, 300));
 
         // Capturar el canvas como imagen
@@ -261,16 +263,16 @@ const PurchaseChart = ({
         }
     };
 
-    // Función para preparar los datos del PDF
+    //  function for prepare the data for the PDF
     const preparePdfData = async () => {
         setIsGenerating(true);
 
         try {
-            // Capturar el gráfico actual
+            //  catch the actual chart image
             const chartImage = await captureCurrentChart();
             if (!chartImage) return;
 
-            // Calcular totales según el tipo de reporte
+            // calculate totals according to type of report
             let totalPurchases = 0;
             const monthlyDetails = {};
 
@@ -337,7 +339,7 @@ const PurchaseChart = ({
         }
     };
 
-    // Componente PDF
+    //  PDF Component
     const PurchaseReportPDF = () => (
         <Document>
             <Page size="A4" style={styles.page}>
