@@ -92,6 +92,7 @@ const SalesChart = ({
     monthlyTotalsByName = {},
     clientSales = [],
     method = {},
+    methodName="",
     item = {},
     selectedYear = new Date().getFullYear(),
     selectedMonth = new Date().getMonth() + 1,
@@ -147,7 +148,24 @@ const SalesChart = ({
                 hoverRadius: 8
             }
         }
-    };
+    }; 
+
+    const methods = (methodName) =>{
+        switch (methodName){
+            case 'cash':
+                return 'Efectivo';
+            case 'debit':
+                return "Débito";
+            case 'credit':
+                return 'Credito'
+            case "check":
+            return "Cheque";
+            case 'currentAccount':
+                return 'Cuenta Corriente'
+            default:
+                return ''
+        }
+    }
 
     // prepare data for charts
     const getChartData = () => {
@@ -219,7 +237,7 @@ const SalesChart = ({
                 return {
                     labels: Object.keys(method),
                     datasets: [{
-                        label: 'Ventas por Método de Pago',
+                        label: `Método ${methods(methodName)}`,
                         data: Object.values(method),
                         backgroundColor: 'rgba(255, 159, 64, 0.5)',
                     }]

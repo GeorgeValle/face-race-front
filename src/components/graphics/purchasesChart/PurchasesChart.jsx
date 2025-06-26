@@ -92,10 +92,13 @@ const PurchaseChart = ({
     monthlyTotalsByName = {},
     supplierPurchases = [],
     method = {},
+    methodName = '',
     item = {},
+    itemName = "",
     selectedYear = new Date().getFullYear(),
     selectedMonth = new Date().getMonth() + 1,
     reportType = 'monthly'
+
     
 
 }) => {
@@ -150,6 +153,23 @@ const PurchaseChart = ({
         }
     };
 
+    const methods = (methodName) =>{
+        switch (methodName){
+            case 'cash':
+                return 'Efectivo';
+            case 'debit':
+                return "Débito";
+            case 'credit':
+                return 'Credito'
+            case "check":
+            return "Cheque";
+            case 'currentAccount':
+                return 'Cuenta Corriente'
+            default:
+                return ''
+        }
+    }
+
     //  prepare data for charts
     const getChartData = () => {
         switch (reportType) {
@@ -185,7 +205,7 @@ const PurchaseChart = ({
                 return {
                     labels: Object.keys(item),
                     datasets: [{
-                        label: 'Compras por Producto',
+                        label: `Datos de ${itemName}  `,
                         data: Object.values(item),
                         backgroundColor: 'rgba(75, 192, 192, 0.5)',
                     }]
@@ -220,7 +240,7 @@ const PurchaseChart = ({
                 return {
                     labels: Object.keys(method),
                     datasets: [{
-                        label: 'Compras por Método de Pago',
+                        label: `Método ${methods(methodName)}`,
                         data: Object.values(method),
                         backgroundColor: 'rgba(255, 159, 64, 0.5)',
                     }]
@@ -397,7 +417,7 @@ const PurchaseChart = ({
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             minHeight: '600px'
         }}>
-            <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 100 }}>
+            <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 3}}>
                 <button
                     onClick={preparePdfData}
                     disabled={isGenerating}

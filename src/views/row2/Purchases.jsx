@@ -691,7 +691,7 @@ const Purchases = () => {
                                 <>
                                     
                                         
-                                            <PurchasesCharts purchasesData={purchases} supplierPurchases={supplierPurchases} item={itemPurchases} method={methodPurchases} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></PurchasesCharts>
+                                            <PurchasesCharts purchasesData={purchases} supplierPurchases={supplierPurchases} item={itemPurchases} itemName={inputItemName} method={methodPurchases} methodName={inputMethod} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></PurchasesCharts>
                                         
                                     
                                 </>
