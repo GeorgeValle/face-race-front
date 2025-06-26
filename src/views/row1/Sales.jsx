@@ -597,7 +597,7 @@ const Sales = () => {
                                 <>
                                     
                                         
-                                            <SalesCharts salesData={sales} clientSales={clientSales} item={itemSales} method={methodSales} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName} clientName={inputNameClient}></SalesCharts>
+                                            <SalesCharts salesData={sales} clientSales={clientSales} item={itemSales} method={methodSales} methodName={inputMethod} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName} clientName={inputNameClient}></SalesCharts>
                                         
                                     
                                 </>

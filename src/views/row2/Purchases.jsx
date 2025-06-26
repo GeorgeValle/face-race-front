@@ -234,7 +234,8 @@ const Purchases = () => {
             const response =
             await axios.get(`${config.API_BASE}purchase/supplier/${inputCUIT}/${selectedYear}`)
             setSupplierPurchases(response.data.data)
-            console.log(response.data.data)
+            setInputNameSupplier(response.data.data[0]?.supplier?.businessName)
+            //console.log(response.data.data)
             setLoading(false)
         }catch(error){
             setLoading(false)
@@ -690,7 +691,7 @@ const Purchases = () => {
                                 <>
                                     
                                         
-                                            <PurchasesCharts purchasesData={purchases} supplierPurchases={supplierPurchases} item={itemPurchases} method={methodPurchases} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></PurchasesCharts>
+                                            <PurchasesCharts purchasesData={purchases} supplierPurchases={supplierPurchases} item={itemPurchases} itemName={inputItemName} method={methodPurchases} methodName={inputMethod} selectedYear={selectedYear} selectedMonth={selectedMonth+1} reportType={inputReportType} monthlyTotalsByName={monthlyTotalsByName}></PurchasesCharts>
                                         
                                     
                                 </>
