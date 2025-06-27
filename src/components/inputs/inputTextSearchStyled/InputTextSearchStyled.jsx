@@ -4,7 +4,7 @@ import { useState } from 'react';
 import BouncyLoading from '../../loaders/bouncyLoading/BouncyLoading'
 
 
-const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", placeholderText="", size=true, onChange=null, onKey=null, value="", onSearch=null, setOneResult=null  }) => {
+const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", placeholderText="", size=true, onChange=null, onKey=null, value="", onSearch=null, setOneResult=null, results=[] }) => {
 
     //const [input, setInput] = useState(value);
     const [theResults, setTheResults] = useState([]);
@@ -13,7 +13,7 @@ const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", p
 
     const fetchData = async(oneValue)=>{
                 
-        if(value.length>0){
+        if(oneValue.length>3){
         setIsLoading(true)
             // fetch(`https://wiki-ideas-back.fly.dev/topics/search/${value}`)
             // .then((response)=>response.json())
@@ -26,18 +26,19 @@ const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", p
             //     else{
             //         setTheResults([])
             //     }
-
-            setTheResults(await onSearch(oneValue))
-
+            const response= await onSearch(oneValue)
+            setTheResults(response)
+            
             setIsLoading(false);
+            console.log(theResults)
         }
     }
 
-    const handleChange = (value)=>{
+    const handleChange = (e)=>{
         //setInput(value);
         //onChange(value)
-        
-        fetchData(value);
+        onChange(e.target.value);
+        fetchData(e.target.value);
     };
 
 
@@ -48,9 +49,11 @@ const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", p
                     <label className={`${styleInput.label}`}>{titleLabel}</label>
                 
                 <input autoComplete="off" name={nameLabel} className={`${styleInput.inputText} ${size?styleInput.sizeS:styleInput.sizeM} `} type={typeInput} placeholder={placeholderText} value={value} onChange={handleChange} onKeyDown={onKey}/>
-                {theResults.length>0 &&
+                {theResults.length>0&&(
+                    <>
                     <SearchResultsList results={theResults} setOneResult={setOneResult}/> 
-                }
+                    </>
+                )}
                 
                 {
                     isLoading&&(

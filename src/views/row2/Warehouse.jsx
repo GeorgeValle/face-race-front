@@ -121,7 +121,7 @@ const Warehouse = () => {
             try{
                 const request = await axios.get((`${config.API_BASE}item/name/${letters}`))
                 const response = request.data
-                return response
+                return response.item
             }catch(error){
                 
                 setMessage("Artículo NO encontrado")
@@ -309,7 +309,7 @@ return (
                                     </div>
                                     <div className={Style.article}>
                                         {/*<TextInputStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} /> */}
-                                        <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem}/>
+                                        <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputNameItem}/>
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
