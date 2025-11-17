@@ -6,6 +6,7 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
+import InputTextSearchStyled from '../../components/inputs/inputTextSearchStyled/InputTextSearchStyled'
 import Style from './Client.module.css'
 import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
@@ -39,6 +40,7 @@ const Client = () => {
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
     const [inputDNI, setInputDNI] = useState("");
+    const [inputName, setInputName]= useState("");
     const [isClient, setIsClient] = useState(false);
     //const [isListCLient, setIsLIstClient] = useState(false);
     const client = useSelector((state)=> state.client);
@@ -131,6 +133,33 @@ const Client = () => {
         
 }
 
+const fetchClientByLetters = async(letters) =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}client/name/${letters}`))
+                const response = request.data
+                return response.client
+            }catch(error){
+                
+                setMessage("Cliente NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);7
+                return []
+            }
+        }        
+
+        
+
+const handleListResults = async(letters) =>{
+        setInputName(letters)
+        return await fetchClientByLetters(letters)
+        
+    }
+
+
+
 const handleDialogDelete = () =>{
     setMessageModal("¿Seguro quieres Borrar al Cliente?");
     setMessageButton("Borrar");
@@ -182,7 +211,8 @@ return (
                                         <MiniBtn onClick={fetchClient} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
-                                        <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} />
+                                        {/*<TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} /> */}
+                                        <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputNameItem}/>
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                 </article> 
