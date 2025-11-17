@@ -1,7 +1,8 @@
 //import { useDispatch } from "react-redux";
 //import {  changeClient, deleteClient  } from "../../../redux/ClientSlice";
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeItem } from '../../../redux/ItemSlice';
 import axios from 'axios';
 import MessageModal from '../messageModal/MessageModal';
 import Style from './EditItemModal.module.css';
@@ -11,9 +12,11 @@ import TextArea from '../../inputs/textArea/TextArea'
 import config from '../../../config/Envs'
 
 
+
 const EditItemModal = ({ onSubmit, onCancel, onClose }) => {
 
     const item = useSelector((state) => state.item);
+    const dispatch = useDispatch();
 
     // const [formData, setFormData]= useState({
     //     email:client.email,name:client.name,phone:client.phone,address:client.address,description:client.description,dni:client.dni,surname:client.surname,city:client.city,cel:client.cel,province:client.province,postalCode:client.postalCode
@@ -26,8 +29,9 @@ const EditItemModal = ({ onSubmit, onCancel, onClose }) => {
     //     [name]: value, 
     //     }); 
     //     }; 
-    const [modalOpenMessage, setModalOpenMessage] = useState(false);
-    const [message, setMessage] = useState('');
+
+const [modalOpenMessage, setModalOpenMessage] = useState(false);
+const [message, setMessage] = useState('');
 const [code, setCode] = useState(item.code);
 const [name, setName]= useState(item.name);
 const [stockQuantity, setStockQuantity] = useState(item.stockQuantity);
@@ -74,31 +78,44 @@ const [description, setDescription] = useState(item.description);
         setModalOpenMessage(false);
     }
 
-    const onSubmitEdit = async () => {
+    const onSubmitEdit = async (e) => {
+        e.preventDefault();
         try {
+            const updatedItem = {
+                code: parseInt(code),
+                name: name,
+                stockQuantity: parseInt(stockQuantity),
+                price: parseFloat(price),
+                category: category,
+                brand: brand,
+                model: model,
+                origin: origin,
+                warehouseLocation: warehouseLocation,
+                description: description,
+            };
 
-            const request = await axios.put(`${config.API_BASE}item/code/${item.code}`, {
-                code:code,
-                name:name,
-                stockQuantity:stockQuantity,
-                price:price,
-                category:category,
-                brand:brand,
-                model:model,
-                origin:origin,
-                warehouseLocation:warehouseLocation,
-                description:description,
-            })
+            
+            const request = await axios.put(`${config.API_BASE}item/code/${item.code}`, updatedItem)
             const response = request.data;
-            console.log(response)
-            setMessage("Artículo Actualizado")
+        
+            // Update Redux state with the edited item
+            dispatch(changeItem(updatedItem));
+
+            setMessage(response.message)
             setModalOpenMessage(true)
+            
             setTimeout(() => {
                 setModalOpenMessage(false);
             }, 3500);
             onSubmit();
         } catch (err) {
-            console.log(err);
+            
+            setMessage(`Error al actualizar el artículo`)
+            setModalOpenMessage(true)
+            setTimeout(() => {
+                setModalOpenMessage(false);
+            }, 3500);
+            onSubmit();
         }
     }
 

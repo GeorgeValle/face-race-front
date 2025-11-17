@@ -95,22 +95,26 @@ const Warehouse = () => {
     
     
 
-        const fetchItem = async() => {
+        const fetchItem = async(code = null) => {
             
             setIsListItems(false)
             setIsReorderPointList(false)
             setIsItem(true)
             
+            const codeToFetch = code || inputCode;
+            
             try{
-                const request = await axios.get((`${config.API_BASE}item/code/${inputCode}`))
+                const request = await axios.get((`${config.API_BASE}item/code/${codeToFetch}`))
                 const response = request.data
                 dispatch(addItem(response.item))
+                return response.item; // Return the item for use in handleEditItem
             }catch(error){
                 setMessage("Artículo NO encontrado")
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
                             }, 3500);
+                return null;
             }
             
             
@@ -224,8 +228,10 @@ const Warehouse = () => {
 
     const handleEditItem = async(code) =>{
         setInputCode(code)
-        await fetchItem()
-        setModalOpenEditItem(true);
+        const item = await fetchItem(code); // Pass code directly to avoid state timing issues
+        if(item) {
+            setModalOpenEditItem(true);
+        }
     }
 
     

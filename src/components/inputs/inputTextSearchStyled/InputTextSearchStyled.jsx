@@ -11,7 +11,7 @@ const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", p
     const wrapperRef = useRef(null);
 
 
-    // Detecta clics fuera del componente para cerrar la lista
+    // Detect clicks out side of component for close of list
     useEffect(() => {
         function handleClickOutside(event) {
             if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -42,7 +42,7 @@ const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", p
         fetchData(e.target.value);
     };
 
-    // Maneja la selección de un resultado y oculta la lista
+    // handle result selection and hide the list
     const handleSelectResult = (selectedItem) => {
         setOneResult(selectedItem);
         setTheResults([]);
