@@ -29,17 +29,17 @@ const EditClientModal = ({onSubmit=null, onCancel=null, onClose=null}) => {
  const [modalOpenMessage, setModalOpenMessage] = useState(false);
  const [message, setMessage] = useState('');
 
-    const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-    const [phone, setPhone] = useState("");
-    const [address, setAddress] = useState("");
-    const [description, setDescription] = useState("");
-    const [dni, setDni]= useState("");
-    const [surname, setSurname] =useState("");
-    const [city,setCity]= useState("");
-    const [cel, setCel] = useState("");
-    const [province, setProvince]= useState("");
-    const [postalCode, setPostalCode] = useState("");
+    const [email, setEmail] = useState(client.email);
+    const [name, setName] = useState(client.name);
+    const [phone, setPhone] = useState(client.phone);
+    const [address, setAddress] = useState(client.address);
+    const [description, setDescription] = useState(client.description);
+    const [dni, setDni]= useState(client.dni);
+    const [surname, setSurname] =useState(client.surname);
+    const [city,setCity]= useState(client.city);
+    const [cel, setCel] = useState(client.cel);
+    const [province, setProvince]= useState(client.province);
+    const [postalCode, setPostalCode] = useState(client.postalCode);
 
     //active this function redux
     //const dispatch = useDispatch();
