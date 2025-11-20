@@ -315,7 +315,7 @@ return (
                                     </div>
                                     <div className={Style.article}>
                                         {/*<TextInputStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} /> */}
-                                        <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputNameItem}/>
+                                        <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputNameItem} combineNameFields={true}/>
                                         {/*<MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
                                     </div>
                                     <div className={Style.article}>

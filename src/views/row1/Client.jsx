@@ -158,6 +158,11 @@ const handleListResults = async(letters) =>{
         
     }
 
+    const handleFetchOneClient = (client)=>{
+            dispatch(addClient(client))
+            setIsClient(true)
+        }
+
 
 
 const handleDialogDelete = () =>{
@@ -212,7 +217,7 @@ return (
                                     </div>
                                     <div className={Style.article}>
                                         {/*<TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} /> */}
-                                        <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputNameItem}/>
+                                        <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} value={inputName} onSearch={handleListResults} setOneResult={handleFetchOneClient} onChange={setInputName} combineNameFields={true}/>
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                 </article> 
