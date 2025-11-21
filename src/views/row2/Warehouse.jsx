@@ -101,7 +101,7 @@ const Warehouse = () => {
             setIsReorderPointList(false)
             setIsItem(true)
             
-            const codeToFetch = code || inputCode;
+            const codeToFetch = parseInt(code) || inputCode;
             
             try{
                 const request = await axios.get((`${config.API_BASE}item/code/${codeToFetch}`))
@@ -315,7 +315,7 @@ return (
                                     </div>
                                     <div className={Style.article}>
                                         {/*<TextInputStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} /> */}
-                                        <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputNameItem} combineNameFields={true}/>
+                                        <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputNameItem} displayFields={["name","brand"]}/>
                                         {/*<MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
                                     </div>
                                     <div className={Style.article}>

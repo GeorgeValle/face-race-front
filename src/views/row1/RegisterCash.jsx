@@ -43,6 +43,9 @@ const RegisterCash = () => {
     const [inputItemName, setInputItemName] = useState("")
     const [inputNameClient, setInputNameClient] = useState("")
     const [isFetchClient, setIsFetchClient] = useState(false);
+    
+    
+    
     //const [isDataItem, setIsDataItem] = useState(false);
     //date
     // const [day, setDay] = useState('');
@@ -286,7 +289,8 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
                     <div className={Style.column1}>
                         <div className={Style.row1}>
                             <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
-                            <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />
+                            {/*<TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />*/}
+                             <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputItemName} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputItemName} displayFields={["name","brand"]}/>
                             <div className={Style.btnLayout}>
                                 {isDataItem ? (<MiniBtn onClick={handleOpenItemModal} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>) : (<MiniBtn onClick={handleOpenItemModal} bgDisable={true} disabled={true} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>)}
                                 {/* <MiniBtn onClick={handleShowPrice} isWhite={true}> $<FontAwesomeIcon icon={faMagnifyingGlass} />  </MiniBtn>
