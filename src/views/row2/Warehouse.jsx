@@ -189,6 +189,7 @@ const Warehouse = () => {
 
     const handleFetchOneItem = (item)=>{
         dispatch(addItem(item))
+        setInputCode(item.code)
         setIsListItems(false)
             setIsReorderPointList(false)
             setIsItem(true)

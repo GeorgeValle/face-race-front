@@ -1,7 +1,7 @@
 ## Tasks description in view register Cash
 
-- Add Dropbox "Fecha"
-- Add input "Observación"
+- Add component InputTextSearchStyled
+- Add functions for InputTextSearchStyled
 - Add input "Cliente"
 - Add input "DNI / CUIT"
 
@@ -24,13 +24,12 @@
 -  [x] Add input "Observación"
 -  [x] Add input "Cliente"
 -  [x] Add input "DNI / CUIT"
--  [ ] Add search button 
--  [ ] Add Radio "Cliente Final"
--  [ ] add functions in "Cobrar" btn
--  [ ] add functions in  "Nuevo Cliente" btn
--  [ ] add functions in  "Nueva venta" btn
--  [ ] add functions in  "Agregar" btn
--  [ ] add functions in  "Ver Precios" btn
--  [ ] add functions in  Search btn
+-  [X] Add Radio "Cliente Final"
+-  [X] add functions in "Cobrar" btn
+-  [X] add functions in  "Nuevo Cliente" btn
+-  [X] add functions in  "Nueva venta" btn
+-  [X] add functions in  "Agregar" btn
+-  [X] add functions in  "Ver Precios" btn
+-  [X] add functions in  Search bars
 -  [ ] add functions in  
 -  [ ] -.

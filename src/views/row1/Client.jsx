@@ -160,6 +160,7 @@ const handleListResults = async(letters) =>{
 
     const handleFetchOneClient = (client)=>{
             dispatch(addClient(client))
+            setInputDNI(client.dni)
             setIsClient(true)
         }
 

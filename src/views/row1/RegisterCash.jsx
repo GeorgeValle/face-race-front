@@ -3,6 +3,7 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar';
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon';
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled';
+import InputTextSearchStyled from '../../components/inputs/inputTextSearchStyled/InputTextSearchStyled'
 import MidTotal from '../../components/totals/midTotal/MidTotal';
 import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge';
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
@@ -43,6 +44,9 @@ const RegisterCash = () => {
     const [inputItemName, setInputItemName] = useState("")
     const [inputNameClient, setInputNameClient] = useState("")
     const [isFetchClient, setIsFetchClient] = useState(false);
+    //const [inputNameItem, setInputNameItem] = useState(false);
+    
+
     
     
     
@@ -151,13 +155,13 @@ const RegisterCash = () => {
     // }
 
     //inputs handles
-    const handleInputItemName = (e) => {
-        setInputItemName(e.target.value)
-    }
+    // const handleInputItemName = (e) => {
+    //     setInputItemName(e.target.value)
+    // }
 
-    const handleInputNameClient = (e) =>{
-        setInputNameClient(e.target.value)
-    }
+    // const handleInputNameClient = (e) =>{
+    //     setInputNameClient(e.target.value)
+    // }
 
     const handleInputDNI = (e) => {
         setInputDNI(e.target.value);
@@ -269,14 +273,82 @@ const RegisterCash = () => {
         calculateTotalSubAmount();
         calculateTotalAdjustment();
     }, [itemsList]);
-
     
+
+
+    // functions for InputTextSearchStyled
+    const fetchItemsByLetters = async(letters) =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}item/name/${letters}`))
+                const response = request.data
+                return response.item
+            }catch(error){
+                
+                setMessage("Artículo NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);7
+                return []
+            }
+        }
+
+        const fetchClientsByLetters = async(letters) =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}client/name/${letters}`))
+                const response = request.data
+                return response.client
+            }catch(error){
+                
+                setMessage("Cliente NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);7
+                return []
+            }
+        }
+        
+        const handleListResultsItems = async(letters) =>{
+        setInputItemName(letters)
+        return await fetchItemsByLetters(letters)
+        
+    }
+
+    const handleListResultsClients = async(letters) =>{
+        setInputNameClient(letters)
+        return await fetchClientsByLetters(letters)
+    }
+
+    const handleFetchOneItem = (OneItem)=>{
+        dispatch(addItem(OneItem))
+        setInputCode(OneItem.code)
+
+        // setIsListItems(false)
+        //     setIsReorderPointList(false)
+        //     setIsItem(true)
+
+    }
+
+    const handleFetchOneClient = (oneClient)=>{
+        dispatch(addClient(oneClient))
+        setInputDNI(oneClient.dni)
+        // setIsListItems(false)
+        //     setIsReorderPointList(false)
+        //     setIsItem(true)
+
+    }
 
     //######### validations
 // Verify Item data  for enable plus button
 const isDataItem = item.name != null;
     
 const isDataListItem = itemsList.length > 0 && client.name != null;
+
+
+
 
     return (
         <div className={Style.mainContainer}>
@@ -290,7 +362,7 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
                         <div className={Style.row1}>
                             <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
                             {/*<TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />*/}
-                             <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputItemName} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputItemName} displayFields={["name","brand"]}/>
+                            <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre de Artículo" size={false} value={inputItemName} onSearch={handleListResultsItems} setOneResult={handleFetchOneItem} onChange={setInputItemName} displayFields={["name","brand"]}/>
                             <div className={Style.btnLayout}>
                                 {isDataItem ? (<MiniBtn onClick={handleOpenItemModal} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>) : (<MiniBtn onClick={handleOpenItemModal} bgDisable={true} disabled={true} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>)}
                                 {/* <MiniBtn onClick={handleShowPrice} isWhite={true}> $<FontAwesomeIcon icon={faMagnifyingGlass} />  </MiniBtn>
@@ -305,7 +377,8 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
                         </div>
                         <div className={Style.row3}>
                             <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
-                            <TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} />
+                            {/*<TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} /> */}
+                            <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre de Cliente" size={false} value={inputNameClient} onSearch={handleListResultsClients} setOneResult={handleFetchOneClient} onChange={setInputNameClient} displayFields={["name","surname"]}/>
                             <MiniBtn onClick={cleanClient} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                             
                         </div>
