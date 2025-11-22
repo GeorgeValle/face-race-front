@@ -3,8 +3,7 @@ import SearchResultsList from './SearchResultList';
 import { useState, useRef, useEffect } from 'react';
 import BouncyLoading from '../../loaders/bouncyLoading/BouncyLoading'
 
-
-const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", placeholderText="", size=true, onChange=null, onKey=null, value="", onSearch=null, setOneResult=null, results=[], combineNameFields=false }) => {
+const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", placeholderText="", size=true, onChange=null, onKey=null, value="", onSearch=null, setOneResult=null, results=[], displayFields=["name"] }) => {
 
     const [theResults, setTheResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -44,17 +43,16 @@ const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", p
 
     // handle result selection and hide the list
     const handleSelectResult = (selectedItem) => {
-        if (combineNameFields) {
-            const combined = [
-                selectedItem.name,
-                selectedItem?.surname,
-                selectedItem?.brand
-            ].filter(Boolean).join(' ');
-            onChange(combined);
-        }
-        setOneResult(selectedItem);
-        setTheResults([]);
-    };
+    const combined = displayFields
+        .map(field => selectedItem[field])
+        .filter(Boolean)
+        .join(' ');
+    onChange(combined);
+    // Serialize the selectedItem to avoid non-serializable errors in Redux
+    const serializedItem = JSON.parse(JSON.stringify(selectedItem));
+    setOneResult(serializedItem);
+    setTheResults([]);
+};
 
 
     return (
@@ -76,7 +74,7 @@ const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", p
                 
                 {theResults.length>0&&(
                     <>
-                    <SearchResultsList results={theResults} setOneResult={handleSelectResult} combineNameFields={combineNameFields}/> 
+                    <SearchResultsList results={theResults} setOneResult={handleSelectResult} displayFields={displayFields}/> 
                     </>
                 )}
                 

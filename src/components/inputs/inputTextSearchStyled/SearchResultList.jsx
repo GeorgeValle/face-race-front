@@ -1,14 +1,17 @@
+
 import styled from './SearchResult.module.css';
 import SearchResult from './SearchResult.jsx';
 
 
-const SearchResultsList =({results,  setOneResult, typeName="name", combineNameFields=false}) => {
+const SearchResultsList =({results,  setOneResult, displayFields=["name"]}) => {
     //const entries = Object.entries(results);
     
-    const handleChange = (value)=>{  
-        setOneResult(value)
-        //setOpenModal(true);
-    }
+    const handleChange = (value) => {  
+    // Serialize the value to avoid non-serializable errors in Redux
+    const serializedValue = JSON.parse(JSON.stringify(value));
+    setOneResult(serializedValue);
+    //setOpenModal(true);
+};
     return (
         <>
         <article className={styled.results_list}>
@@ -16,7 +19,7 @@ const SearchResultsList =({results,  setOneResult, typeName="name", combineNameF
         {  
         results.map((result) =>{
             
-            return  <SearchResult  result={result} onClicking={handleChange} typeName={typeName} combineNameFields={combineNameFields} key={result._id}/>
+            return  <SearchResult  result={result} onClicking={handleChange} displayFields={displayFields} key={result._id}/>
             })
         }
     </div>
