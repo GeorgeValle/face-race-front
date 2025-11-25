@@ -10,7 +10,7 @@ import InputTextSearchStyled from '../../components/inputs/inputTextSearchStyled
 import Style from './Client.module.css'
 import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import {faMagnifyingGlass, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
+import {faBroomBall, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
 import TextViewClient from '../../components/textViews/textViewClient/TextViewClient'
 import NewClientModal from '../../components/modals/newClientModal/NewClientModal'
 import { createPortal } from 'react-dom'
@@ -73,6 +73,7 @@ const Client = () => {
             try{
                 const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
                 const response = request.data
+                setInputName(`${response.data.name} ${response.data.surname}`)
                 dispatch(addClient(response.data))
             }catch(error){
                 setMessage("Cliente NO encontrado")
@@ -83,6 +84,7 @@ const Client = () => {
             }
             
             
+        
 
 
             // const request = await axios.post('${config.API_BASE}session/login', {
@@ -94,8 +96,24 @@ const Client = () => {
             // navigate('/panel')
         }
 
-    
+        
+        const handleInputDNI = (e) => {
+        setInputDNI(e.target.value);
+    }
 
+        const handleOnKeyClient = async (event) => {
+        if (event.key === "Enter" || event.key === "Intro") {
+            
+            await fetchClient();
+            
+        }
+    }
+
+        const cleanClient = () =>{
+        dispatch(deleteClient()); //delete item of redux
+        setInputDNI("");
+        setInputName("");
+    }
 
     const handleClose=()=>{
         setModalOpenNewModal(false);
@@ -213,13 +231,14 @@ return (
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
-                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" value={inputDNI} onChange={(e) =>setInputDNI(e.target.value)} />
-                                        <MiniBtn onClick={fetchClient} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                        <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
+                                        {/*<MiniBtn onClick={fetchClient} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
                                     </div>
                                     <div className={Style.article}>
                                         {/*<TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} /> */}
                                         <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Cliente" size={false} value={inputName} onSearch={handleListResults} setOneResult={handleFetchOneClient} onChange={setInputName} displayFields={["name","surname"]}/>
-                                        <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                        {/*<MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
+                                        <MiniBtn onClick={cleanClient} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                                     </div>
                                 </article> 
                                 

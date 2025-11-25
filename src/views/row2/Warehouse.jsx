@@ -11,7 +11,7 @@ import InputSelectStyled from '../../components/inputs/inputSelectStyled/InputSe
 import Style from './WareHouse.module.css'
 import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faMagnifyingGlass, faPlus, faTruck/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
+import {faBroomBall, faPlus, faTruck/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
 import TextViewItem from '../../components/textViews/textViewItem/TextViewItem'
 import {TableCategoryItems} from '../../components/tables/tableCategoryItems/TableCategoryItems'
 import { TableReorderPoint } from '../../components/tables/tableReorderPoint/TableReorderPoint'
@@ -251,45 +251,51 @@ const Warehouse = () => {
         
 }
 
-const handleDialogDelete = async(code) =>{
-    setInputCode(code)
-    
-    setMessageModal("¿Seguro quieres deshabilitar al Item?");
-    setMessageDialog("Deshabilitar");
-    setModalOpenDialog(true);
-}
-
-const handleDeleteItem = async () => {
-    setModalOpenDialog(false);
-    setIsListItems(false)
-    setIsReorderPointList(false)
-    try{
-        await axios.delete(`${config.API_BASE}item/code/${inputCode}`)
-        dispatch(deleteItem())
-        setInputCode("")
-        setMessage("Artículo Deshabilitado")
-                setModalOpenMessage(true)
-                setTimeout(() => {
-                    setModalOpenMessage(false);
-                            }, 3500);
-    }catch(error){
+    const handleDialogDelete = async(code) =>{
+        setInputCode(code)
         
-        setInputCode("")
-        setMessage("Artículo NO encontrado")
-                setModalOpenMessage(true)
-                setTimeout(() => {
-                    setModalOpenMessage(false);
-                            }, 3500);
+        setMessageModal("¿Seguro quieres deshabilitar al Item?");
+        setMessageDialog("Deshabilitar");
+        setModalOpenDialog(true);
     }
-    
-}
 
-const handleReorderPointList = () =>{
-    setIsItem(false)
-    setIsListItems(false)
-    setIsReorderPointList(true)
-    fetchReorderPointList();
-}
+    const handleDeleteItem = async () => {
+        setModalOpenDialog(false);
+        setIsListItems(false)
+        setIsReorderPointList(false)
+        try{
+            await axios.delete(`${config.API_BASE}item/code/${inputCode}`)
+            dispatch(deleteItem())
+            setInputCode("")
+            setMessage("Artículo Deshabilitado")
+                    setModalOpenMessage(true)
+                    setTimeout(() => {
+                        setModalOpenMessage(false);
+                                }, 3500);
+        }catch(error){
+            
+            setInputCode("")
+            setMessage("Artículo NO encontrado")
+                    setModalOpenMessage(true)
+                    setTimeout(() => {
+                        setModalOpenMessage(false);
+                                }, 3500);
+        }
+        
+    }
+
+    const handleReorderPointList = () =>{
+        setIsItem(false)
+        setIsListItems(false)
+        setIsReorderPointList(true)
+        fetchReorderPointList();
+    }
+
+    const cleanItem = () =>{
+                dispatch(deleteItem()); //delete item of redux
+                setInputCode("");
+                setInputNameItem("");
+            }
 
 
 //to du
@@ -312,12 +318,13 @@ return (
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
                                         <TextInputStyled placeholderText={"Ej: 01122344"} typeInput={"number"} titleLabel="Código del Artículo" value={inputCode} onChange={(e) =>setInputCode(e.target.value)} />
-                                        <MiniBtn onClick={fetchItem} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                        {/*<MiniBtn onClick={fetchItem} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
                                     </div>
                                     <div className={Style.article}>
                                         {/*<TextInputStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} /> */}
                                         <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputNameItem} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputNameItem} displayFields={["name","brand"]}/>
                                         {/*<MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
+                                        <MiniBtn onClick={cleanItem} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                                     </div>
                                     <div className={Style.article}>
                                         {/* <TextInputStyled placeholderText={"Ej: casco or guante "} typeInput={"text"} titleLabel="Categoría" value={inputList} onChange={(e) =>setInputList(e.target.value)} size={true} />
