@@ -1,7 +1,8 @@
 ## Tasks description
 
-- config layout of components 
-- Add all btns, inputs, textview and tables
+- Add btns Clean items and clean Client
+- Add inputTextSerachStyled for Items and Clients
+
 
  
 
@@ -16,11 +17,12 @@
 -  [X] Add tables
 -  [X] Add edit buttons
 -  [X] Add delete buttons
--   [] add functions in  delete btns
--   [] add functions in edit btns
--   [] add function search in dni input
--   [] add function search in code input
--   [] add function search in quantity input
--   [] add function search in name item input
--   [] add function print in btn imprimir
--   [] add function total in MiniTotals component
+-  [X] add functions in  delete btns
+-  [X] add functions in edit btns
+-  [X] add function search in dni input
+-  [X] add function search in code input
+-  [X] add function search in quantity input
+-  [X] add function search in name item input
+-  [X] add function print in btn imprimir
+-  [X] add function total in MiniTotals component
+-  [X] add btns for clean Item and Client of inputs

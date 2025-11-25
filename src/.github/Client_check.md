@@ -1,9 +1,8 @@
 ## Tasks description in client view
 
-- add functions in  register btn
-- add functions in edit btn
+
 - add function search in code input
-- add function delete client
+- add btn clean client for inputs and table
 
 
 ## Checklist
@@ -23,3 +22,4 @@
 -  [X] add functions in edit btn
 -  [X] add function search in code input
 -  [X] add function delete client
+-  [X] add btn Clean Client of inputs and table
