@@ -8,6 +8,7 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
+import InputTextSearchStyled from '../../components/inputs/inputTextSearchStyled/InputTextSearchStyled'
 import Style from './Supplier.module.css'
 import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
@@ -46,6 +47,7 @@ const Supplier = () => {
     // const [error, setError] = useState(null);
     const [inputCUIT, setInputCUIT] = useState("");
     const [inputList, setInputList] = useState("");
+    const [inputName, setInputName] = useState("");
     const [list, setList] = useState([{}]);
     const supplier = useSelector((state)=> state.supplier);
 
@@ -83,11 +85,11 @@ const Supplier = () => {
                 const request = await axios.get((`${config.API_BASE}supplier/list/${inputList}`))
                 const response = request.data
 
-                console.log('Response-s:',response.suppliersList )
+                console.log('Response-s:',response.suppliers )
                 console.log('Response-r:',response)
                 
-                setList(response)
-                console.log('list:',list)
+                setList(response.suppliers)
+                
                 
             }catch(error){
                 setMessage("Proveedores NO encontrados")
@@ -98,6 +100,35 @@ const Supplier = () => {
             }
             
             
+        }
+
+        const fetchSuppliersByLetters = async(letters) =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}supplier/list/${letters}`))
+                const response = request.data
+                return response.suppliers
+            }catch(error){
+                
+                setMessage("Proveedor NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);7
+                return []
+            }
+        }
+        
+        const handleListResults = async(letters) =>{
+        setInputName(letters)
+        return await fetchSuppliersByLetters(letters)
+        }
+
+        const handleFetchOneSupplier = (OneSupplier)=>{
+                    dispatch(addSupplier(OneSupplier))
+                    setInputCUIT(OneSupplier.cuit)
+                    setOpenSupplierList(false)
+                    setOpenSupplier(true)
         }
 
 
@@ -185,7 +216,8 @@ return (
                                         <MiniBtn onClick={fetchSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
-                                        <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} />
+                                        {/* <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} /> */}
+                                        <InputTextSearchStyled placeholderText={"Ej: Lona Flex "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} value={inputName} onSearch={handleListResults} setOneResult={handleFetchOneSupplier} onChange={setInputName} displayFields={["businessName","companyName"]}/>
                                         <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
