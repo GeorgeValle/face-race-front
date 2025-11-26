@@ -12,7 +12,7 @@ import InputTextSearchStyled from '../../components/inputs/inputTextSearchStyled
 import Style from './Supplier.module.css'
 import { useState, /*useEffect*/} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faMagnifyingGlass, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
+import {faBroomBall, faPlus/*, faPencil*/} from "@fortawesome/free-solid-svg-icons"
 import TextViewSupplier from '../../components/textViews/textViewSupplier/TextViewSupplier'
 import NewSupplierModal from '../../components/modals/newSupplierModal/NewSupplierModal'
 import { createPortal } from 'react-dom'
@@ -64,6 +64,30 @@ const Supplier = () => {
                 const request = await axios.get((`${config.API_BASE}supplier/cuit/${inputCUIT}`))
                 const response = request.data
                 dispatch(addSupplier(response.data))
+                setInputName(`${response.data.businessName}`)
+            }catch(error){
+                setMessage("Proveedor NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);
+            }
+            
+            
+        }
+
+        const fetchOneSupplierForEdit = async(cuit = null) => {
+        
+            setOpenSupplierList(false)
+            setOpenSupplier(true)
+
+            const cuitToFetch = parseInt(cuit) || inputCUIT;
+            try{
+                const request = await axios.get((`${config.API_BASE}supplier/cuit/${cuitToFetch}`))
+                const response = request.data
+                dispatch(addSupplier(response.data))
+                setInputName(`${response.data.businessName}`)
+                setModalOpenEditSupplier(true)
             }catch(error){
                 setMessage("Proveedor NO encontrado")
                 setModalOpenMessage(true)
@@ -128,11 +152,23 @@ const Supplier = () => {
         const handleInputCUIT = (e) => {
         setInputCUIT(e.target.value);
         }
+
+        const handleInputList = (e) =>{
+            setInputList(e.target.value)
+        }
         
         const handleOnKeySupplier = async (event) => {
             if (event.key === "Enter" || event.key === "Intro") {
             
             await fetchSupplier();
+            
+            }
+        }
+
+        const handleOnKeyListSupplier = async (event) => {
+            if (event.key === "Enter" || event.key === "Intro") {
+            
+            await fetchListSupplier();
             
             }
         }
@@ -157,7 +193,15 @@ const Supplier = () => {
         setModalOpenDialog(false);
     }
 
-
+    const handleEditSupplier = async(cuit) =>{
+        
+        const cuitToFetch = parseInt(cuit);
+        setInputCUIT(cuitToFetch)
+        await fetchOneSupplierForEdit(cuitToFetch);
+        //if(supplier){
+          //  setModalOpenEditSupplier(true);
+        //}
+    }
     const handleSubmitEdit=(message)=>{
         
         setModalOpenEditSupplier(false);
@@ -184,9 +228,14 @@ const Supplier = () => {
 
 
 
-const handleDialogDelete = () =>{
-    setMessageModal("¿Seguro quieres Borrar al Proveedor?");
-    setMessageDialog("Borrar");
+const handleDialogDelete = (cuit=null) =>{
+
+    if(cuit){
+        setInputCUIT(cuit)
+    }
+    
+    setMessageModal("¿Seguro quieres desahabilitar al Proveedor?");
+    setMessageDialog("Deshabilitar");
     setModalOpenDialog(true);
 }
 
@@ -231,16 +280,17 @@ return (
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
                                         <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Proveedor" value={inputCUIT} onChange={handleInputCUIT} onKey={handleOnKeySupplier} />
-                                        <MiniBtn onClick={fetchSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                        {/*<MiniBtn onClick={fetchSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>*/}
                                     </div>
                                     <div className={Style.article}>
                                         {/* <TextInputStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} /> */}
                                         <InputTextSearchStyled placeholderText={"Ej: Lona Flex "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} value={inputName} onSearch={handleListResults} setOneResult={handleFetchOneSupplier} onChange={setInputName} displayFields={["businessName","companyName"]}/>
-                                        <MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                        {/*<MiniBtn ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
+                                        <MiniBtn onClick={cleanSupplier} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                                     </div>
                                     <div className={Style.article}>
-                                        <TextInputStyled placeholderText={"Ej: aba or moto "} typeInput={"text"} titleLabel="Listado" value={inputList} onChange={(e) =>setInputList(e.target.value)} size={true} />
-                                        <MiniBtn  onClick={fetchListSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
+                                        <TextInputStyled placeholderText={"Ej: aba or moto "} typeInput={"text"} titleLabel="Listado" value={inputList} onChange={handleInputList} onKey={handleOnKeyListSupplier} size={true} />
+                                        {/*<MiniBtn  onClick={fetchListSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
                                     </div>
                                 </article> 
                                 
@@ -262,7 +312,7 @@ return (
                             
                             }
                             {
-                                openSupplierList&&<TableSupplierList rows={list || []}/>
+                                openSupplierList&&<TableSupplierList rows={list || []} onEdit={handleEditSupplier} onDelete={handleDialogDelete}/>
                             }
                         
                     </div>
