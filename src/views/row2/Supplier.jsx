@@ -118,7 +118,25 @@ const Supplier = () => {
                 return []
             }
         }
+
+        const cleanSupplier = () =>{
+                dispatch(deleteSupplier()); //delete item of redux
+                setInputCUIT("");
+                setInputName("");
+            }
+
+        const handleInputCUIT = (e) => {
+        setInputCUIT(e.target.value);
+        }
         
+        const handleOnKeySupplier = async (event) => {
+            if (event.key === "Enter" || event.key === "Intro") {
+            
+            await fetchSupplier();
+            
+            }
+        }
+
         const handleListResults = async(letters) =>{
         setInputName(letters)
         return await fetchSuppliersByLetters(letters)
@@ -212,7 +230,7 @@ return (
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
-                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Proveedor" value={inputCUIT} onChange={(e) =>setInputCUIT(e.target.value)} />
+                                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Proveedor" value={inputCUIT} onChange={handleInputCUIT} onKey={handleOnKeySupplier} />
                                         <MiniBtn onClick={fetchSupplier} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn>
                                     </div>
                                     <div className={Style.article}>
