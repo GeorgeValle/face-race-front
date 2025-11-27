@@ -1,9 +1,11 @@
 ## Tasks description in Supplier view
 
-- add functions in  register btn
-- add functions in edit btn
+- add input inputSearchTextStyled for search names in dynamic mode
+- add functions  edit from btn table
 - add function search in code input
-- add function delete client
+- add function delete supplier from btn table
+- delete btns of search
+
 
 
 ## Checklist
@@ -23,3 +25,6 @@
 -  [X] add functions in edit btn
 -  [X] add function search in code input
 -  [X] add function delete client
+-  [X] add Table List suppliers
+-  [X] add edit and delete suppliers from table
+-  [X] add input search name

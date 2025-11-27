@@ -5,7 +5,7 @@ import { faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 // deleteRow, editRow
 
-export const TableSupplierList = ({ rows , size=false}) => {
+export const TableSupplierList = ({ rows , size=false, onEdit=null , onDelete=null}) => {
     return (<div className={Style.table_wrapper}>
         <table className={`${Style.table} ${size?Style.sizeM:Style.sizeL}`}>
             <thead>
@@ -37,8 +37,8 @@ export const TableSupplierList = ({ rows , size=false}) => {
                             <tr key={idx}>
                                 <td>
                                     <span className={Style.actions}>
-                                        <FontAwesomeIcon icon={faTrash} className={Style.delete_btn} /*onClick={()=>deleteRow(idx)}*/ />
-                                        <FontAwesomeIcon icon={faPencil} /*onClick={()=> editRow(idx)}*/ />
+                                        <FontAwesomeIcon icon={faTrash} className={Style.delete_btn} onClick={()=> onDelete(row.cuit)}/*onClick={()=>deleteRow(idx)}*/ />
+                                        <FontAwesomeIcon icon={faPencil} onClick={()=>onEdit(row.cuit)}/*onClick={()=> editRow(idx)}*/ />
                                     </span>
                                 </td>
                                 <td>{row.cuit}</td>
