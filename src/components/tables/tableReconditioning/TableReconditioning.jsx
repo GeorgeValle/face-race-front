@@ -6,7 +6,7 @@ import styles from './TableReconditioning.module.css';
 import config from "../../../config/Envs"
 import TextInputStyled from "../../inputs/inputTextStyled/TextInputStyled"
 import InputTextSearchStyled from '../../inputs/inputTextSearchStyled/InputTextSearchStyled';
-import TextViewInfoStyled from "../../textViews/textViewInfoStyled/TextViewInfoStyled"
+//import TextViewInfoStyled from "../../textViews/textViewInfoStyled/TextViewInfoStyled"
 import MiniBtn from "../../btns/miniBtn/MiniBtn"
 import MiniNavBar from '../../miniNavbar/MIniNavBar';
 import { createPortal } from 'react-dom'

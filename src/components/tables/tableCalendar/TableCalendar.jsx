@@ -6,7 +6,8 @@ import axios from 'axios';
 import styles from './TableCalendar.module.css';
 import config from "../../../config/Envs"
 import TextInputStyled from "../../inputs/inputTextStyled/TextInputStyled"
-import TextViewInfoStyled from "../../textViews/textViewInfoStyled/TextViewInfoStyled"
+import InputTextSearchStyled from '../../inputs/inputTextSearchStyled/InputTextSearchStyled';
+//import TextViewInfoStyled from "../../textViews/textViewInfoStyled/TextViewInfoStyled"
 import MiniBtn from "../../btns/miniBtn/MiniBtn"
 import MiniNavBar from '../../miniNavbar/MIniNavBar';
 import { createPortal } from 'react-dom'
@@ -37,6 +38,7 @@ const TableCalendar = ({ changeTurn = null }) => {
     const [appointments, setAppointments] = useState([]);
     const [filteredAppointments, setFilteredAppointments] = useState([]);
     const [inputDNI, setInputDNI] = useState("")
+    const [inputNameClient, setInputNameClient] = useState("");
     const [message, setMessage] = useState("");
     const [messageModal, setMessageModal] = useState("");
     const [messageDialog, setMessageDialog] = useState("");
@@ -74,6 +76,45 @@ const TableCalendar = ({ changeTurn = null }) => {
         setMessageDialog("")
         setMessage("")
     }
+
+        const fetchClientsByLetters = async(letters) =>{
+                    
+                    try{
+                        const request = await axios.get((`${config.API_BASE}client/name/${letters}`))
+                        const response = request.data
+                        
+                        return response.client
+                    }catch(error){
+                        
+                        setMessage("Cliente NO encontrado")
+                        setModalOpenMessage(true)
+                        setTimeout(() => {
+                            setModalOpenMessage(false);
+                                    }, 3500);7
+                        
+                        return []
+                    }
+                }
+    
+        const handleFetchOneClient = (oneClient)=>{
+            setLoading(true);
+            dispatch(addClient(oneClient))
+            setInputDNI(oneClient.dni)
+                setIsFetchClient(true);
+                fetchByDNI(oneClient.dni);
+                setLoading(false);
+                
+            // setIsListItems(false)
+            //     setIsReorderPointList(false)
+            //     setIsItem(true)
+    
+        }
+    
+        const handleListResultsClients = async(letters) =>{
+            setInputNameClient(letters)
+            return await fetchClientsByLetters(letters)
+        }
+    
 
     const filterAppointmentsByStatus = (status) => {
 
@@ -441,12 +482,13 @@ const TableCalendar = ({ changeTurn = null }) => {
                 <div className={styles.separate} >
                     <div className={styles.article} >
                         <MiniBtn onClick={changeTurn} ><FontAwesomeIcon icon={faMotorcycle} /></MiniBtn>
-                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Cliente" value={inputDNI} onChange={(e) => setInputDNI(e.target.value)} onKey={handleOnKeyClient} />
+                        <TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI o CUIT Cliente" value={inputDNI} onChange={(e) => setInputDNI(e.target.value)} onKey={handleOnKeyClient} /> 
 
                     </div>
                     <div className={styles.article}>
 
-                        <TextViewInfoStyled titleLabel="Nombre del Cliente " size={false} value={`${client.name == null ? "" : client.name} ${client.surname == null ? "" : client.surname}`} />
+                        {/*<TextViewInfoStyled titleLabel="Nombre del Cliente " size={false} value={`${client.name == null ? "" : client.name} ${client.surname == null ? "" : client.surname}`} /> */}
+                        <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre de Cliente" size={false} value={inputNameClient} onSearch={handleListResultsClients} setOneResult={handleFetchOneClient} onChange={setInputNameClient} displayFields={["name","surname"]}/>
                     </div>
                     <div className={styles.inputDate_group}>
                         <label className={styles.label}>
