@@ -3,12 +3,13 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar'
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
+import InputTextSearchStyled from '../../components/inputs/inputTextSearchStyled/InputTextSearchStyled'
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
 import InputSelectStyled from '../../components/inputs/inputSelectStyled/InputSelectStyled'
 import Style from './Sales.module.css'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faPlus, faTruck/*, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
+import { faMagnifyingGlass, faBroomBall, faPlus, faTruck/*, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
 import Dialog from '../../components/modals/dialog/Dialog'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 import { TableSale } from '../../components/tables/tableSale/TableSale'
@@ -16,8 +17,9 @@ import { createPortal } from 'react-dom'
 import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import SalesCharts from '../../components/graphics/salesChart/SalesChart'
 import { useDispatch, useSelector } from "react-redux";
-import { addItem,/* changeClient, deleteItem  */} from "../../redux/ItemSlice";
-import {addSale} from '../../redux/SaleSlice';
+import { addItem, deleteItem/* changeClient, deleteItem  */} from "../../redux/ItemSlice";
+import { addClient, deleteClient } from '../../redux/ClientSlice'
+import {addSale, resetSale} from '../../redux/SaleSlice';
 import SaleModal from '../../components/modals/saleModal/SaleModal'
 import axios from 'axios'
 import config from '../../config/Envs'
@@ -119,7 +121,85 @@ const Sales = () => {
         setInputSaleNumber(e.target.value)
     }
 
-    
+    const cleanClient = () =>{
+            dispatch(deleteClient()); //delete item of redux
+            dispatch(resetSale());
+            setInputDNI("");
+            setInputNameClient("");
+        }
+
+    const cleanItem = () =>{
+            dispatch(deleteItem()); //delete item of redux
+            setInputCode("");
+            setInputItemName("");
+        }
+
+        // functions for InputTextSearchStyled
+    const fetchItemsByLetters = async(letters) =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}item/name/${letters}`))
+                const response = request.data
+                return response.item
+            }catch(error){
+                
+                setMessage("Artículo NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);7
+                return []
+            }
+        }
+
+        const fetchClientsByLetters = async(letters) =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}client/name/${letters}`))
+                const response = request.data
+                return response.client
+            }catch(error){
+                
+                setMessage("Cliente NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);7
+                return []
+            }
+        }
+        
+        const handleListResultsItems = async(letters) =>{
+        setInputItemName(letters)
+        return await fetchItemsByLetters(letters)
+        
+    }
+
+    const handleListResultsClients = async(letters) =>{
+        setInputNameClient(letters)
+        return await fetchClientsByLetters(letters)
+    }
+
+    const handleFetchOneItem = async(OneItem)=>{
+        dispatch(addItem(OneItem))
+        setInputCode(OneItem.code)
+        await fetchFindTotalProductAmountByCodeAndMonthNotItem(OneItem.code)
+
+        // setIsListItems(false)
+        //     setIsReorderPointList(false)
+        //     setIsItem(true)
+
+    }
+
+    const handleFetchOneClient = async(oneClient)=>{
+        dispatch(addClient(oneClient))
+        setInputDNI(oneClient.dni)
+        await fetchAnnualClientSalesByDNI(oneClient.dni);
+        // setIsListItems(false)
+        //     setIsReorderPointList(false)
+        //     setIsItem(true)
+
+    }
 
 // const fetchMonthlyTotalsByName = async ()=>{
 //     try {
@@ -168,10 +248,10 @@ const Sales = () => {
         }
     }
 
-    const fetchItem = async() => {
-        
+    const fetchItem = async(code=null) => {
+        const codeToFetch = code || inputCode
         try{
-            const request = await axios.get((`${config.API_BASE}item/code/${inputCode}`))
+            const request = await axios.get((`${config.API_BASE}item/code/${codeToFetch}`))
             const response = request.data
             dispatch(addItem(response.item))
             setInputItemName(`${response.item.name} ${response.item.brand}`)
@@ -199,10 +279,11 @@ const Sales = () => {
         }
     }
 
-    const fetchFindTotalProductAmountByCodeAndMonth = async () =>{
+    const fetchFindTotalProductAmountByCodeAndMonth = async (code=null) =>{
         
+        const codeToFetch = code || inputCode
     try{   const response =
-                await axios.get(`${config.API_BASE}sale/item/${inputCode}/${selectedYear}`)
+                await axios.get(`${config.API_BASE}sale/item/${codeToFetch}/${selectedYear}`)
                 setItemSales(response.data.data);
                 await fetchItem();
                 
@@ -212,10 +293,26 @@ const Sales = () => {
     }
     }
 
-    const fetchAnnualClientSalesByDNI = async ()=>{ 
+    const fetchFindTotalProductAmountByCodeAndMonthNotItem = async (code=null) =>{
+        
+        const codeToFetch = code || inputCode
+    try{   const response =
+                await axios.get(`${config.API_BASE}sale/item/${codeToFetch}/${selectedYear}`)
+                setItemSales(response.data.data);
+                
+                
+                setTotalPrint(sumMonthlyAmounts(response.data.data))
+    }catch(error){
+        setMessage("sin info")
+    }
+    }
+
+    const fetchAnnualClientSalesByDNI = async (dni=null)=>{ 
+        
+        const DNIToFetch = dni || inputDNI
         try{
             const response =
-            await axios.get(`${config.API_BASE}sale/client/${inputDNI}/${selectedYear}`)
+            await axios.get(`${config.API_BASE}sale/client/${DNIToFetch}/${selectedYear}`)
             setClientSales(response.data.data)
             setInputNameClient(`${response.data.data[0].client.name} ${response.data.data[0].client.surname}`)
 
@@ -515,9 +612,10 @@ const Sales = () => {
                                         {
                                             isByClient && (
                                                 <article className={Style.separate}>
-                                                    <TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} />
+                                                    {/* <TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} /> */}
                                                     <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
-                                                    
+                                                    <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre de Cliente" size={false} value={inputNameClient} onSearch={handleListResultsClients} setOneResult={handleFetchOneClient} onChange={setInputNameClient} displayFields={["name","surname"]}/>
+                            <MiniBtn onClick={cleanClient} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                                                     <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
                                                         {Array.from({ length: 10 }, (_, i) => (
                                                             <option key={i} value={date.getFullYear() - 5 + i}>
@@ -533,7 +631,9 @@ const Sales = () => {
                                             isByItem && (
                                                 <article className={Style.separate}>
                                                     <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
-                                                    <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />
+                                                    {/* <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} /> */}
+                                                    <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre de Artículo" size={false} value={inputItemName} onSearch={handleListResultsItems} setOneResult={handleFetchOneItem} onChange={setInputItemName} displayFields={["name","brand"]}/>
+                                                    <MiniBtn onClick={cleanItem} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} /> </MiniBtn>
                                                     <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
                                                         {Array.from({ length: 10 }, (_, i) => (
                                                             <option key={i} value={date.getFullYear() - 5 + i}>

@@ -245,7 +245,6 @@ const handleDeleteSupplier = async () => {
         await axios.delete(`${config.API_BASE}supplier/cuit/${supplier.cuit}`)
         dispatch(deleteSupplier())
         setMessage("Proveedor Borrado")
-       
                 setModalOpenMessage(true)
                 setTimeout(() => {
                     setModalOpenMessage(false);
