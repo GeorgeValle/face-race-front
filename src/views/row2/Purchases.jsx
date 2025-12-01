@@ -4,11 +4,12 @@ import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon'
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled'
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
+import InputTextSearchStyled from '../../components/inputs/inputTextSearchStyled/InputTextSearchStyled'
 import InputSelectStyled from '../../components/inputs/inputSelectStyled/InputSelectStyled'
 import Style from './Purchases.module.css'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faPlus, faTruckRampBox/*, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
+import { faMagnifyingGlass, faPlus, faTruckRampBox, faBroomBall/*, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
 import Dialog from '../../components/modals/dialog/Dialog'
 import MessageModal from '../../components/modals/messageModal/MessageModal'
 import { TablePurchase } from '../../components/tables/tablePurchase/TablePurchase'
@@ -17,7 +18,7 @@ import { NavLink } from "react-router-dom";
 import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import PurchasesCharts from '../../components/graphics/purchasesChart/PurchasesChart'
 import { useDispatch, useSelector } from "react-redux";
-import { addItem,/* changeClient, deleteItem  */} from "../../redux/ItemSlice";
+import { addItem, deleteItem/* changeClient */} from "../../redux/ItemSlice";
 import {addPurchase,toggleChecked} from '../../redux/PurchaseSlice';
 import PurchaseModal from '../../components/modals/purchaseModal/PurchaseModal'
 import LoaderMotorcycle from '../../components/loaders/loaderMotorcycle/LoaderMotorcycle';
@@ -126,6 +127,44 @@ const Purchases = () => {
 
     }
 
+    const handleListResults = async(letters) =>{
+        setInputItemName(letters)
+        return await fetchItemsByLetters(letters)
+        
+    }
+
+    const fetchItemsByLetters = async(letters) =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}item/name/${letters}`))
+                const response = request.data
+                return response.item
+            }catch(error){
+                
+                setMessage("Artículo NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);7
+                return []
+            }
+        } 
+
+    const handleFetchOneItem = async (item)=>{
+        dispatch(addItem(item))
+        setInputCode(item.code)
+        await fetchFindTotalProductAmountByCodeAndMonthNotItemFetch(item.code)
+        //setIsItem(true)
+    }
+
+    const cleanItem = () =>{
+                dispatch(deleteItem()); //delete item of redux
+                setInputCode("");
+                setInputItemName("");
+            }
+
+
+
 // const fetchMonthlyTotalsByName = async ()=>{
 //     try {
 //         const response =
@@ -211,14 +250,33 @@ const Purchases = () => {
         }
     }
 
-    const fetchFindTotalProductAmountByCodeAndMonth = async () =>{
+    const fetchFindTotalProductAmountByCodeAndMonth = async (code = null) =>{
         
-    try{   
+    try{ 
+        const codeToFetch = code || inputCode;   
         setLoading(true)
         const response =
-                await axios.get(`${config.API_BASE}purchase/item/${inputCode}/${selectedYear}`)
+                await axios.get(`${config.API_BASE}purchase/item/${codeToFetch}/${selectedYear}`)
                 setItemPurchases(response.data.data);
                 await fetchItem();
+                
+                setTotalPrint(sumMonthlyAmounts(response.data.data))
+        setLoading(false)
+        }catch(error){
+        setLoading(false)    
+        setMessage("sin info")
+    }
+    }
+
+    const fetchFindTotalProductAmountByCodeAndMonthNotItemFetch = async (code = null) =>{
+        
+    try{ 
+        const codeToFetch = code || inputCode;   
+        setLoading(true)
+        const response =
+                await axios.get(`${config.API_BASE}purchase/item/${codeToFetch}/${selectedYear}`)
+                setItemPurchases(response.data.data);
+                
                 
                 setTotalPrint(sumMonthlyAmounts(response.data.data))
         setLoading(false)
@@ -616,7 +674,9 @@ const Purchases = () => {
                                             isByItem && (
                                                 <article className={Style.separate}>
                                                     <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
-                                                    <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />
+                                                   {/*<TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} /> */}
+                                                    <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel="Nombre Artículo" size={false} value={inputItemName} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputItemName} displayFields={["name","brand"]}/>
+                                                    <MiniBtn onClick={cleanItem} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                                                     <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
                                                         {Array.from({ length: 10 }, (_, i) => (
                                                             <option key={i} value={date.getFullYear() - 5 + i}>
