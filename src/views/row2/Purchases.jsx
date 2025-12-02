@@ -19,6 +19,7 @@ import MiniTotal from '../../components/totals/miniTotal/MiniTotal'
 import PurchasesCharts from '../../components/graphics/purchasesChart/PurchasesChart'
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, deleteItem/* changeClient */} from "../../redux/ItemSlice";
+import {addSupplier, deleteSupplier} from '../../redux/SupplierSlice';
 import {addPurchase,toggleChecked} from '../../redux/PurchaseSlice';
 import PurchaseModal from '../../components/modals/purchaseModal/PurchaseModal'
 import LoaderMotorcycle from '../../components/loaders/loaderMotorcycle/LoaderMotorcycle';
@@ -163,6 +164,42 @@ const Purchases = () => {
                 setInputItemName("");
             }
 
+    const fetchSuppliersByLetters = async(letters) =>{
+
+        try{
+            const request = await axios.get((`${config.API_BASE}supplier/list/${letters}`))
+            const response = request.data
+            return response.suppliers
+        }catch(error){
+            
+            setMessage("Proveedor NO encontrado")
+            setModalOpenMessage(true)
+            setTimeout(() => {
+                setModalOpenMessage(false);
+                        }, 3500);7
+            return []
+        }
+    }
+
+    const cleanSupplier = () =>{
+        dispatch(deleteSupplier()); //delete item of redux
+        setInputCUIT("");
+        setInputName("");
+    }
+
+    const handleSupplierListResults = async(letters) =>{
+            setInputName(letters)
+            return await fetchSuppliersByLetters(letters)
+            }
+    
+    const handleFetchOneSupplier = async (OneSupplier)=>{
+                dispatch(addSupplier(OneSupplier))
+                setInputCUIT(OneSupplier.cuit)
+                await fetchAnnualSupplierPurchasesByCUIT(OneSupplier.cuit)
+                //setOpenSupplierList(false)
+                //setOpenSupplier(true)
+    }
+
 
 
 // const fetchMonthlyTotalsByName = async ()=>{
@@ -286,11 +323,12 @@ const Purchases = () => {
     }
     }
 
-    const fetchAnnualSupplierPurchasesByCUIT = async ()=>{ 
+    const fetchAnnualSupplierPurchasesByCUIT = async (cuit = null)=>{ 
+        const cuitToFetch = cuit || inputCUIT
         try{
             setLoading(true)
             const response =
-            await axios.get(`${config.API_BASE}purchase/supplier/${inputCUIT}/${selectedYear}`)
+            await axios.get(`${config.API_BASE}purchase/supplier/${cuitToFetch}/${selectedYear}`)
             setSupplierPurchases(response.data.data)
             setInputNameSupplier(response.data.data[0]?.supplier?.businessName)
             //console.log(response.data.data)
@@ -657,8 +695,10 @@ const Purchases = () => {
                                         {
                                             isBySupplier && (
                                                 <article className={Style.separate}>
-                                                    <TextInputStyled titleLabel={"Nombre del proveedor"} nameLabel={"supplier"} placeholderText={"Ej: Juan Gomez"} value={inputNameSupplier} onChange={handleInputNameSupplier} typeInput={"text"} size={false} />
+                                                    {/* <TextInputStyled titleLabel={"Nombre del proveedor"} nameLabel={"supplier"} placeholderText={"Ej: Juan Gomez"} value={inputNameSupplier} onChange={handleInputNameSupplier} typeInput={"text"} size={false} /> */}
                                                     <TextInputStyled typeInput="number" nameLabel={"cuit"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputCUIT} onChange={handleInputCUIT} onKey={handleOnKeySupplier} />
+                                                    <InputTextSearchStyled placeholderText={"Ej: Lona Flex "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} value={inputName} onSearch={handleSupplierListResults} setOneResult={handleFetchOneSupplier} onChange={setInputName} displayFields={["businessName","companyName"]}/>
+                                                    <MiniBtn onClick={cleanSupplier} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                                                     <InputSelectDateStyled onLabel={"Año"} onChange={handleAnnualChange} defaultValue={selectedYear}>
                                                         {Array.from({ length: 10 }, (_, i) => (
                                                             <option key={i} value={date.getFullYear() - 5 + i}>
