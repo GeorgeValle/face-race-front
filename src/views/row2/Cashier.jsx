@@ -3,6 +3,7 @@ import MiniNavBar from '../../components/miniNavbar/MIniNavBar';
 import MiniBtn from '../../components/btns/miniBtn/MiniBtn'
 import BtnCommon from '../../components/btns/btnCommon/BtnCommon';
 import TextInputStyled from '../../components/inputs/inputTextStyled/TextInputStyled';
+import InputTextSearchStyled from '../../components/inputs/inputTextSearchStyled/InputTextSearchStyled';
 import MidTotal from '../../components/totals/midTotal/MidTotal';
 import BtnVioletLarge from '../../components/btns/btnVioletLarge/BtnVioletLarge';
 import InputSelectDateStyled from '../../components/inputs/inputSelectDateStyled/InputSelectDateStyled'
@@ -64,9 +65,10 @@ const Cashier = () => {
 
     // fetching data
 
-    const fetchItem = async () => {
+    const fetchItem = async (code= null) => {
+        const codeToFetch = code || inputCode
         try {
-            const request = await axios.get((`${config.API_BASE}item/code/${inputCode}`))
+            const request = await axios.get((`${config.API_BASE}item/code/${codeToFetch}`))
             const response = request.data
             dispatch(addItem(response.item))
             setInputItemName(`${response.item.name} ${response.item.brand}`)
@@ -80,9 +82,10 @@ const Cashier = () => {
         }
     }
 
-    const fetchSupplier = async () => {
+    const fetchSupplier = async (cuit=null) => {
+        const cuitToFetch = cuit || inputCUIT;
         try {
-            const request = await axios.get((`${config.API_BASE}supplier/cuit/${inputCUIT}`))
+            const request = await axios.get((`${config.API_BASE}supplier/cuit/${cuitToFetch}`))
             const response = request.data
             dispatch(addSupplier(response.data))
             setInputNameSupplier(`${response.data.businessName}, Alias: ${response.data.companyName}`)
@@ -110,6 +113,38 @@ const Cashier = () => {
         }
     };
 
+    const fetchSuppliersByLetters = async(letters) =>{
+
+        try{
+            const request = await axios.get((`${config.API_BASE}supplier/list/${letters}`))
+            const response = request.data
+            return response.suppliers
+        }catch(error){
+            
+            setMessage("Proveedor NO encontrado")
+            setModalOpenMessage(true)
+            setTimeout(() => {
+                setModalOpenMessage(false);
+                        }, 3500);7
+            return []
+        }
+    }
+
+    
+
+    const handleSupplierListResults = async(letters) =>{
+            setInputNameSupplier(letters)
+            return await fetchSuppliersByLetters(letters)
+            }
+    
+    const handleFetchOneSupplier = async (OneSupplier)=>{
+                // dispatch(addSupplier(OneSupplier))
+                setInputCUIT(OneSupplier.cuit)
+                await fetchSupplier(OneSupplier.cuit)
+                //setOpenSupplierList(false)
+                //setOpenSupplier(true)
+    }
+
     // function for clean items of redux and input
     const cleanItem = () =>{
     dispatch(deleteItem()); //delete item of redux
@@ -121,6 +156,36 @@ const Cashier = () => {
         dispatch(deleteSupplier()); //delete item of redux
         setInputCUIT("");
         setInputNameSupplier("");
+    }
+
+    const handleListResults = async(letters) =>{
+        setInputItemName(letters)
+        return await fetchItemsByLetters(letters)
+        
+    }
+
+    const fetchItemsByLetters = async(letters) =>{
+
+            try{
+                const request = await axios.get((`${config.API_BASE}item/name/${letters}`))
+                const response = request.data
+                return response.item
+            }catch(error){
+                
+                setMessage("Artículo NO encontrado")
+                setModalOpenMessage(true)
+                setTimeout(() => {
+                    setModalOpenMessage(false);
+                            }, 3500);7
+                return []
+            }
+        } 
+
+    const handleFetchOneItem = async (item)=>{
+        // dispatch(addItem(item))
+        setInputCode(item.code)
+        await fetchItem(item.code)
+        //setIsItem(true)
     }
     //onKeyDown handles 
 
@@ -301,7 +366,8 @@ const isDataListItem = itemsList.length > 0 && supplier.businessName != null;
                     <div className={Style.column1}>
                         <div className={Style.row1}>
                             <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
-                            <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} />
+                            {/* <TextInputStyled titleLabel={"Nombre de Artículo"} nameLabel={"itemName"} placeholderText={"Ej: Guantes"} value={inputItemName} onChange={handleInputItemName} typeInput={"text"} size={false} /> */}
+                            <InputTextSearchStyled placeholderText={"Ej: Casco Italy "} typeInput={"text"} titleLabel={"Nombre Artículo"} size={false} value={inputItemName} onSearch={handleListResults} setOneResult={handleFetchOneItem} onChange={setInputItemName} displayFields={["name","brand"]}/>
                             <div className={Style.btnLayout}>
                                 {isDataItem ? (<MiniBtn onClick={handleOpenItemModal} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>) : (<MiniBtn onClick={handleOpenItemModal} bgDisable={true} disabled={true} isWhite={true}> <FontAwesomeIcon icon={faPlus} />  </MiniBtn>)}
                                 {/* <MiniBtn onClick={handleShowPrice} isWhite={true}> $<FontAwesomeIcon icon={faMagnifyingGlass} />  </MiniBtn>
@@ -316,7 +382,8 @@ const isDataListItem = itemsList.length > 0 && supplier.businessName != null;
                         </div>
                         <div className={Style.row3}>
                             <TextInputStyled typeInput="number" nameLabel={"cuit"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputCUIT} onChange={handleInputCUIT} onKey={handleOnKeySupplier} />
-                            <TextInputStyled titleLabel={"Nombre Proveedor"} nameLabel={"suppplier"} placeholderText={"Ej: Electro Moto"} value={inputNameSupplier} onChange={handleInputNameSupplier} typeInput={"text"} size={false} />
+                            {/* <TextInputStyled titleLabel={"Nombre Proveedor"} nameLabel={"suppplier"} placeholderText={"Ej: Electro Moto"} value={inputNameSupplier} onChange={handleInputNameSupplier} typeInput={"text"} size={false} /> */}
+                            <InputTextSearchStyled placeholderText={"Ej: Lona Flex "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} value={inputNameSupplier} onSearch={handleSupplierListResults} setOneResult={handleFetchOneSupplier} onChange={setInputNameSupplier} displayFields={["businessName","companyName"]}/>
                             <MiniBtn onClick={cleanSupplier} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                             
                         </div>
