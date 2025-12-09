@@ -14,7 +14,7 @@ import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMotorcycle, faChartPie /*faPlus, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
 import { useDispatch } from "react-redux";
-import { addClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
+import { addClient, deleteClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
 import { addShift, deleteShift } from "../../../redux/ShiftSlice"
 import { useSelector } from 'react-redux';
 import MessageModal from "../../../components/modals/messageModal/MessageModal"
@@ -24,6 +24,7 @@ import AppointmentsListPDF from '../../textViews/appointmentListPDF/Appointments
 import AppointmentPieChartModal from '../../modals/appointmentPieChartModal/AppointmentPieChartModal'
 import LoaderMotorcycle from '../../loaders/loaderMotorcycle/LoaderMotorcycle';
 import AppointmentReportingPDF from '../../pdf/appointmentReportingPDF/AppointmentReportingPDF';
+import AppointmentsClientModal from '../../modals/appointmentsClientModal/AppointmentsClientModal';
 
 const TableCalendar = ({ changeTurn = null }) => {
     const [date, setDate] = useState(new Date());
@@ -47,6 +48,7 @@ const TableCalendar = ({ changeTurn = null }) => {
     const [modalOpenDialog2, setModalOpenDialog2] = useState(false);
     const [modalOpenAppointment, setModalOpenAppointment] = useState(false);
     const [modalOpenAppointmentPieChart, setModalOpenAppointmentPieChart] = useState(false);
+    const [modalOpenAppointmentClients, setModalOpenAppointmentsClient] = useState(false)
     const [isFetchClient, setIsFetchClient] = useState(false);
     const [loading, setLoading] = useState(false);
     const [report, setReport] = useState(false);
@@ -73,8 +75,14 @@ const TableCalendar = ({ changeTurn = null }) => {
         setModalOpenDialog2(false);
         setModalOpenAppointment(false);
         setModalOpenAppointmentPieChart(false);
-        setMessageDialog("")
-        setMessage("")
+        setModalOpenAppointmentsClient(false);
+        setMessageDialog("");
+        setMessage("");
+        dispatch(deleteClient());
+    }
+
+    const handleOnNew = () =>{
+        setModalOpenAppointmentsClient(false);
     }
 
         const fetchClientsByLetters = async(letters) =>{
@@ -259,11 +267,11 @@ const TableCalendar = ({ changeTurn = null }) => {
         }
     }
 
-    const fetchClient = async () => {
-
+    const fetchClient = async (dni=null) => {
+        const dniToFetch = dni || inputDNI;
         try {
             setLoading(true)
-            const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
+            const request = await axios.get((`${config.API_BASE}client/dni/${dniToFetch}`))
             const response = request.data
             dispatch(addClient(response.data))
 
@@ -277,6 +285,27 @@ const TableCalendar = ({ changeTurn = null }) => {
             setMessage("Cliente NO encontrado")
             MessageResponse();
         }
+    }
+
+    const handleOnShow = async(dni) =>{
+    
+        setModalOpenAppointmentsClient(false)
+        await fetchClient(dni)
+
+    }
+
+    const fetchAppoitmentsClient = async(dni=null) =>{
+        const dniToFetch = dni || inputDNI;
+        try{
+            setLoading(true)
+            const request = await axios.get(`${config.API_BASE}appointment/many/${dniToFetch}`)
+            const response = request.data
+        }catch(error){
+            setLoading(false)
+            setMessage("Error al buscar Turnos con el DNI")
+            MessageResponse();
+        }
+
     }
 
     const handleOnKeyClient = async (event) => {
@@ -477,7 +506,8 @@ const TableCalendar = ({ changeTurn = null }) => {
             {modalOpenDialog2 && createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose} />, document.body)}
             {modalOpenAppointmentPieChart && createPortal(<AppointmentPieChartModal appointments={appointments} onClose={handleClose} />, document.body)}
             {modalOpenAppointment && createPortal(<AppointmentModal TheShift={shift} onEditStatus={handleEditStatus} onEditDescription={handleEditDescription} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose} />, document.body)}
-            {loading && <LoaderMotorcycle />}
+            {modalOpenAppointmentClients && createPortal(<AppointmentsClientModal appointments={[]} miniTitle={"Recepciones de Cliente"} onShow={handleOnShow} onCancel={handleClose} onNew={handleOnNew} />, document.body)}
+            {loading && <LoaderMotorcycle />} 
             <div className={styles.center}>
                 <div className={styles.separate} >
                     <div className={styles.article} >
