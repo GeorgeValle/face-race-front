@@ -1,4 +1,4 @@
-import Style from './EditClientModal.module.css'
+import Style from './AppointmentsClientModal.module.css'
 import MIniNavBar from '../../miniNavbar/MIniNavBar'
 import { TableAppointmentsClient } from '../../tables/tableAppointments/TableAppointmentsClient';
 //import TextInput from '../../inputs/textInput/TextInput'
@@ -30,14 +30,14 @@ const AppointmentsClientModal = ({appointments, miniTitle="", onShow=null, onCan
     }> 
         
         <div className={Style.modal}  >
-            <div className={Style.modal_header}>
+            <div className={`${Style.modal_header} ${Style.item1}`}>
                 <MIniNavBar miniTitle={miniTitle} btnClose={true} close={onClose} />
             </div>
-            <div className={Style.modal_content}>
-                <TableAppointmentsClient appointments={appointments} onShow={onShow} /> 
+            <div className={`${Style.modal_content} ${Style.item2}`}>
+                <TableAppointmentsClient appointments={appointments} perPage={3} onShow={onShow} /> 
                 
             </div>
-            <div className={Style.modal_buttons}>
+            <div className={`${Style.modal_buttons} ${Style.item3}`}>
                 <button type="button" onClick={()=> onNew()} className={`${Style.btn} ${Style.btn_submit}`} >Nuevo Turno </button>
                 <button className={`${Style.btn} ${Style.btn_cancel}`} onClick={() => onCancel()}>Cancelar </button>
             </div>

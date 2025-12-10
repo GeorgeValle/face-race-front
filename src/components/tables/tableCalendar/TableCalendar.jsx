@@ -37,6 +37,7 @@ const TableCalendar = ({ changeTurn = null }) => {
     const [selectedOption, setSelectedOption] = useState("");
     //   const [selectedWeek, setSelectedWeek] = useState(null);
     const [appointments, setAppointments] = useState([]);
+    const [appointmentsClient, setAppointmentsClient] = useState([])
     const [filteredAppointments, setFilteredAppointments] = useState([]);
     const [inputDNI, setInputDNI] = useState("")
     const [inputNameClient, setInputNameClient] = useState("");
@@ -83,6 +84,7 @@ const TableCalendar = ({ changeTurn = null }) => {
 
     const handleOnNew = () =>{
         setModalOpenAppointmentsClient(false);
+        
     }
 
         const fetchClientsByLetters = async(letters) =>{
@@ -108,8 +110,9 @@ const TableCalendar = ({ changeTurn = null }) => {
             setLoading(true);
             dispatch(addClient(oneClient))
             setInputDNI(oneClient.dni)
-                setIsFetchClient(true);
-                fetchByDNI(oneClient.dni);
+                //setIsFetchClient(true);
+                //fetchByDNI(oneClient.dni);
+                fetchAppointmentsClient(oneClient.dni)// now
                 setLoading(false);
                 
             // setIsListItems(false)
@@ -294,12 +297,17 @@ const TableCalendar = ({ changeTurn = null }) => {
 
     }
 
-    const fetchAppoitmentsClient = async(dni=null) =>{
+    const fetchAppointmentsClient = async(dni=null) =>{
         const dniToFetch = dni || inputDNI;
         try{
             setLoading(true)
             const request = await axios.get(`${config.API_BASE}appointment/many/${dniToFetch}`)
             const response = request.data
+            if(response.data){
+            setAppointmentsClient(response.data);
+            setModalOpenAppointmentsClient(true);
+            setLoading(false)
+            }
         }catch(error){
             setLoading(false)
             setMessage("Error al buscar Turnos con el DNI")
@@ -311,7 +319,8 @@ const TableCalendar = ({ changeTurn = null }) => {
     const handleOnKeyClient = async (event) => {
         if (event.key === "Enter" || event.key === "Intro") {
 
-            await fetchClient();
+            //await fetchClient();
+            await fetchAppointmentsClient()
 
         }
     }
@@ -506,7 +515,7 @@ const TableCalendar = ({ changeTurn = null }) => {
             {modalOpenDialog2 && createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose} />, document.body)}
             {modalOpenAppointmentPieChart && createPortal(<AppointmentPieChartModal appointments={appointments} onClose={handleClose} />, document.body)}
             {modalOpenAppointment && createPortal(<AppointmentModal TheShift={shift} onEditStatus={handleEditStatus} onEditDescription={handleEditDescription} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose} />, document.body)}
-            {modalOpenAppointmentClients && createPortal(<AppointmentsClientModal appointments={[]} miniTitle={"Recepciones de Cliente"} onShow={handleOnShow} onCancel={handleClose} onNew={handleOnNew} />, document.body)}
+            {modalOpenAppointmentClients && createPortal(<AppointmentsClientModal appointments={appointmentsClient} miniTitle={"Recepciones de Cliente"} onShow={handleOnShow} onClose={handleClose} onCancel={handleClose} onNew={handleOnNew} />, document.body)}
             {loading && <LoaderMotorcycle />} 
             <div className={styles.center}>
                 <div className={styles.separate} >

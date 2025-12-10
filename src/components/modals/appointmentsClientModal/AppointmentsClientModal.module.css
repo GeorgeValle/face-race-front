@@ -26,13 +26,14 @@
 .modal {
     flex-shrink: 0;
     padding: 2px;
+    margin-top: 2px;
     z-index: 12;
     display: grid;
     justify-content: center;
     align-items: center;
-    width: 994px;
-    max-height: 823px;
-    min-height: 600px;
+    width: 1200px;
+    height: 690px;
+    /*min-height: 600px; */
     border-radius: 15px;
     stroke: #000;
     stroke-width: 0.5px;
@@ -42,6 +43,15 @@
     -webkit-backdrop-filter: blur(3.75px);
     -moz-backdrop-filter: blur(3.75px);
     box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.25);
+    grid:
+
+    "item1  " auto
+
+    "item2  " auto
+
+    "item3  " auto
+    /1fr;
+    gap: 10px;
 }
 
 .modal_buttons{
@@ -55,40 +65,42 @@
 .modal_header {
     height: 30px;
     display: flex;
-	justify-content: flex-end;
+	justify-content:center;
 	font-size: 2rem;
     margin-bottom: 30px;
 }
 
 .modal_content {
+    display: flex;
+	align-content: center;
     padding-bottom: 2px;
+    padding-right: 20px;
     margin-top:13px;
+    margin-left: 20px;;
     max-width: 994px;
-    display: grid;
-    grid:
-
-    "item1 item2 " .5fr
-
-    "item3 item4 " .5fr
-
-    "item5 item6 " .5fr
-
-    "item7 item8 " .5fr
-
-    "item9 item10" .5fr
-    "item11 item11" .5fr
-
-    / .5fr .5fr ;
-
-    gap: 10px;
+   
+    
 }
 
 
-.item1 { grid-area: item1; }
+.item1 { 
+    grid-area: item1;
+    /* margin: 1px;
+    padding: 1px;  */
 
-.item2 { grid-area: item2; }
+}
 
-.item3 { grid-area: item3; }
+.item2 { 
+    grid-area: item2;
+    /* margin: 1px; 
+    padding: 1px;  */
+}
+
+.item3 { 
+    grid-area: item3;
+    /* margin: 1px;
+    padding: 1px;  */
+}
 
 .item4 { grid-area: item4; }
 
