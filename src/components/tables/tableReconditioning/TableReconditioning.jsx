@@ -13,8 +13,8 @@ import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChartPie, faCalendarPlus /*faPlus, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
 import { useDispatch } from "react-redux";
-import { addClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
-import { addShift, deleteShift } from "../../../redux/ShiftSlice"
+import { addClient, deleteClient/* changeClient,*/ } from "../../../redux/ClientSlice";
+//import { addShift, deleteShift } from "../../../redux/ShiftSlice"
 import { addTurn, deleteTurn } from "../../../redux/TurnSlice"
 import { useSelector } from 'react-redux';
 import MessageModal from "../../modals/messageModal/MessageModal"
@@ -24,6 +24,7 @@ import ReconditioningsListPDF from '../../pdf/reconditioningPDF/ReconditioningPD
 import ReconditioningPieChartModal from '../../modals/reconditioningPieChartModal/ReconditioningPieChartModal'
 import LoaderMotorcycle from '../../loaders/loaderMotorcycle/LoaderMotorcycle';
 import ReconditioningReportingPDF from '../../pdf/reconditioningReportingPDF/ReconditioningReportingPDF';
+import AppointmentsClientModal from '../../modals/appointmentsClientModal/AppointmentsClientModal';
 
 const TableReconditioning = ({ changeTurn=null}) => {
     const [date, setDate] = useState(new Date());
@@ -37,6 +38,7 @@ const TableReconditioning = ({ changeTurn=null}) => {
     //   const [selectedWeek, setSelectedWeek] = useState(null);
     const [appointments, setAppointments] = useState([]);
     const [filteredAppointments, setFilteredAppointments] = useState([]);
+    const [appointmentsClient, setAppointmentsClient] = useState([])
     const [inputNameClient, setInputNameClient] = useState("");
     const [inputDNI, setInputDNI] = useState("");
     const [message, setMessage] = useState("");
@@ -46,6 +48,7 @@ const TableReconditioning = ({ changeTurn=null}) => {
     const [modalOpenMessage, setModalOpenMessage] = useState("");
     const [modalOpenDialog2, setModalOpenDialog2] = useState(false);
     const [modalOpenAppointment, setModalOpenAppointment] = useState(false);
+    const [modalOpenAppointmentClients, setModalOpenAppointmentsClient] = useState(false)
     const [report, setReport] = useState(false);
     const [calendar, setCalendar] = useState(true);
     const [modalOpenAppointmentPieChart, setModalOpenAppointmentPieChart] = useState(false);
@@ -75,8 +78,10 @@ const TableReconditioning = ({ changeTurn=null}) => {
         setModalOpenDialog2(false);
         setModalOpenAppointment(false);
         setModalOpenAppointmentPieChart(false);
+        setModalOpenAppointmentsClient(false);
         setMessageDialog("")
         setMessage("")
+        dispatch(deleteClient());
     }
 
     const fetchClientsByLetters = async(letters) =>{
@@ -103,13 +108,20 @@ const TableReconditioning = ({ changeTurn=null}) => {
         dispatch(addClient(oneClient))
         setInputDNI(oneClient.dni)
             setIsFetchClient(true);
-            fetchByDNI(oneClient.dni);
+            //fetchByDNI(oneClient.dni);
+            fetchAppointmentsClient(oneClient.dni)// now
             setLoading(false);
             
         // setIsListItems(false)
         //     setIsReorderPointList(false)
         //     setIsItem(true)
 
+    }
+
+    const handleOnNew = () =>{
+        setModalOpenAppointmentsClient(false);
+        setIsFetchClient(true)
+        
     }
 
     const handleListResultsClients = async(letters) =>{
@@ -260,6 +272,27 @@ const TableReconditioning = ({ changeTurn=null}) => {
         }
     }
 
+    const fetchByDayAndTime = async (shiftDate, timeSlot) => {
+            try {
+                setLoading(true)
+                const request = await axios.get(`${config.API_BASE}reconditioning/day/${shiftDate}/time/${timeSlot}`)
+                const response = request.data
+    
+                if (response.data) {
+                    dispatch(addTurn(response.data))
+                    setModalOpenAppointment(true)
+                    setTheDate(response.data.shiftDate)
+                    setTheTimeSlot(response.data.timeSlot)
+                    setTheId(response.data._id)
+                    setLoading(false)
+                }
+            } catch (error) {
+                setLoading(false)
+                setMessage("Error al buscar Turno con día y fecha")
+                MessageResponse();
+            }
+        }
+
     const fetchClient = async () => {
 
         try {
@@ -281,6 +314,30 @@ const TableReconditioning = ({ changeTurn=null}) => {
 
 
     }
+
+
+        const fetchAppointmentsClient = async(dni=null) =>{
+            const dniToFetch = dni || inputDNI;
+            try{
+                setLoading(true)
+                const firstRequest = await axios.get((`${config.API_BASE}client/dni/${dniToFetch}`))
+                const client = firstRequest.data.data;
+                dispatch(addClient(client))
+    
+                const request = await axios.get(`${config.API_BASE}appointment/many/${dniToFetch}`)
+                const response = request.data
+                if(response.data){
+                setAppointmentsClient(response.data);
+                setModalOpenAppointmentsClient(true);
+                setLoading(false)
+                }
+            }catch(error){
+                setLoading(false)
+                setMessage("Error al buscar Turnos con el DNI")
+                MessageResponse();
+            }
+    
+        }
 
     const handleOnKeyClient = async (event) => {
         if (event.key === "Enter" || event.key === "Intro") {

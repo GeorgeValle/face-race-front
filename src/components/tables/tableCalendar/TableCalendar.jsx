@@ -84,6 +84,7 @@ const TableCalendar = ({ changeTurn = null }) => {
 
     const handleOnNew = () =>{
         setModalOpenAppointmentsClient(false);
+        setIsFetchClient(true)
         
     }
 
@@ -110,7 +111,7 @@ const TableCalendar = ({ changeTurn = null }) => {
             setLoading(true);
             dispatch(addClient(oneClient))
             setInputDNI(oneClient.dni)
-                //setIsFetchClient(true);
+                setIsFetchClient(true);
                 //fetchByDNI(oneClient.dni);
                 fetchAppointmentsClient(oneClient.dni)// now
                 setLoading(false);
@@ -270,6 +271,27 @@ const TableCalendar = ({ changeTurn = null }) => {
         }
     }
 
+    const fetchByDayAndTime = async (shiftDate, timeSlot) => {
+        try {
+            setLoading(true)
+            const request = await axios.get(`${config.API_BASE}appointment/day/${shiftDate}/time/${timeSlot}`)
+            const response = request.data
+
+            if (response.data) {
+                dispatch(addShift(response.data))
+                setModalOpenAppointment(true)
+                setTheDate(response.data.shiftDate)
+                setTheTimeSlot(response.data.timeSlot)
+                setTheId(response.data._id)
+                setLoading(false)
+            }
+        } catch (error) {
+            setLoading(false)
+            setMessage("Error al buscar Turno con día y fecha")
+            MessageResponse();
+        }
+    }
+
     const fetchClient = async (dni=null) => {
         const dniToFetch = dni || inputDNI;
         try {
@@ -280,7 +302,7 @@ const TableCalendar = ({ changeTurn = null }) => {
 
             if (response.data) {
                 setIsFetchClient(true);
-                fetchByDNI(response.data.dni);
+                await fetchByDNI(response.data.dni);
                 setLoading(false)
             }
         } catch (error) {
@@ -290,10 +312,11 @@ const TableCalendar = ({ changeTurn = null }) => {
         }
     }
 
-    const handleOnShow = async(dni) =>{
+    const handleOnShow = async(shiftDate,timeSlot) =>{
     
         setModalOpenAppointmentsClient(false)
-        await fetchClient(dni)
+        //await fetchClient(dni)
+        await fetchByDayAndTime(shiftDate,timeSlot)
 
     }
 
@@ -301,6 +324,10 @@ const TableCalendar = ({ changeTurn = null }) => {
         const dniToFetch = dni || inputDNI;
         try{
             setLoading(true)
+            const firstRequest = await axios.get((`${config.API_BASE}client/dni/${dniToFetch}`))
+            const client = firstRequest.data.data;
+            dispatch(addClient(client))
+
             const request = await axios.get(`${config.API_BASE}appointment/many/${dniToFetch}`)
             const response = request.data
             if(response.data){
@@ -408,12 +435,33 @@ const TableCalendar = ({ changeTurn = null }) => {
 
 
         }
-
-
-
     }
 
     const handleSlotClick = async (theAppointment, isBooked, date, slot) => {
+
+        if (isBooked) {
+
+            //const dni = theAppointment.dni
+            const shiftDate = theAppointment.shiftDate;
+            const timeSlot = theAppointment.timeSlot
+            await fetchByDayAndTime(shiftDate, timeSlot);
+        } else if (isFetchClient) {
+            setDate(date)
+            setTheDate(date)
+            setTheTimeSlot(slot)
+            setMessageModal(`¿Está seguro de agendar un turno para ${client.name} ${client.surname}?`)
+
+            setMessageDialog('Agendar')
+            setModalOpenDialog2(true);
+            setIsFetchClient(false);
+        } else {
+            setMessage("NO se seleccionó un cliente para agendar");
+            MessageResponse();
+        }
+
+    };
+
+    /* const handleSlotClick = async (theAppointment, isBooked, date, slot) => {
 
         if (isBooked) {
 
@@ -433,7 +481,7 @@ const TableCalendar = ({ changeTurn = null }) => {
             MessageResponse();
         }
 
-    };
+    }; */
 
     const renderColumns = () => {
         const today = new Date();

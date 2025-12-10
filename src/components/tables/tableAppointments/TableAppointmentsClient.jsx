@@ -58,7 +58,7 @@ export const TableAppointmentsClient = ({ appointments, size = false, perPage = 
 
 
     // Crear un array de items a mostrar, rellenando con objetos vacíos si es necesario
-    const currentItems = [...appointments.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - appointments.length)).fill({ dni: '', shiftDate: null, timeSlot: '', status: '-' })];
+    const currentItems = [...appointments.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - appointments.length)).fill({ dni: '', shiftDate:'', timeSlot: '', status: '-' })];
 
     // useEffect(() => {
     //     const currentItems = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ code: '', item: '', quantity: '', price: 0 })];
@@ -113,6 +113,23 @@ export const TableAppointmentsClient = ({ appointments, size = false, perPage = 
         }
     }
 
+    function formatEnglish(dateString){
+        if (dateString) {
+        // Create a object Date whit a String
+            const date = new Date(dateString);
+
+            // Obtain day, month and year
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            // Format to spanish DD-MM-YYYY
+            return `${month}-${day}-${year}`;
+        } else {
+            return " - "
+        }
+    }
+
     function formatHour(hour) {
         switch (hour) {
             case '10-12':
@@ -146,8 +163,8 @@ export const TableAppointmentsClient = ({ appointments, size = false, perPage = 
                 return '-';
         }
     }
-        const handleOnShow = (dni) => {
-            onShow(parseInt(dni))
+        const handleOnShow = (shiftDate,timeSlot) => {
+            onShow(shiftDate,timeSlot)
         }
 
         // Function for format price numbers
@@ -180,7 +197,7 @@ export const TableAppointmentsClient = ({ appointments, size = false, perPage = 
                                     <td>
                                         {row.dni && (
                                             <span className={Style.actions}>
-                                                <FontAwesomeIcon icon={faMagnifyingGlass} className={`${Style.magnifying_glass}`} onClick={() => handleOnShow(row.dni || 0)} />
+                                                <FontAwesomeIcon icon={faMagnifyingGlass} className={`${Style.magnifying_glass}`} onClick={() => handleOnShow(formatEnglish(row.shiftDate), row.timeSlot)} />
                                                 {/*isEdit&&<FontAwesomeIcon icon={faMagnifyingGlass} className={`${row.checked?Style.unpen_btn:Style.pen_btn} ${init&&Style.checked_init}`} onClick={()=> handleEditQuantity(row.code||0, row.quantity||0) } />*/}
                                                 {/*isChecked&&<FontAwesomeIcon icon={faCircleCheck} className={`${row.checked?Style.checked:Style.unchecked} ${init&&Style.checked_init}`} onClick={()=> handleCheckedStatus(row.code||0, row.checked||false, row.quantity||0) } /> */}
                                             </span>
