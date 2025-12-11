@@ -311,9 +311,16 @@ const TableReconditioning = ({ changeTurn=null}) => {
             setMessage("Cliente NO encontrado")
             MessageResponse();
         }
+    }
 
+    const handleOnShow = async(shiftDate,timeSlot) =>{
+    
+        setModalOpenAppointmentsClient(false)
+        //await fetchClient(dni)
+        await fetchByDayAndTime(shiftDate,timeSlot)
 
     }
+
 
 
         const fetchAppointmentsClient = async(dni=null) =>{
@@ -324,7 +331,7 @@ const TableReconditioning = ({ changeTurn=null}) => {
                 const client = firstRequest.data.data;
                 dispatch(addClient(client))
     
-                const request = await axios.get(`${config.API_BASE}appointment/many/${dniToFetch}`)
+                const request = await axios.get(`${config.API_BASE}reconditioning/many/${dniToFetch}`)
                 const response = request.data
                 if(response.data){
                 setAppointmentsClient(response.data);
@@ -342,8 +349,8 @@ const TableReconditioning = ({ changeTurn=null}) => {
     const handleOnKeyClient = async (event) => {
         if (event.key === "Enter" || event.key === "Intro") {
             
-            await fetchClient();
-            
+            //await fetchClient();
+            await fetchAppointmentsClient()
         }
     }
 
@@ -434,8 +441,11 @@ const TableReconditioning = ({ changeTurn=null}) => {
 
         if (isBooked) {
 
-            const dni = theAppointment.dni
-            await fetchByDNI(dni);
+            //const dni = theAppointment.dni
+            const shiftDate = theAppointment.shiftDate;
+            const timeSlot = theAppointment.timeSlot
+            //await fetchByDNI(dni);
+            await fetchByDayAndTime(shiftDate, timeSlot);
         } else if (isFetchClient) {
             setDate(date)
             setTheDate(date)
@@ -532,6 +542,7 @@ const TableReconditioning = ({ changeTurn=null}) => {
             {modalOpenDialog2 && createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose} />, document.body)}
             {modalOpenAppointmentPieChart && createPortal(<ReconditioningPieChartModal reconditionings={appointments} onClose={handleClose} />, document.body)}
             {modalOpenAppointment && createPortal(<ReconditioningModal TheShift={turn} onEditStatus={handleEditStatus} onEditDescription={handleEditDescription} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose} />, document.body)}
+            {modalOpenAppointmentClients && createPortal(<AppointmentsClientModal appointments={appointmentsClient} miniTitle={"Entregas a Cliente"} onShow={handleOnShow} onClose={handleClose} onCancel={handleClose} onNew={handleOnNew} />, document.body)}
             {loading&&<LoaderMotorcycle/>}
             <div className={styles.center}>
                 <div className={styles.separate} >

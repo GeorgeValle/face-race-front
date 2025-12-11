@@ -3,53 +3,10 @@ import Style from './TableAppointmentsClient.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-// import EditQuantityItemModal from '../../modals/editQuantityItemModal/EditQuantityItemModal';
-// import Dialog from '../../modals/dialog/Dialog';
-
-// deleteRow, editRow
 
 export const TableAppointmentsClient = ({ appointments, size = false, perPage = 6, onShow = null }) => {
     const itemsPerPage = perPage; // Número de items por página
     const [currentPage, setCurrentPage] = useState(0); // Página actual
-    // const [isModalQuantity, setIsModalQuantity] = useState(false);
-    // const [isDialog, setIsDialog] = useState(false);
-    // const [defaultQuantity, setDefaultQuantity] = useState(0);
-    // const [defaultCode, setdefaultCode] = useState(0);
-    // const [init, setInit]=useState(false)
-
-    //Handles 
-    // handle quantity
-    // const handleClose = () =>{
-    //     setIsDialog(false);
-    //     setIsModalQuantity(false);
-    // }
-    // const handleEditQuantity = (code, quantity) => {
-    //     setDefaultQuantity(quantity);
-    //     setdefaultCode(code);
-    //     setIsModalQuantity(true);
-    //     }
-
-    // const handleCheckedStatus = (code, checked, quantity) =>{
-    //     try{
-    //         editChecked(code, checked, quantity)
-    //         setInit(true)
-    //     }catch(error)
-    //     {
-    //         setInit(false)
-    //     }
-    // }
-
-    //handleDeleteRow
-    // const handleModalDialogDeleteRow = (code) => {
-    //     setDefaultQuantity(0);
-    //     setdefaultCode(code);
-    //     setIsDialog(true);
-    //     }
-
-    // const handleDeleteRow = () =>{
-    //     setIsDialog(false);
-    //     modalRemoveItem(defaultCode);
-    // }
 
     // calculate index start and end of appointments to show
     const startIndex = currentPage * itemsPerPage;
@@ -60,10 +17,6 @@ export const TableAppointmentsClient = ({ appointments, size = false, perPage = 
     // Crear un array de items a mostrar, rellenando con objetos vacíos si es necesario
     const currentItems = [...appointments.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - appointments.length)).fill({ dni: '', shiftDate:'', timeSlot: '', status: '-' })];
 
-    // useEffect(() => {
-    //     const currentItems = [...rows.slice(startIndex, endIndex), ...Array(Math.max(0, itemsPerPage - rows.length)).fill({ code: '', item: '', quantity: '', price: 0 })];
-    //     setCurrentItems(currentItems);
-    //   }, [rows, startIndex, endIndex, itemsPerPage]);
 
     // Calculate the total number of pages 
     const totalPages = Math.ceil(appointments.length / itemsPerPage);
@@ -80,20 +33,6 @@ export const TableAppointmentsClient = ({ appointments, size = false, perPage = 
             setCurrentPage(currentPage - 1);
         }
     };
-
-    // Function for calculate amount of each item 
-    // const calculateAmount = (quantity, price) => {
-    //     return quantity * price;
-    // };
-
-    // Function for add all amounts 
-    // const sumTotalAmount = () => {
-    //     return rows.reduce((total, row) => total + calculateAmount(row.quantity, row.price), 0);
-    // };
-
-    // const totalAmount = sumTotalAmount(); // Total de todos los amounts
-
-    // totals(totalAmount);
 
     function formatDateToSpanish(dateString) {
 
@@ -150,14 +89,16 @@ export const TableAppointmentsClient = ({ appointments, size = false, perPage = 
         switch (status) {
             case 'pending':
                 return 'Pendiente';
-
             case 'attended':
                 return 'Atendido';
-
             case 'canceled':
                 return 'Cancelado';
             case 'missing':
                 return 'Ausente';
+            case 'delivered':
+                return 'Entregado';
+            case 'ready':
+                return 'Listo';
 
             default:
                 return '-';
