@@ -14,7 +14,7 @@ import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMotorcycle, faChartPie /*faPlus, faPencil*/ } from "@fortawesome/free-solid-svg-icons"
 import { useDispatch } from "react-redux";
-import { addClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
+import { addClient, deleteClient,/* changeClient,*/ } from "../../../redux/ClientSlice";
 import { addShift, deleteShift } from "../../../redux/ShiftSlice"
 import { useSelector } from 'react-redux';
 import MessageModal from "../../../components/modals/messageModal/MessageModal"
@@ -24,6 +24,7 @@ import AppointmentsListPDF from '../../textViews/appointmentListPDF/Appointments
 import AppointmentPieChartModal from '../../modals/appointmentPieChartModal/AppointmentPieChartModal'
 import LoaderMotorcycle from '../../loaders/loaderMotorcycle/LoaderMotorcycle';
 import AppointmentReportingPDF from '../../pdf/appointmentReportingPDF/AppointmentReportingPDF';
+import AppointmentsClientModal from '../../modals/appointmentsClientModal/AppointmentsClientModal';
 
 const TableCalendar = ({ changeTurn = null }) => {
     const [date, setDate] = useState(new Date());
@@ -36,6 +37,7 @@ const TableCalendar = ({ changeTurn = null }) => {
     const [selectedOption, setSelectedOption] = useState("");
     //   const [selectedWeek, setSelectedWeek] = useState(null);
     const [appointments, setAppointments] = useState([]);
+    const [appointmentsClient, setAppointmentsClient] = useState([])
     const [filteredAppointments, setFilteredAppointments] = useState([]);
     const [inputDNI, setInputDNI] = useState("")
     const [inputNameClient, setInputNameClient] = useState("");
@@ -47,6 +49,7 @@ const TableCalendar = ({ changeTurn = null }) => {
     const [modalOpenDialog2, setModalOpenDialog2] = useState(false);
     const [modalOpenAppointment, setModalOpenAppointment] = useState(false);
     const [modalOpenAppointmentPieChart, setModalOpenAppointmentPieChart] = useState(false);
+    const [modalOpenAppointmentClients, setModalOpenAppointmentsClient] = useState(false)
     const [isFetchClient, setIsFetchClient] = useState(false);
     const [loading, setLoading] = useState(false);
     const [report, setReport] = useState(false);
@@ -73,8 +76,16 @@ const TableCalendar = ({ changeTurn = null }) => {
         setModalOpenDialog2(false);
         setModalOpenAppointment(false);
         setModalOpenAppointmentPieChart(false);
-        setMessageDialog("")
-        setMessage("")
+        setModalOpenAppointmentsClient(false);
+        setMessageDialog("");
+        setMessage("");
+        dispatch(deleteClient());
+    }
+
+    const handleOnNew = () =>{
+        setModalOpenAppointmentsClient(false);
+        setIsFetchClient(true)
+        
     }
 
         const fetchClientsByLetters = async(letters) =>{
@@ -101,7 +112,8 @@ const TableCalendar = ({ changeTurn = null }) => {
             dispatch(addClient(oneClient))
             setInputDNI(oneClient.dni)
                 setIsFetchClient(true);
-                fetchByDNI(oneClient.dni);
+                //fetchByDNI(oneClient.dni);
+                fetchAppointmentsClient(oneClient.dni)// now
                 setLoading(false);
                 
             // setIsListItems(false)
@@ -259,17 +271,38 @@ const TableCalendar = ({ changeTurn = null }) => {
         }
     }
 
-    const fetchClient = async () => {
-
+    const fetchByDayAndTime = async (shiftDate, timeSlot) => {
         try {
             setLoading(true)
-            const request = await axios.get((`${config.API_BASE}client/dni/${inputDNI}`))
+            const request = await axios.get(`${config.API_BASE}appointment/day/${shiftDate}/time/${timeSlot}`)
+            const response = request.data
+
+            if (response.data) {
+                dispatch(addShift(response.data))
+                setModalOpenAppointment(true)
+                setTheDate(response.data.shiftDate)
+                setTheTimeSlot(response.data.timeSlot)
+                setTheId(response.data._id)
+                setLoading(false)
+            }
+        } catch (error) {
+            setLoading(false)
+            setMessage("Error al buscar Turno con día y fecha")
+            MessageResponse();
+        }
+    }
+
+    const fetchClient = async (dni=null) => {
+        const dniToFetch = dni || inputDNI;
+        try {
+            setLoading(true)
+            const request = await axios.get((`${config.API_BASE}client/dni/${dniToFetch}`))
             const response = request.data
             dispatch(addClient(response.data))
 
             if (response.data) {
                 setIsFetchClient(true);
-                fetchByDNI(response.data.dni);
+                await fetchByDNI(response.data.dni);
                 setLoading(false)
             }
         } catch (error) {
@@ -279,10 +312,42 @@ const TableCalendar = ({ changeTurn = null }) => {
         }
     }
 
+    const handleOnShow = async(shiftDate,timeSlot) =>{
+    
+        setModalOpenAppointmentsClient(false)
+        //await fetchClient(dni)
+        await fetchByDayAndTime(shiftDate,timeSlot)
+
+    }
+
+    const fetchAppointmentsClient = async(dni=null) =>{
+        const dniToFetch = dni || inputDNI;
+        try{
+            setLoading(true)
+            const firstRequest = await axios.get((`${config.API_BASE}client/dni/${dniToFetch}`))
+            const client = firstRequest.data.data;
+            dispatch(addClient(client))
+
+            const request = await axios.get(`${config.API_BASE}appointment/many/${dniToFetch}`)
+            const response = request.data
+            if(response.data){
+            setAppointmentsClient(response.data);
+            setModalOpenAppointmentsClient(true);
+            setLoading(false)
+            }
+        }catch(error){
+            setLoading(false)
+            setMessage("Error al buscar Turnos con el DNI")
+            MessageResponse();
+        }
+
+    }
+
     const handleOnKeyClient = async (event) => {
         if (event.key === "Enter" || event.key === "Intro") {
 
-            await fetchClient();
+            //await fetchClient();
+            await fetchAppointmentsClient()
 
         }
     }
@@ -370,12 +435,33 @@ const TableCalendar = ({ changeTurn = null }) => {
 
 
         }
-
-
-
     }
 
     const handleSlotClick = async (theAppointment, isBooked, date, slot) => {
+
+        if (isBooked) {
+
+            //const dni = theAppointment.dni
+            const shiftDate = theAppointment.shiftDate;
+            const timeSlot = theAppointment.timeSlot
+            await fetchByDayAndTime(shiftDate, timeSlot);
+        } else if (isFetchClient) {
+            setDate(date)
+            setTheDate(date)
+            setTheTimeSlot(slot)
+            setMessageModal(`¿Está seguro de agendar un turno para ${client.name} ${client.surname}?`)
+
+            setMessageDialog('Agendar')
+            setModalOpenDialog2(true);
+            setIsFetchClient(false);
+        } else {
+            setMessage("NO se seleccionó un cliente para agendar");
+            MessageResponse();
+        }
+
+    };
+
+    /* const handleSlotClick = async (theAppointment, isBooked, date, slot) => {
 
         if (isBooked) {
 
@@ -395,7 +481,7 @@ const TableCalendar = ({ changeTurn = null }) => {
             MessageResponse();
         }
 
-    };
+    }; */
 
     const renderColumns = () => {
         const today = new Date();
@@ -477,7 +563,8 @@ const TableCalendar = ({ changeTurn = null }) => {
             {modalOpenDialog2 && createPortal(<Dialog messageModal={messageModal} messageConfirm={messageDialog} onSubmit={handleConfirmNewAppointment} onClose={handleClose} />, document.body)}
             {modalOpenAppointmentPieChart && createPortal(<AppointmentPieChartModal appointments={appointments} onClose={handleClose} />, document.body)}
             {modalOpenAppointment && createPortal(<AppointmentModal TheShift={shift} onEditStatus={handleEditStatus} onEditDescription={handleEditDescription} onPrint={null} onDelete={handleConfirmDeleteAppointment} onClose={handleClose} />, document.body)}
-            {loading && <LoaderMotorcycle />}
+            {modalOpenAppointmentClients && createPortal(<AppointmentsClientModal appointments={appointmentsClient} miniTitle={"Recepciones de Cliente"} onShow={handleOnShow} onClose={handleClose} onCancel={handleClose} onNew={handleOnNew} />, document.body)}
+            {loading && <LoaderMotorcycle />} 
             <div className={styles.center}>
                 <div className={styles.separate} >
                     <div className={styles.article} >
