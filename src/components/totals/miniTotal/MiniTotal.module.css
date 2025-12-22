@@ -13,6 +13,13 @@
     margin: 2px 7px 2px 7px;
 }
 
+.article_l{
+
+    width: 500px;
+    height: 80px;
+
+}
+
 .article h2{
     color: #61E651;
     font-family: "Roboto";
