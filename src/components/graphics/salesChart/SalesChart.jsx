@@ -97,7 +97,9 @@ const SalesChart = ({
     selectedYear = new Date().getFullYear(),
     selectedMonth = new Date().getMonth() + 1,
     reportType = 'monthly',
-    clientName = ''
+    clientName = '',
+    forecastData = null,
+    advice = ""
 }) => {
     const chartRef = useRef(null);
     const [isGenerating, setIsGenerating] = useState(false);
@@ -165,6 +167,11 @@ const SalesChart = ({
             default:
                 return ''
         }
+    }
+
+    // Defensive validation for forecast 
+    if (reportType === 'forecast' && (!forecastData || !Array.isArray(forecastData.forecast))) {
+        return <p>No hay datos de predicción disponibles.</p>;
     }
 
     // prepare data for charts
@@ -243,6 +250,45 @@ const SalesChart = ({
                     }]
                 };
 
+            case 'forecast':
+                //if (!forecastData)  return { labels: [], datasets: [] };
+                return {
+                    labels: forecastData.forecast.map(f => f.ds),
+                    datasets: [
+                    {
+                        label: "Histórico",
+                        data: forecastData.history.map(h => h.y),
+                        borderColor: "#1f77b4",
+                        backgroundColor: "rgba(31,119,180,0.2)",
+                        fill: false
+                    },
+                    {
+                        label: "Proyección",
+                        data: forecastData.forecast.map(f => f.yhat),
+                        borderColor: "#7f7f7f",
+                        backgroundColor: "rgba(127,127,127,0.2)",
+                        borderDash: [5, 5],
+                        fill: false
+                    },
+                    {
+                        label: "Intervalo inferior",
+                        data: forecastData.forecast.map(f => f.yhat_lower ?? null),
+                        borderColor: "rgba(200,200,200,0.6)",
+                        pointRadius: 0,
+                        borderDash: [2, 2],
+                        fill: false
+                    },
+                    {
+                        label: "Intervalo superior",
+                        data: forecastData.forecast.map(f => f.yhat_upper ?? null),
+                        borderColor: "rgba(200,200,200,0.6)",
+                        pointRadius: 0,
+                        borderDash: [2, 2],
+                        fill: false
+                    }
+                    ]
+                };
+
             default:
                 return {
                     labels: [],
@@ -289,7 +335,7 @@ const SalesChart = ({
             const chartImage = await captureCurrentChart();
             if (!chartImage) return;
 
-            // Calcular totales según el tipo de reporte
+            // Calculate totals by reportType
             let totalSales = 0;
             const monthlyDetails = {};
 
@@ -341,6 +387,26 @@ const SalesChart = ({
                         monthlyDetails[methodName] = value;
                     });
                     break;
+
+                case 'forecast':
+                    // Use date of ds for more clarity in  PDF
+                     // Usamos el totalForecast directamente
+                    totalSales = forecastData.totalForecast || 0;
+
+                    // También podemos listar cada predicción por fecha
+                    forecastData.forecast.forEach((f) => {
+                        monthlyDetails[`Predicción ${f.ds}`] = Math.round(f.yhat);
+                    });
+                    break;
+
+                // case 'forecast':
+                    
+                    // forecastData.forecast.forEach((f) => {
+                    //     const yhatRounded = Math.round(f.yhat);
+                    //     monthlyDetails[`Predicción ${f.ds}`] = yhatRounded;
+                    //     totalSales += yhatRounded;
+                    // });
+                    // break;
             }
 
             setPdfData({
@@ -368,6 +434,7 @@ const SalesChart = ({
                         {reportType === 'item' && `Ventas por producto`}
                         {reportType === 'client' && `Ventas por cliente`}
                         {reportType === 'method' && `Ventas por método de pago`}
+                        {reportType === 'forecast' && `Proyección de ventas desde ${selectedYear}`}
                     </Text>
                     <Text style={styles.date}>Generado el {new Date().toLocaleDateString('es-ES')}</Text>
                 </View>
@@ -379,7 +446,7 @@ const SalesChart = ({
                 )}
 
                 <View style={styles.totals}>
-                    <Text style={styles.boldText}>Resumen de Ventas</Text>
+                    <Text style={styles.boldText}>Resumen</Text>
 
                     <View style={styles.totalItem}>
                         <Text>Total General:</Text>
@@ -389,10 +456,17 @@ const SalesChart = ({
                     {Object.entries(pdfData?.monthlyDetails || {}).map(([period, amount]) => (
                         <View style={styles.totalItem} key={period}>
                             <Text>{period}:</Text>
-                            <Text>$ {amount.toLocaleString('es-AR')}</Text>
+                            <Text>$ {Number(amount).toLocaleString('es-AR')}</Text>
                         </View>
                     ))}
                 </View>
+
+                {reportType === 'forecast' && advice && (
+                    <View style={styles.totals}>
+                        <Text style={styles.boldText}>Consejo de Predicción</Text>
+                        <Text>{advice}</Text>
+                    </View>
+                )}
 
                 <View style={styles.footer}>
                     <Text>Colaneri e Hijos</Text>
@@ -453,8 +527,9 @@ const SalesChart = ({
                 {reportType === 'annual' && `Ventas Anuales ${selectedYear}`}
                 {reportType === 'monthly' && `Ventas de ${MONTH_NAMES_ES[selectedMonth - 1]} ${selectedYear}`}
                 {reportType === 'item' && `Ventas por Producto`}
-                {reportType === 'client' && `Ventas por Cliente`}
-                {reportType === 'method' && `Ventas por Método de Pago`}
+                {reportType === 'client' && `Ventas por Cliente${clientName ? `: ${clientName}`: ''  }`}
+                {reportType === 'method' && `Ventas por Método de Pago${methods(methodName) ? `: ${methods(methodName)}` : ''}`}
+                {reportType === 'forecast' && `Proyección de Ventas`}
             </h2>
 
             <div style={{ height: '500px', marginTop: '40px' }}>
@@ -464,14 +539,25 @@ const SalesChart = ({
                         data={getChartData()}
                         options={lineChartOptions}
                     />
-                ) : (
-                    <Bar
-                        ref={chartRef}
-                        data={getChartData()}
-                        options={commonChartOptions}
-                    />
-                )}
+                    ) : reportType === 'forecast' ? (
+                        <Line
+                            ref={chartRef}
+                            data={getChartData()}
+                            options={lineChartOptions}
+                        />
+                    ) : (
+                        <Bar
+                            ref={chartRef}
+                            data={getChartData()}
+                            options={commonChartOptions}
+                        />
+                    )}
             </div>
+            {reportType === 'forecast' && advice && (
+                <p style={{ marginTop: 16 }}>
+                    <strong>Consejo:</strong> {advice}
+                </p>
+            )}
         </div>
     );
 };
