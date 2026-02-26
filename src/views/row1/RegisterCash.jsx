@@ -373,7 +373,7 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
 
                         </div>
                         <div className={Style.row2}>
-                            <TableQuotation rows={itemsList} totals={handleTotalAmount} size={true} modalRemoveItem={handleRemoveItem} modalUpdateItem={handleUpdateQuantity} isEdit={false} />
+                            <TableQuotation rows={itemsList} totals={handleTotalAmount} size={true} modalRemoveItem={handleRemoveItem} modalUpdateItem={handleUpdateQuantity} isEdit={false} isQuotation={false} />
                         </div>
                         <div className={Style.row3}>
                             <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />

@@ -8,7 +8,7 @@ import Dialog from '../../modals/dialog/Dialog';
 
 // deleteRow, editRow
 
-export const TableQuotation = ({ rows ,isChecked=false, size=false, perPage=6 , totals=null, modalRemoveItem=null, modalUpdateItem=null, editChecked=null, isEdit=true}) => {
+export const TableQuotation = ({ rows ,isChecked=false, size=false, perPage=6 , totals=null, modalRemoveItem=null, modalUpdateItem=null, editChecked=null, isEdit=true, isQuotation=true}) => {
     const itemsPerPage = perPage; // Número de items por página
     const [currentPage, setCurrentPage] = useState(0); // Página actual
     const [isModalQuantity, setIsModalQuantity] = useState(false);
@@ -96,8 +96,8 @@ export const TableQuotation = ({ rows ,isChecked=false, size=false, perPage=6 , 
 
     // Function for format price numbers
     const formatNumber = (number) => {
-        return number.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    };  
+        return (number || 0).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
 
     return (<div className={Style.table_wrapper}>
         {isDialog&&<Dialog onSubmit={handleDeleteRow} messageModal={"Seguro quiere eliminar este Árticulo"} messageConfirm={"Eliminar"} onClose={handleClose} ></Dialog>}
@@ -117,8 +117,7 @@ export const TableQuotation = ({ rows ,isChecked=false, size=false, perPage=6 , 
                 {
                     currentItems.map((row, idx) => {
                         //  const statusText = row.status.chartAt(0).toUpperCase() + row.status.slice(1);
-                        const amount = calculateAmount(row.quantity, row.price); // Calcular el amount para cada item
-
+                        const amountQuotation = isQuotation ? calculateAmount(row.quantity, row.price) : row?.amount; // calculate each item amount
                         return (
                             <tr key={idx}>
                                 <td>
@@ -137,7 +136,7 @@ export const TableQuotation = ({ rows ,isChecked=false, size=false, perPage=6 , 
                                     $ {formatNumber(row.price)}
                                     {/* <span className={` ${Style.label} ${Style.label_`${row.status}`}`}>{statusText}</span> */}
                                 </td>
-                                <td>$ {formatNumber(amount)}</td>
+                                <td>$ {formatNumber(amountQuotation)||0}</td>
                             </tr>
                         );
 
