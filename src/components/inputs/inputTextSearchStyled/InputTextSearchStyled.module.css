@@ -1,5 +1,6 @@
 .inputText_group {
     box-sizing: content-box;
+    position: relative;
     max-width: fit-content;
     display: flex;
     flex-direction: column;
@@ -60,4 +61,20 @@
 
 .sizeM {
     width: 326px;
+}
+
+.results_container {
+    position: absolute;
+    right: 0;
+    z-index: 10;
+    width: 150%;
+    min-width: 330px;
+}
+
+.bottom-right {
+    top: 100%;
+}
+
+.top-right {
+    bottom: 100%;
 }

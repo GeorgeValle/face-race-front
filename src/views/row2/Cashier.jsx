@@ -383,7 +383,7 @@ const isDataListItem = itemsList.length > 0 && supplier.businessName != null;
                         <div className={Style.row3}>
                             <TextInputStyled typeInput="number" nameLabel={"cuit"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputCUIT} onChange={handleInputCUIT} onKey={handleOnKeySupplier} />
                             {/* <TextInputStyled titleLabel={"Nombre Proveedor"} nameLabel={"suppplier"} placeholderText={"Ej: Electro Moto"} value={inputNameSupplier} onChange={handleInputNameSupplier} typeInput={"text"} size={false} /> */}
-                            <InputTextSearchStyled placeholderText={"Ej: Lona Flex "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} value={inputNameSupplier} onSearch={handleSupplierListResults} setOneResult={handleFetchOneSupplier} onChange={setInputNameSupplier} displayFields={["businessName","companyName"]}/>
+                            <InputTextSearchStyled placeholderText={"Ej: Lona Flex "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} value={inputNameSupplier} listPosition={'top-right'} onSearch={handleSupplierListResults} setOneResult={handleFetchOneSupplier} onChange={setInputNameSupplier} displayFields={["businessName","companyName"]}/>
                             <MiniBtn onClick={cleanSupplier} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                             
                         </div>

@@ -2,7 +2,7 @@
 
     export const formatNumber = (number) => {
         //let final = parseFloat(number)
-        return number.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return (number || 0).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };  
     // export const formatNumber = (number) => {
     // if (!isNaN(number)) {
@@ -14,3 +14,5 @@
     //         return 0
     //     }
     // }
+
+    
