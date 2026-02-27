@@ -13,7 +13,7 @@ import { faPlus, faTruck, faWallet, faXmark,faBox , faPencil, faMagnifyingGlass,
 import { TableQuotation } from '../../components/tables/tableQuotation/TableQuotation';
 import MessageModal from '../../components/modals/messageModal/MessageModal';
 import NewSupplierModal from '../../components/modals/newSupplierModal/NewSupplierModal'
-import ItemModal from '../../components/modals/itemModal/ItemModal';
+import ItemModal from '../../components/modals/itemPurchaseModal/ItemModal';
 import NewItemModal from '../../components/modals/newItemModal/NewItemModal'
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
@@ -378,12 +378,12 @@ const isDataListItem = itemsList.length > 0 && supplier.businessName != null;
 
                         </div>
                         <div className={Style.row2}>
-                            <TableQuotation rows={itemsList} totals={handleTotalAmount} size={true} modalRemoveItem={handleRemoveItem} modalUpdateItem={handleUpdateQuantity} isEdit={false} />
+                            <TableQuotation rows={itemsList} totals={handleTotalAmount} size={true} modalRemoveItem={handleRemoveItem} modalUpdateItem={handleUpdateQuantity} isEdit={false} isQuotation={false}/>
                         </div>
                         <div className={Style.row3}>
                             <TextInputStyled typeInput="number" nameLabel={"cuit"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputCUIT} onChange={handleInputCUIT} onKey={handleOnKeySupplier} />
                             {/* <TextInputStyled titleLabel={"Nombre Proveedor"} nameLabel={"suppplier"} placeholderText={"Ej: Electro Moto"} value={inputNameSupplier} onChange={handleInputNameSupplier} typeInput={"text"} size={false} /> */}
-                            <InputTextSearchStyled placeholderText={"Ej: Lona Flex "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} value={inputNameSupplier} onSearch={handleSupplierListResults} setOneResult={handleFetchOneSupplier} onChange={setInputNameSupplier} displayFields={["businessName","companyName"]}/>
+                            <InputTextSearchStyled placeholderText={"Ej: Lona Flex "} typeInput={"text"} titleLabel="Nombre Proveedor" size={false} value={inputNameSupplier} listPosition={'top-right'} onSearch={handleSupplierListResults} setOneResult={handleFetchOneSupplier} onChange={setInputNameSupplier} displayFields={["businessName","companyName"]}/>
                             <MiniBtn onClick={cleanSupplier} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                             
                         </div>

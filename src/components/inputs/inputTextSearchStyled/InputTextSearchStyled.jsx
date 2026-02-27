@@ -3,7 +3,7 @@ import SearchResultsList from './SearchResultList';
 import { useState, useRef, useEffect } from 'react';
 import BouncyLoading from '../../loaders/bouncyLoading/BouncyLoading'
 
-const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", placeholderText="", size=true, onChange=null, onKey=null, value="", onSearch=null, setOneResult=null, results=[], displayFields=["name"] }) => {
+const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", placeholderText="", size=true, onChange=null, onKey=null, value="", onSearch=null, setOneResult=null, results=[], displayFields=["name"], listPosition = 'bottom-right' }) => {
 
     const [theResults, setTheResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -72,10 +72,10 @@ const InputTextSearchStyled = ({typeInput="text", titleLabel="", nameLabel="", p
                     onKeyDown={onKey}
                 />
                 
-                {theResults.length>0&&(
-                    <>
-                    <SearchResultsList results={theResults} setOneResult={handleSelectResult} displayFields={displayFields}/> 
-                    </>
+                {theResults.length > 0 && (
+                    <div className={`${styleInput.results_container} ${styleInput[listPosition]}`}>
+                        <SearchResultsList results={theResults} setOneResult={handleSelectResult} displayFields={displayFields}/> 
+                    </div>
                 )}
                 
                 {

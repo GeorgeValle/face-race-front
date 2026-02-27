@@ -1,6 +1,7 @@
 import Style from './TableCategoryItems.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { formatNumber } from '../../../utils/amountUtils/formatNumber';
 
 // deleteRow, editRow
 
@@ -45,7 +46,7 @@ export const TableCategoryItems = ({ rows, size=false, onEdit=null, onDelete=nul
                                 <td className={Style.expand}>{`${row.name} ${row.brand}`}</td>
                                 <td>{row.stockQuantity}</td>
                                 <td>
-                                    $ {row.price}
+                                    $ {formatNumber(row.price)}
                                     {/* <span className={` ${Style.label} ${Style.label_`${row.status}`}`}>{statusText}</span> */}
                                 </td>
                                 <td> {row.category}</td>

@@ -373,12 +373,12 @@ const isDataListItem = itemsList.length > 0 && client.name != null;
 
                         </div>
                         <div className={Style.row2}>
-                            <TableQuotation rows={itemsList} totals={handleTotalAmount} size={true} modalRemoveItem={handleRemoveItem} modalUpdateItem={handleUpdateQuantity} isEdit={false} />
+                            <TableQuotation rows={itemsList} totals={handleTotalAmount} size={true} modalRemoveItem={handleRemoveItem} modalUpdateItem={handleUpdateQuantity} isEdit={false} isQuotation={false} />
                         </div>
                         <div className={Style.row3}>
                             <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
                             {/*<TextInputStyled titleLabel={"Nombre del Cliente"} nameLabel={"client"} placeholderText={"Ej: Juan Gomez"} value={inputNameClient} onChange={handleInputNameClient} typeInput={"text"} size={false} /> */}
-                            <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre de Cliente" size={false} value={inputNameClient} onSearch={handleListResultsClients} setOneResult={handleFetchOneClient} onChange={setInputNameClient} displayFields={["name","surname"]}/>
+                            <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre de Cliente" size={false} value={inputNameClient} listPosition={'top-right'} onSearch={handleListResultsClients} setOneResult={handleFetchOneClient} onChange={setInputNameClient} displayFields={["name","surname"]}/>
                             <MiniBtn onClick={cleanClient} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                             
                         </div>

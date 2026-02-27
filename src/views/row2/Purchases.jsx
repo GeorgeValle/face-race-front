@@ -596,16 +596,17 @@ const Purchases = () => {
     }
 
     const handleChecked = async(purchaseNumber,oneCode, checkedStatus, oneQuantity) =>{
-        dispatch(toggleChecked({code:oneCode}));
+        
         
         try{ 
-            await handleEditStockItem(oneCode,oneQuantity)
-            await handleFetchChecked(purchaseNumber,oneCode,checkedStatus)
-            //await axios.put((`${config.API_BASE}purchase/checked/${purchaseNumber}/${oneCode}`),{checked:checkedStatus});
+            //await handleEditStockItem(oneCode,oneQuantity)
+            //await handleFetchChecked(purchaseNumber,oneCode,checkedStatus)
+            await axios.put((`${config.API_BASE}purchase/checked/${purchaseNumber}/${oneCode}/${oneQuantity}`),{checked:checkedStatus});
             // await axios.put((`${config.API_BASE}item/incrementStock/${oneCode}`), 
             // {
             //     quantity: parseInt(oneQuantity),
             // });
+            dispatch(toggleChecked({code:oneCode}));
         }catch(error){
             setMessage("Cambios NO realizados")
             setModalOpenMessage(true)

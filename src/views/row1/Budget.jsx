@@ -281,7 +281,7 @@ const Budget = () => {
                             <div className={Style.article}>
                                 {/*<TextInputStyled placeholderText={"Ej: 40112233"} typeInput={"number"} titleLabel="DNI Cliente" value={inputDNI} onChange={handleInputDNI} /> */}
                                 <TextInputStyled typeInput="number" nameLabel={"dni"} titleLabel={"DNI / CUIT"} placeholderText={"Ej: 40112233"} value={inputDNI} onChange={handleInputDNI} onKey={handleOnKeyClient} />
-                                <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre de Cliente" size={false} value={inputClientName} onSearch={handleListResultsClients} setOneResult={handleFetchOneClient} onChange={setInputClientName} displayFields={["name","surname"]}/>
+                                <InputTextSearchStyled placeholderText={"Ej: Juan Valdez "} typeInput={"text"} titleLabel="Nombre de Cliente" size={false} value={inputClientName} onSearch={handleListResultsClients} setOneResult={handleFetchOneClient} onChange={setInputClientName} listPosition={'top-right'} displayFields={["name","surname"]}/>
                                 {/*<MiniBtn onClick={fetchClient} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
                                 <MiniBtn onClick={cleanClient} isWhite={true}> <FontAwesomeIcon icon={faBroomBall} />  </MiniBtn>
                             </div>

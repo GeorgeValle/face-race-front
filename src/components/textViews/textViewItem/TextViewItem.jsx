@@ -2,6 +2,7 @@ import Style from './TextViewItem.module.css'
 import MiniBtn from '../../btns/miniBtn/MiniBtn'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons"
+import { formatNumber } from '../../../utils/amountUtils/formatNumber'
 
 // ,onEdit=null, onDelete=null
 //<div className={Style.row_title}><MiniBtn onClick={onEdit} isWhite={true}><FontAwesomeIcon icon={faPencil}/></MiniBtn><MiniBtn onClick={onDelete} isRed={true}><FontAwesomeIcon icon={faTrash}/></MiniBtn></div>
@@ -27,7 +28,7 @@ const TextViewItem = ({ TheItem = null, onEdit = null, onDelete = null }) => {
                         <th>Cantidad:</th>
                         <td>{TheItem.stockQuantity}</td>
                         <th>Precio:</th>
-                        <td>{TheItem.price}</td>
+                        <td>$ {formatNumber(TheItem.price)}</td>
                     </tr>
                     <tr>
                         <th>Categoría:</th>
