@@ -36,8 +36,8 @@
     justify-content: center;
     align-items: center;
     width: 994px;
-    max-height: 823px;
-    min-height: 650px;
+    max-height: 825px;
+    min-height: 720px;
     border-radius: 15px;
     stroke: #000;
     stroke-width: 0.5px;
@@ -85,6 +85,9 @@
     "item9 item10" .5fr
 
     "item11 item12" .5fr
+
+    "item13 item14" .5fr
+
     / .5fr .5fr ;
 
     gap: 10px;
@@ -113,7 +116,17 @@
 
 .item11 { grid-area: item11; }
 
-.item11 { grid-area: item12; }
+.item12 { grid-area: item12; }
+
+.item13 { grid-area: item13; 
+    
+}
+
+.item14 { grid-area: item14; 
+    
+}
+
+/* .item14 { grid-area: item14; } */
 
 
 .btn {
@@ -150,4 +163,16 @@
 
 .close {
     cursor: pointer;
+}
+
+.warning{
+    margin-top: 5px;
+    color: white;
+    background-color: #D551E6;
+}
+
+.error{
+    margin-top: 5px;
+    color:red;
+    background-color: yellow;
 }

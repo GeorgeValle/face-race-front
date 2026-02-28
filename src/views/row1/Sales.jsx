@@ -351,6 +351,7 @@ const Sales = () => {
             const response =
                 await axios.get(`${config.API_BASE}sale/client/${DNIToFetch}/${selectedYear}`)
             setClientSales(response.data.data)
+            
             setInputNameClient(`${response.data.data[0].client.name} ${response.data.data[0].client.surname}`)
 
             //console.log(response.data.data)
