@@ -154,3 +154,15 @@
 .close {
     cursor: pointer;
 }
+
+.warning{
+    margin-top: 5px;
+    color: white;
+    background-color: #D551E6;
+}
+
+.error{
+    margin-top: 5px;
+    color:red;
+    background-color: yellow;
+}

@@ -19,36 +19,43 @@ const [model,setModel]= useState("");
 const [origin, setOrigin]= useState("");
 const [warehouseLocation, setWarehouseLocation] = useState("");
 const [description, setDescription] = useState("");
-
-//const [error, setError] = useState(false);
+const [error, setError] = useState(false);
 //const [loading, setLoading] = useState(false);
 
 const allCategory = [{label:'Seleccione una categoría',value:""},{label:'Indumentaria',value:'Indumentaria'}, {label:'Protección Personal', value:'Protección Personal'}, {label:'Equipaje',value:'Equipaje'}, {label:'Lingas y Trabas',value:'Lingas y Trabas'}, {label:'Luces',value:'Luces'}, {label:'Cobertores',value:'Cobertores'},{label:'Redes y sujetadores',value:'Redes y sujetadores'},{label:'Parlantes',value:'Parlantes'},{label:'Parabrisas', value:'Parabrisas'},{label:'Herramientas',value:'Herramientas'},{label:'Emblemas',value:'Emblemas'},{label:'Tableros y Velocimetros',value:'Tableros y Velocimetros'},{label:'Pisadores',Value:'Pisadores'},{label:'Escapes',value:'Escapes'},{label:'Frenos',value:'Frenos'},{label:'Repuestos',value:'Repuestos'},{label:'Servicios', value:'Servicios'},{label:'Mantenimiento',value:'Mantenimiento'},{label:'Otros',value:'Otros'}]
 
 const onSubmitCreate = async () =>{
-    try {
-        //setLoading(true);
-        //setError("")
-        const request = await axios.post(`${config.API_BASE}item/register`, {
-            code:code,
-            name:name,
-            stockQuantity:stockQuantity,
-            price:price,
-            category:category,
-            brand:brand,
-            model:model,
-            origin:origin,
-            warehouseLocation:warehouseLocation,
-            description:description,
-            })
-            //const response =  request.data;
-            //setLoading(false);
+    
+    
+    
+        if(!code||!name||!stockQuantity||!price||!category||!brand)
+    {
+        setError("Rellene lo obligatorio *")
+    }
+    else{
+        try {
+            //setLoading(true);
+            const request = await axios.post(`${config.API_BASE}item/register`, {
+                code:code,
+                name:name,
+                stockQuantity:stockQuantity,
+                price:price,
+                category:category,
+                brand:brand,
+                model:model,
+                origin:origin,
+                warehouseLocation:warehouseLocation,
+                description:description,
+                })
+                //const response =  request.data;
+                //setLoading(false);
 
-            onSubmit(request.data.message);
-} catch (err) {
-    //setError(err);
-    onSubmit(`Error al crear Item`);
-}
+                onSubmit(request.data.message);
+            } catch (err) {
+                //setError(err);
+                onSubmit(`Error al crear Item`);
+            }
+    }
 }
 
 const handleCategory = ( category) =>{
@@ -70,19 +77,19 @@ const handleCategory = ( category) =>{
             <div className={Style.modal_content}>
                 
                 <div className={Style.item1}>
-                    <TextInput  typeInput={"number"} value={code} nameInput={"code"} isLabel={true} titleLabel={`Código:`} nameLabel={"code"} placeholderText={"119228"} sideLabel={true} onChange={(e)=>setCode(e.target.value)} />
+                    <TextInput  typeInput={"number"} value={code} nameInput={"code"} isLabel={true} titleLabel={`Código*:`} nameLabel={"code"} placeholderText={"119228"} sideLabel={true} onChange={(e)=>setCode(e.target.value)} />
                 </div>
                 <div className={Style.item2}>
-                    <TextInput  typeInput={"text"} value={name} nameInput={"name"} isLabel={true} titleLabel={"Nombre:"} nameLabel={"name"} placeholderText={"Ej: Casco Italy"} sideLabel={true} onChange={(e)=>setName(e.target.value)} />
+                    <TextInput  typeInput={"text"} value={name} nameInput={"name"} isLabel={true} titleLabel={"Nombre*:"} nameLabel={"name"} placeholderText={"Ej: Casco Italy"} sideLabel={true} onChange={(e)=>setName(e.target.value)} />
                 </div>
                 <div className={Style.item3}>
-                    <TextInput  typeInput={"number"} value={stockQuantity} nameInput={"stockQuantity"} isLabel={true} titleLabel={"Cantidad:"} nameLabel={"stockQuantity"} placeholderText={"Ej: 52"} sideLabel={true} onChange={(e)=>setStockQuantity(e.target.value)} />
+                    <TextInput  typeInput={"number"} value={stockQuantity} nameInput={"stockQuantity"} isLabel={true} titleLabel={"Cantidad*:"} nameLabel={"stockQuantity"} placeholderText={"Ej: 52"} sideLabel={true} onChange={(e)=>setStockQuantity(e.target.value)} />
                 </div>
                 <div className={Style.item4}>
-                    <TextInput  typeInput={"number"} value={price} nameInput={"price"} sideLabel={true} isLabel={true} titleLabel={"Precio:"} nameLabel={"price"} placeholderText={"Ej: 50.00"} onChange={(e)=>setPrice(e.target.value)} />
+                    <TextInput  typeInput={"number"} value={price} nameInput={"price"} sideLabel={true} isLabel={true} titleLabel={"Precio*:"} nameLabel={"price"} placeholderText={"Ej: 50.00"} onChange={(e)=>setPrice(e.target.value)} />
                 </div>
                 <div className={Style.item5}>
-                    <InputSelectStyled  defaultValue={category} onLabel={" "} sideLabel={true} isLabel={true} isGroup={false} titleLabel={"Categoría:"} onSetValue={handleCategory} options={allCategory} />
+                    <InputSelectStyled  defaultValue={category} onLabel={" "} sideLabel={true} isLabel={true} isGroup={false} titleLabel={"Categoría*:"} onSetValue={handleCategory} options={allCategory} />
                 </div>
                 <div className={Style.item6}>
                     <TextInput  typeInput={"text"} value={brand} nameInput={"brand"} isLabel={true} titleLabel={"Marca:"} nameLabel={"brand"} placeholderText={"Ej:Zx"} sideLabel={true} onChange={(e)=>setBrand(e.target.value)} />
@@ -97,7 +104,13 @@ const handleCategory = ( category) =>{
                     <TextInput  typeInput={"text"} value={warehouseLocation} nameInput={"warehouseLocation"} isLabel={true} titleLabel={"Ubicación:"} nameLabel={"warehouseLocation"} placeholderText={"Ej: AB 12"} sideLabel={true} onChange={(e)=>setWarehouseLocation(e.target.value)} />
                 </div>
                 <div className={Style.item10}>
-                    <TextArea titleLabel={"Observaciones:"} value={description} nameInput={"description"} nameLabel={"description"} onChange={(e)=>setDescription(e.target.value)} placeholderText={"* Opcional: Detalles varios"}  />
+                    <TextArea titleLabel={"Observaciones:"} value={description} nameInput={"description"} nameLabel={"description"} onChange={(e)=>setDescription(e.target.value)} placeholderText={" Opcional: Detalles varios"}  />
+                </div>
+                <div className={Style.item11}>
+                    {error&&(<p className={Style.error} >{error}</p>)}
+                </div>
+                <div className={Style.item12}>
+                    {!error&&(<p className={Style.warning} >* Campos obligatorios</p>)}
                 </div>
                 
             </div>
