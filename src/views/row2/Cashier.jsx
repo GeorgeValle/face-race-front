@@ -214,13 +214,13 @@ const Cashier = () => {
     // }
 
     //inputs handles
-    const handleInputItemName = (e) => {
-        setInputItemName(e.target.value)
-    }
+    // const handleInputItemName = (e) => {
+    //     setInputItemName(e.target.value)
+    // }
 
-    const handleInputNameSupplier = (e) =>{
-        setInputNameSupplier(e.target.value)
-    }
+    // const handleInputNameSupplier = (e) =>{
+    //     setInputNameSupplier(e.target.value)
+    // }
 
     const handleInputCUIT = (e) => {
         setInputCUIT(e.target.value);

@@ -295,7 +295,18 @@ const Warehouse = () => {
                 dispatch(deleteItem()); //delete item of redux
                 setInputCode("");
                 setInputNameItem("");
-            }
+    }
+
+    const handleOnKeyItem = async (event) => {
+        if (event.key === 'Enter' || event.key === 'Intro') {
+            await fetchItem();
+
+        }
+    }
+
+    const handleInputCode = (e) => {
+        setInputCode(e.target.value);
+    }
 
 
 //to du
@@ -317,7 +328,7 @@ return (
                                     
                                     <BtnCommon title={"Registrar"} onClick={()=>setModalOpenNewModal(true)} colorViolet={true}> <FontAwesomeIcon icon={faPlus}/></BtnCommon>
                                     <div className={Style.article} >
-                                        <TextInputStyled placeholderText={"Ej: 01122344"} typeInput={"number"} titleLabel="Código del Artículo" value={inputCode} onChange={(e) =>setInputCode(e.target.value)} />
+                                        <TextInputStyled typeInput="number" nameLabel={"codigo"} titleLabel={"Código de Barras"} placeholderText={"Ej: 1923"} value={inputCode} onChange={handleInputCode} onKey={handleOnKeyItem} />
                                         {/*<MiniBtn onClick={fetchItem} ><FontAwesomeIcon icon={faMagnifyingGlass} /></MiniBtn> */}
                                     </div>
                                     <div className={Style.article}>

@@ -27,6 +27,9 @@ const NewSupplierModal = ({onSubmit, onCancel, onClose, }) =>{
         cel:"",
         description:""
     });
+    
+    const [error, setError] = useState("");
+
 
     const handleChange = (e) => { 
         setFormData({ 
@@ -52,38 +55,44 @@ const NewSupplierModal = ({onSubmit, onCancel, onClose, }) =>{
 //const [loading, setLoading] = useState(false);
 
 const onSubmitCreate = async () =>{
-   
-    try {
-        //setLoading(true);
-        //setError("")
-        
-        
-        const request = await axios.post(`${config.API_BASE}supplier/register`,formData 
+
+    if(!formData.email||!formData.cuit||!formData.businessName||!formData.companyName||!formData.address||!formData.city||!formData.province)
+    {
+        setError("Rellene lo obligatorio *")
+    }
+    else{
+        try {
+            //setLoading(true);
+            //setError("")
             
-            // {
-            // email:email,
-            // cuit:cuit,
-            // businessName:businessName,
-            // companyName:companyName,
-            // coreBusiness:coreBusiness,
-            // address:address,
-            // city:city,
-            // province:province,
-            // postalCode:postalCode,
-            // phone:phone,
-            // cel:cel,
-            // description:description,
-            // }
-        )
-            const response =  request.data;
             
-            //setLoading(false);
-            dispatch(changeSupplier(formData))
-            onSubmit(response.message);
-} catch (err) {
-    //setError(err);
-    onSubmit(`Error al crear Proveedor`);
-}
+            const request = await axios.post(`${config.API_BASE}supplier/register`,formData 
+                
+                // {
+                // email:email,
+                // cuit:cuit,
+                // businessName:businessName,
+                // companyName:companyName,
+                // coreBusiness:coreBusiness,
+                // address:address,
+                // city:city,
+                // province:province,
+                // postalCode:postalCode,
+                // phone:phone,
+                // cel:cel,
+                // description:description,
+                // }
+            )
+                const response =  request.data;
+                
+                //setLoading(false);
+                dispatch(changeSupplier(formData))
+                onSubmit(response.message);
+        } catch (err) {
+            //setError(err);
+            onSubmit(`Error al crear Proveedor`);
+        }
+    }
 }
 
 
@@ -98,28 +107,28 @@ const onSubmitCreate = async () =>{
             <div className={Style.modal_content}>
                 
                 <div className={Style.item1}>
-                    <TextInput  typeInput={"email"} value={formData.email} nameInput={"email"} isLabel={true} titleLabel={`Email:`} nameLabel={"email"} placeholderText={"Ej: cliente@gmail.com"} sideLabel={true} onChange={handleChange} />
+                    <TextInput  typeInput={"email"} value={formData.email} nameInput={"email"} isLabel={true} titleLabel={`Email*:`} nameLabel={"email"} placeholderText={"Ej: cliente@gmail.com"} sideLabel={true} onChange={handleChange} />
                 </div>
                 <div className={Style.item2}>
-                    <TextInput  typeInput={"number"} value={formData.cuit} nameInput={"cuit"} isLabel={true} titleLabel={"CUIT:"} nameLabel={"cuit"} placeholderText={"Ej: 40112233"} sideLabel={true} onChange={handleChange} />
+                    <TextInput  typeInput={"number"} value={formData.cuit} nameInput={"cuit"} isLabel={true} titleLabel={"CUIT*:"} nameLabel={"cuit"} placeholderText={"Ej: 40112233"} sideLabel={true} onChange={handleChange} />
                 </div>
                 <div className={Style.item3}>
-                    <TextInput  typeInput={"text"} value={formData.businessName} nameInput={"businessName"} isLabel={true} titleLabel={"Nombre Comercial:"} nameLabel={"businessName"} placeholderText={"Ej: Cascos Rodas"} sideLabel={true} onChange={handleChange} />
+                    <TextInput  typeInput={"text"} value={formData.businessName} nameInput={"businessName"} isLabel={true} titleLabel={"Nombre Comercial*:"} nameLabel={"businessName"} placeholderText={"Ej: Cascos Rodas"} sideLabel={true} onChange={handleChange} />
                 </div>
                 <div className={Style.item4}>
-                    <TextInput  typeInput={"text"} value={formData.companyName} nameInput={"companyName"} isLabel={true} titleLabel={"Razón Social:"} nameLabel={"companyName"} placeholderText={"Ej: Grupo Rodas"} sideLabel={true} onChange={handleChange} />
+                    <TextInput  typeInput={"text"} value={formData.companyName} nameInput={"companyName"} isLabel={true} titleLabel={"Razón Social*:"} nameLabel={"companyName"} placeholderText={"Ej: Grupo Rodas"} sideLabel={true} onChange={handleChange} />
                 </div>
                 <div className={Style.item5}>
                     <TextInput  typeInput={"text"} value={formData.coreBusiness} nameInput={"coreBusiness"} isLabel={true} titleLabel={"Ramo:"} nameLabel={"coreBusiness"} placeholderText={"Ej: Venta cascos"} sideLabel={true} onChange={handleChange} />
                 </div>
                 <div className={Style.item6}>
-                    <TextInput  typeInput={"text"} value={formData.address} nameInput={"address"} isLabel={true} titleLabel={"Dirección:"} nameLabel={"address"} placeholderText={"Ej: Paso 1526"} sideLabel={true} onChange={handleChange} />
+                    <TextInput  typeInput={"text"} value={formData.address} nameInput={"address"} isLabel={true} titleLabel={"Dirección*:"} nameLabel={"address"} placeholderText={"Ej: Paso 1526"} sideLabel={true} onChange={handleChange} />
                 </div>
                 <div className={Style.item7}>
-                    <TextInput  typeInput={"text"} value={formData.city} nameInput={"city"} isLabel={true} titleLabel={"Ciudad:"} nameLabel={"city"} placeholderText={"Ej: Rosario"} sideLabel={true} onChange={handleChange} />
+                    <TextInput  typeInput={"text"} value={formData.city} nameInput={"city"} isLabel={true} titleLabel={"Ciudad*:"} nameLabel={"city"} placeholderText={"Ej: Rosario"} sideLabel={true} onChange={handleChange} />
                 </div>
                 <div className={Style.item8}>
-                    <TextInput  typeInput={"text"} value={formData.province} nameInput={"province"} isLabel={true} titleLabel={"Provincia:"} nameLabel={"province"} placeholderText={"Ej: Santa Fe"} sideLabel={true} onChange={handleChange} />
+                    <TextInput  typeInput={"text"} value={formData.province} nameInput={"province"} isLabel={true} titleLabel={"Provincia*:"} nameLabel={"province"} placeholderText={"Ej: Santa Fe"} sideLabel={true} onChange={handleChange} />
                 </div>
                 <div className={Style.item9}>
                     <TextInput  typeInput={"number"} value={formData.postalCode} nameInput={"postalCode"} isLabel={true} titleLabel={"Código Postal:"} nameLabel={"postalCode"} placeholderText={"Ej: 1251"} sideLabel={true} onChange={handleChange} />
@@ -132,6 +141,12 @@ const onSubmitCreate = async () =>{
                 </div>
                 <div className={Style.item12}>
                     <TextArea titleLabel={"Observaciones:"} value={formData.description} nameInput={"description"} nameLabel={"description"} onChange={handleChange} placeholderText={"* Opcional: Detalles varios"}  />
+                </div>
+                <div className={Style.item13}>
+                    {error&&(<p className={Style.error} >{error}</p>)}
+                </div>
+                <div className={Style.item14}>
+                    {!error&&(<p className={Style.warning} >* Campos obligatorios</p>)}
                 </div>
                 
             </div>
