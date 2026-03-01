@@ -40,6 +40,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f0f0',
         flexDirection: 'row',
     },
+    typeBill:{
+        width: '10%',
+        paddingRight: 10,
+    },
     tableCell: {
         border: '1px solid black',
         padding: 5,
@@ -79,7 +83,21 @@ const styles = StyleSheet.create({
         right: 20,
         fontSize: 10,
     },
-    
+    tableCellB: {
+        border: '1px solid black',
+        padding: 5,
+        textAlign: 'center',
+        flex: 1,
+        fontFamily: 'Times-Roman',
+        position: 'relative',
+    },
+    letterB: {
+        fontSize: 20,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+    },
 
 });
 
@@ -106,6 +124,9 @@ const BudgetPDF = ({ clientData, items }) => {
                         <Text style={styles.headerText}>Rosario</Text>
                         <Text style={styles.headerText}>colanerimotoshop@gmail.com</Text>
                     </View>
+                    <View style={styles.typeBill}>
+                                            <Text style={styles.tableCellB}><Text style={styles.letterB}>X</Text></Text>
+                                        </View>
                     <View style={styles.clientInfo}>
                         <Text style={styles.headerText}>Nombre: {clientData.name}</Text>
                         <Text style={styles.headerText}>DNI: {clientData.dni}</Text>
