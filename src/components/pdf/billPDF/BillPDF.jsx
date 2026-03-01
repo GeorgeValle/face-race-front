@@ -1,4 +1,5 @@
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import {getConcatenatedMethods} from '../../../utils/paymentsUtils/getConcatenatedMethods'
 
 // Estilos para el PDF
 const styles = StyleSheet.create({
@@ -143,7 +144,7 @@ const BillPDF = ({ clientData, items, method }) => {
                 <View>
                     {/* Sección de forma de pago */}
                     <View style={styles.paymentSection}>
-                        <Text>Forma de pago: {method.map((item)=>(item.type))||""}</Text>
+                        <Text>Forma de pago: {getConcatenatedMethods(method)||""}</Text>
                     </View>
                     <Text style={styles.title}>Factura</Text>
                     <View style={styles.table}>
