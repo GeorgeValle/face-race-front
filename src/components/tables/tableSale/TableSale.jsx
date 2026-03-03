@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 //import EditQuantityItemModal from '../../modals/editQuantityItemModal/EditQuantityItemModal';
 import Dialog from '../../modals/dialog/Dialog';
 import {formatArgentineDate} from '../../../utils/datesUtils/formatArgentineDate'
+import { getConcatenatedTypes } from '../../../utils/paymentsUtils/getConcatenatedTypes';
 //import SaleModal from '../../modals/saleModal/SaleModal';
 
 
@@ -82,12 +83,14 @@ export const TableSale = ({ rows , size=false, totals=null, modalDesahibilitySal
     //   .map(payment => payment.type)// Extract the atribute type
     //    .join(' ')//concatenated whit spaces
     //}
-    const getConcatenatedTypes = (selectedSale) => {
-        if(!selectedSale|| !selectedSale.payment) return "";
-        return selectedSale.payment
-        .map(payment => payment.type)
-        .join(' ')
-    }
+
+
+    // const getConcatenatedTypes = (selectedSale) => {
+    //     if(!selectedSale|| !selectedSale.payment) return "";
+    //     return selectedSale.payment
+    //     .map(payment => payment.type)
+    //     .join(' ')
+    // }
 
     const getConcatenatedFullName = (selectedSale)=>{
         let fullName

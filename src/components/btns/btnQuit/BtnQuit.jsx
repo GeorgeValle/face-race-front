@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { deleteUser } from "../../../redux/UserSlice";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Envs from '../../../config/Envs';
+
 
 
 
@@ -16,9 +18,9 @@ const BtnQuit = () => {
     const navigate = useNavigate();
 
     const handleExit = async () => {
-        const url = 'http://localhost:8080/api/session/logout';
+        //const url = 'http://localhost:8080/api/session/logout';
         try {
-            const response = await axios.post(url, {})//UseAxiosPost(url,{});
+            const response = await axios.post(`${Envs.API_BASE}session/logout`, {})//UseAxiosPost(url,{});
             //To do quit this console.log
             console.log(response.logout)
             dispatch(deleteUser());

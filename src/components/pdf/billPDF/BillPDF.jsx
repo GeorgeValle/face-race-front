@@ -132,9 +132,9 @@ const BillPDF = ({ clientData, items, method }) => {
                         <Text style={styles.tableCellB}><Text style={styles.letterB}>B</Text></Text>
                     </View>
                     <View style={styles.clientInfo}>
-                        <Text style={styles.headerText}>Nombre: {clientData.name}</Text>
+                        <Text style={styles.headerText}>Nombre: {`${clientData.name} ${clientData.surname}`}</Text>
                         <Text style={styles.headerText}>DNI: {clientData.dni}</Text>
-                        <Text style={styles.headerText}>Teléfono: {clientData.cel}</Text>
+                        <Text style={styles.headerText}>Celular: {clientData.cel}</Text>
                         <Text style={styles.headerText}>Email: {clientData.email}</Text>
                         <Text style={styles.headerText}>Fecha: {formattedDate}</Text>
                     </View>
