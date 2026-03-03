@@ -23,7 +23,7 @@ const AppointmentModal = ({ TheShift= null, onPrint, onEditStatus=null, onEditDe
     const [theDescription, setTheDescription] = useState(TheShift.description);
     //const [selectedOption, setSelectedOption] = useState(TheShift.status);
 
-    const allStatus = [{label:'Seleccione un estado',value:''}, {label:'Pendiente',value:'pending'}, {label:'Cancelado',value:'Cancelled'},{label:'Ausente',value:'missing'}, {label:'Atendido',value:'attended'}]
+    const allStatus = [{label:'Seleccione un estado',value:''}, {label:'Pendiente',value:'pending'}, {label:'Cancelado',value:'cancelled'},{label:'Ausente',value:'missing'}, {label:'Atendido',value:'attended'}]
 
     function formatDateToSpanish(dateString) { 
         // Create a object Date whit a String
